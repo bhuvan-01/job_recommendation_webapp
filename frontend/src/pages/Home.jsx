@@ -2,6 +2,7 @@ import Features from '@/components/Features';
 import Hero from '@/components/Hero';
 import Navbar from '@/components/Navbar';
 import Working from '@/components/Working';
+import FooterWithSocialLinks from '@/components/footer'
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
       <Hero />
       <Features />
       <Working />
+      <FooterWithSocialLinks/>
     </>
   );
 };
