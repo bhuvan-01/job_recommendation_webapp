@@ -30,7 +30,7 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage src='assets/images/profileDefault.png' />
+                    <AvatarImage src='../assets/images/profileDefault.png' />
                     {user && <AvatarFallback>{fallbackName}</AvatarFallback>}{' '}
                   </Avatar>
                 </DropdownMenuTrigger>

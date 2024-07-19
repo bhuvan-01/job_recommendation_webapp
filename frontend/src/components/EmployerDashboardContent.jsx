@@ -42,6 +42,8 @@ const EmployerDashboardContent = () => {
     user && fetchJobs();
   }, [user]);
 
+  // handle job delete functionality
+
   const handleJobDelete = async (id) => {
     try {
       const res = await apiClient.delete(`/jobs/${id}`);
