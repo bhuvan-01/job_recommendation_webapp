@@ -12,6 +12,9 @@ import EmployerDashboardContent from '@/components/EmployerDashboardContent';
 import CreateJobs from '@/pages/employer/CreateJobs';
 import EditJob from '@/pages/employer/EditJob';
 import NotFound from '@/pages/NotFound';
+import AppliedJobs from '@/pages/user/AppliedJobs'
+import RecommendedJobs from '@/pages/user/RecommendedJobs';
+import SavedJobs from '@/pages/user/SavedJobs';
 
 const router = createBrowserRouter([
   {
@@ -70,6 +73,26 @@ const router = createBrowserRouter([
             path: 'profile/employer',
             element: <EmployerProfile />,
           },
+
+
+          // new router added
+
+          {
+            path:'appliedjobs',
+            element:<AppliedJobs/>
+          },
+          {
+            path:'recommendedjobs',
+            element:<RecommendedJobs/>
+          },
+
+          {
+            path:'savedjobs',
+            element:<SavedJobs/>
+          },
+
+          // new router above
+
         ],
       },
     ],
