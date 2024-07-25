@@ -1,41 +1,25 @@
 
+from bson import ObjectId
 from flask import Flask,request, jsonify
+from flask_pymongo import PyMongo
+from dotenv import load_dotenv
+import os
 from recommendation import recommend
+load_dotenv()
+from pathlib import Path
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 
 app = Flask(__name__)
 
+mongo_uri = os.getenv("MONGO_URI") 
 
-users = [
-    {
-        "user_id": 1,
-        "name": "John Doe",
-        "skills": ["python", "machine learning", "data analysis"]
-    },
-    {
-        "user_id": 2,
-        "name": "Jane Smith",
-        "skills": ["javascript", "react", "nodejs"]
-    }
-]
+if not mongo_uri:
+    raise ValueError("No MONGO_URI found. Please ensure it is set in the .env file.")
+app.config["MONGO_URI"] = mongo_uri
 
-jobs = [
-    {
-        "job_id": 1,
-        "title": "Data Scientist",
-        "skills_required": ["python", "machine learning", "statistics"]
-    },
-    {
-        "job_id": 2,
-        "title": "Frontend Developer",
-        "skills_required": ["javascript", "react", "css"]
-    },
-    {
-        "job_id": 3,
-        "title": "Backend Developer",
-        "skills_required": ["nodejs", "express", "mongodb"]
-    }
-]
+mongo = PyMongo(app)
 
 
 @app.route('/')
@@ -45,12 +29,17 @@ def hello():
 
 @app.route('/recommededjob/<int:user_id>', methods=['GET'])
 def recommandedjobs(user_id):
-     user_profile = next((user for user in users if user['user_id'] == user_id), None)
-     if user_profile is None:
-        return jsonify({"error": "User not found"}), 404
     
-     recommendations = recommend(user_profile, jobs)
-     return jsonify(recommendations)
+     # Fetch user data from the database
+    user_profile = mongo.db.users.find_one({"_id": user_id})
+    
+    if user_profile is None:
+        return jsonify({"error": "User not found"}), 404
+
+    # Fetch all job data from the database
+    job_data = list(mongo.db.jobs.find())
+    recommendations = recommend(user_profile, job_data)
+    return jsonify(recommendations)
           
 
 
