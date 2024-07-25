@@ -1,14 +1,12 @@
 
 from bson import ObjectId
-from flask import Flask,request, jsonify
+from flask import Flask,jsonify
 from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 import os
 from recommendation import recommend
 load_dotenv()
-from pathlib import Path
-env_path = Path('.') / '.env'
-load_dotenv(dotenv_path=env_path)
+from bson.json_util import dumps
 
 
 app = Flask(__name__)
@@ -21,25 +19,24 @@ app.config["MONGO_URI"] = mongo_uri
 
 mongo = PyMongo(app)
 
-
 @app.route('/')
 def hello():
     return "Welcome to the flask Api: server is running now"
 
 
-@app.route('/recommededjob/<int:user_id>', methods=['GET'])
+@app.route('/recommededjob/<user_id>', methods=['GET'])
 def recommandedjobs(user_id):
     
      # Fetch user data from the database
-    user_profile = mongo.db.users.find_one({"_id": user_id})
+    user_profile = mongo.db.users.find_one({"_id": ObjectId(user_id)})    
     
     if user_profile is None:
         return jsonify({"error": "User not found"}), 404
 
     # Fetch all job data from the database
     job_data = list(mongo.db.jobs.find())
-    recommendations = recommend(user_profile, job_data)
-    return jsonify(recommendations)
+    recommendations = recommend(user_profile['profile'], job_data)
+    return dumps(recommendations)
           
 
 

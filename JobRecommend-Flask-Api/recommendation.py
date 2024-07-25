@@ -6,7 +6,7 @@ def recommend(user_profile, job_data):
     # Encode user and job skills
     mlb = MultiLabelBinarizer()
     user_skills = [user_profile["skills"]]
-    job_skills = [job["skills_required"] for job in job_data]
+    job_skills = [job["requirements"] for job in job_data]
 
     mlb.fit(user_skills + job_skills)
     user_skill_vector = mlb.transform(user_skills)
