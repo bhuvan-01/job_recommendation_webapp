@@ -114,3 +114,22 @@ exports.getEmployerJobs = async (req, res) => {
     });
   }
 };
+
+
+exports.getRecommended = async (req, res) => {
+    // Access userId from the token
+    const userId = req.user._id;
+
+
+
+    try {
+        // Call the Flask API with the userId
+        const response = await fetch(process.env.FLASK_API + `/recommededjob/${userId}`);
+
+        // Send the Flask API response back to the client
+        return res.json(await response.json());
+    } catch (error) {
+        console.error('Error calling Flask API:', error);
+        return res.status(500).json({ error: 'Failed to fetch recommended jobs' });
+    }
+}
