@@ -1,6 +1,7 @@
 
 from bson import ObjectId
 from flask import Flask,jsonify
+from flask_cors import CORS
 from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 import os
@@ -8,8 +9,8 @@ from recommendation import recommend
 load_dotenv()
 from bson.json_util import dumps
 
-
 app = Flask(__name__)
+CORS(app) 
 
 mongo_uri = os.getenv("MONGO_URI") 
 
@@ -41,4 +42,4 @@ def recommandedjobs(user_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8080)

@@ -22,6 +22,7 @@ def recommend(user_profile, job_data):
     # Include ranks in the job details
     ranked_jobs_with_ranks = []
     for rank, (job, score) in enumerate(ranked_jobs_with_scores, start=1):
+       if score > 0.5:  
         job_with_rank = job.copy()  # Create a copy to avoid modifying the original job data
         job_with_rank['rank'] = rank
         job_with_rank['similarity_score'] = score
