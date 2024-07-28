@@ -248,10 +248,22 @@ const UserDashboardContent = () => {
           </h1>
           <p className='pb-3 border-b'>{user?.bio}</p>
           <Link
-            to='/jobs/applied'
+            to='appliedjobs'
             className='flex font-medium gap-2 justify-center items-center pt-3'
           >
             <span>Applied jobs</span> <SquareArrowOutUpRight size={16} />
+          </Link>
+          <Link
+            to='savedjobs'
+            className='flex font-medium gap-2 justify-center items-center pt-3'
+          >
+            <span>Saved Jobs</span> <SquareArrowOutUpRight size={16} />
+          </Link>
+          <Link
+            to='recommended'
+            className='flex font-medium gap-2 justify-center items-center pt-3'
+          >
+            <span>Recomended Jobs</span> <SquareArrowOutUpRight size={16} />
           </Link>
         </div>
 
@@ -290,8 +302,7 @@ const UserDashboardContent = () => {
           ) : null}
           <div className='flex mt-4 justify-between items-center'>
             <h1 className='text-xl'>
-              Showing <strong>{jobs?.length}</strong> jobs found in Bengaluru,
-              India
+              Showing <strong>{jobs?.length}</strong> jobs found.
             </h1>
             <select
               className='p-2 border rounded-md font-medium'

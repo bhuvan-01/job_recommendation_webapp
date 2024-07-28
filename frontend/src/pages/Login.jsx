@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/app/auth/authSlice';
 import { useEffect } from 'react';
-import { Button } from '@material-tailwind/react';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -139,25 +138,6 @@ const Login = () => {
             >
               Login
             </button>
-
-            <div> 
-            <Button
-                variant="outlined"
-                size="lg"
-                className="flex h-12 border-blue-gray-200 items-center justify-center gap-2"
-                fullWidth
-              >
-                <img
-                  src={`https://www.material-tailwind.com/logos/logo-google.png`}
-                  alt="google"
-                  className="h-6 w-6"
-                />{" "}
-                sign in with google
-              </Button></div>
-              
-        
-        
-              
 
             <div className='flex flex-wrap justify-between items-center'>
               <p className='mt-4 text-sm text-gray-500 sm:mt-0'>

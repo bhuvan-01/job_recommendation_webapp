@@ -13,8 +13,9 @@ import CreateJobs from '@/pages/employer/CreateJobs';
 import EditJob from '@/pages/employer/EditJob';
 import NotFound from '@/pages/NotFound';
 import AppliedJobs from '@/pages/user/AppliedJobs'
-import RecommendedJobs from '@/pages/user/RecommendedJobs';
+import JobRecommendations from '@/pages/user/RecommendedJobs';
 import SavedJobs from '@/pages/user/SavedJobs';
+import UserDashboardContent from '@/components/UserDashboardContent'
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,24 @@ const router = createBrowserRouter([
           {
             path: 'dashboard/user',
             element: <UserDashboard />,
+            children:[
+              {
+                index: true,
+                element: <UserDashboardContent />,
+              },
+              {
+                path:'appliedjobs',
+                element:<AppliedJobs/>
+              },
+              {
+                path:'savedjobs',
+                element:<SavedJobs/>
+              },
+              {
+                path:'recommended',
+                element:<JobRecommendations/>
+              },
+            ]
           },
           {
             path: 'dashboard/employer',
@@ -67,6 +86,8 @@ const router = createBrowserRouter([
               //   path:'/edit',
               //   element
               // }
+
+             
             ],
           },
           {
@@ -77,19 +98,7 @@ const router = createBrowserRouter([
 
           // new router added
 
-          {
-            path:'appliedjobs',
-            element:<AppliedJobs/>
-          },
-          {
-            path:'recommendedjobs',
-            element:<RecommendedJobs/>
-          },
-
-          {
-            path:'savedjobs',
-            element:<SavedJobs/>
-          },
+         
 
           // new router above
 

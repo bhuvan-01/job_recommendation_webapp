@@ -70,7 +70,7 @@ const EmployerDashboardContent = () => {
           </Link>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {jobs.length !== 0 &&
+          {Array.isArray(jobs) && jobs.length > 0 ? (
             jobs.map((job) => (
               <div key={job?._id} className='border p-4 rounded-md'>
                 <div className='flex mb-4 gap-4 items-center'>
@@ -121,53 +121,77 @@ const EmployerDashboardContent = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-                </div>{' '}
+                </div>
                 <p className='text-gray-600 mb-2'>
-                  {job?.description.length > 100
+                  {job?.description?.length > 100
                     ? job?.description.slice(0, 100) + '...'
                     : job?.description}
                 </p>
                 <ul className=''>
                   <div className='my-4 flex flex-wrap gap-2'>
-                    {job.requirements
-                      .toString()
-                      .split(',')
-                      .map((requirement, idx) => (
-                        <span
-                          key={idx}
-                          className='px-3 py-1 font-medium bg-gray-200 rounded-md text-blue-600 text-xs'
-                        >
-                          {requirement}
-                        </span>
-                      ))}
+                    {job?.requirements &&
+                      job.requirements
+                        .toString()
+                        .split(',')
+                        .map((requirement, idx) => (
+                          <span
+                            key={idx}
+                            className='px-3 py-1 font-medium bg-gray-200 rounded-md text-blue-600 text-xs'
+                          >
+                            {requirement}
+                          </span>
+                        ))}
                   </div>
                 </ul>
                 <p className='text-gray-600'>
                   <strong>Salary:</strong> ${job?.salary}
                 </p>
-                {/* {job?.company && (
+                 {/* {job?.company && (
+
                   <div className='mt-4'>
+
                     <p className='text-gray-600'>
+
                       <strong>Name:</strong>
-                    </p>
-                    <p className='text-gray-600'>
-                      <strong>Industry:</strong> {job?.company?.industry}
+
                     </p>
 
                     <p className='text-gray-600'>
-                      <strong>Website:</strong>
-                      <a
-                        href={job?.company?.website}
-                        target='_blank'
-                        className='text-blue-600 hover:underline'
-                      >
-                        {job?.company?.website}
-                      </a>
+
+                      <strong>Industry:</strong> {job?.company?.industry}
+
                     </p>
+
+
+
+                    <p className='text-gray-600'>
+
+                      <strong>Website:</strong>
+
+                      <a
+
+                        href={job?.company?.website}
+
+                        target='_blank'
+
+                        className='text-blue-600 hover:underline'
+
+                      >
+
+                        {job?.company?.website}
+
+                      </a>
+
+                    </p>
+
                   </div>
+
                 )} */}
               </div>
-            ))}
+            ))
+          ) : (
+            <p>No jobs found.</p>
+          )}
         </div>
       </div>
     </div>
