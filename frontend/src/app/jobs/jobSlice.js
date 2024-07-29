@@ -6,6 +6,8 @@ const jobSlice = createSlice({
     jobs: [],
     // loading: false,
     // error: null,
+    savedJobs: [],
+    appliedJobs: [],
   },
   reducers: {
     addJob: (state, action) => {
@@ -25,11 +27,26 @@ const jobSlice = createSlice({
         state.jobs[index] = action.payload;
       }
     },
+    saveJob: (state, action) => {
+      const job = action.payload;
+      // Ensure the job isn't already saved
+      if (!state.savedJobs.find(savedJob => savedJob._id === job._id)) {
+        state.savedJobs.push(job);
+      }
+    },
+
+    appliedJob: (state, action) => {
+      const job = action.payload;
+      // Ensure the job isn't already applied
+      if (!state.appliedJobs.find(appliedJob => appliedJob._id === job._id)) {
+        state.appliedJobs.push(job);
+      }
+    },
   },
 });
 
 const { actions, reducer } = jobSlice;
 
-export const { addJob, deleteJob, storeJobs, updateJob } = actions;
+export const { addJob, deleteJob, storeJobs, updateJob,saveJob, appliedJob} = actions;
 
 export default reducer;

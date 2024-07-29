@@ -95,14 +95,102 @@ const signup = async (req, res) => {
 };
 
 // forget password
+// const forgotPassword = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Invalid email',
+//       });
+//     }
+
+//     const transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: process.env.APP_EMAIL,
+//         pass: process.env.APP_PASSWORD,
+//       },
+//     });
+
+//     storedOTPs[email] = generateOTP();
+
+//     const mailOptions = {
+//       from: process.env.APP_EMAIL,
+//       to: email,
+//       subject: 'Reset password | Chatty 💬',
+//       text: `Your OTP to reset your password is ${storedOTPs[email]}`,
+//     };
+
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error('Error sending email:', error);
+//         return res.status(400).json({
+//           message: 'Failed to send email',
+//           error: error.message,
+//           success: false,
+//         });
+//       } else {
+//         console.log('Email sent:', info.response);
+//         return res.status(200).json({
+//           success: true,
+//           message:
+//             'Email has been sent successfully! Check your inbox or spam folder.',
+//         });
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Error in forgot password: ', error);
+//     return res.status(500).json({ message: 'Internal Server Error', error });
+//   }
+// };
+
+// async function verifyOTP(req, res) {
+//   try {
+//     const { otp, email } = req.body;
+
+//     if (storedOTPs[email] && storedOTPs[email] === otp) {
+//       return res.status(200).json({
+//         success: true,
+//         message: 'Verified, proceed to change password',
+//       });
+//     }
+//     return res.status(400).json({
+//       sucess: false,
+//       message: 'Invalid OTP',
+//     });
+//   } catch (error) {
+//     console.log('Error in verify password: ', error);
+//     return res.status(500).json({
+//       message: 'Server error',
+//       error: error.message,
+//     });
+//   }
+// }
+
+
+// Function to generate OTP (adjust as needed)
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+};
+
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
+
+    if (!email) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid email',
+        message: 'Email is required',
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
       });
     }
 
@@ -114,19 +202,20 @@ const forgotPassword = async (req, res) => {
       },
     });
 
-    storedOTPs[email] = generateOTP();
+    const otp = generateOTP();
+    storedOTPs[email] = otp;
 
     const mailOptions = {
       from: process.env.APP_EMAIL,
       to: email,
       subject: 'Reset password | Chatty 💬',
-      text: `Your OTP to reset your password is ${storedOTPs[email]}`,
+      text: `Your OTP to reset your password is ${otp}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
-        return res.status(400).json({
+        return res.status(500).json({
           message: 'Failed to send email',
           error: error.message,
           success: false,
@@ -135,29 +224,38 @@ const forgotPassword = async (req, res) => {
         console.log('Email sent:', info.response);
         return res.status(200).json({
           success: true,
-          message:
-            'Email has been sent successfully! Check your inbox or spam folder.',
+          message: 'Email has been sent successfully! Check your inbox or spam folder.',
         });
       }
     });
   } catch (error) {
     console.error('Error in forgot password: ', error);
-    return res.status(500).json({ message: 'Internal Server Error', error });
+    return res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
 
-async function verifyOTP(req, res) {
+const verifyOTP = async (req, res) => {
   try {
     const { otp, email } = req.body;
 
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and OTP are required',
+      });
+    }
+
     if (storedOTPs[email] && storedOTPs[email] === otp) {
+      // Optionally, clear the OTP after successful verification
+      delete storedOTPs[email];
       return res.status(200).json({
         success: true,
         message: 'Verified, proceed to change password',
       });
     }
+    
     return res.status(400).json({
-      sucess: false,
+      success: false,
       message: 'Invalid OTP',
     });
   } catch (error) {
@@ -167,7 +265,10 @@ async function verifyOTP(req, res) {
       error: error.message,
     });
   }
-}
+};
+
+
+
 
 // reset password
 const resetPassword = async (req, res) => {
