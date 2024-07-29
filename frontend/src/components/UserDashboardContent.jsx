@@ -242,7 +242,7 @@ const UserDashboardContent = () => {
   const handleSaveJob = (job) => {
     dispatch(saveJob(job));
     toast.success("Job saved!", {
-      position: "top-right",
+      position: "center-bottom",
       duration: 2000,
     });
   };

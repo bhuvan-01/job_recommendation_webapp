@@ -19,7 +19,7 @@ const ApplyNow = () => {
   const handleAppliedJob = (job) => {
     dispatch(appliedJob(job));
     toast.success("Job applied!", {
-      position: "top-right",
+      position: "center-bottom",
       duration: 2000,
     });
   };
