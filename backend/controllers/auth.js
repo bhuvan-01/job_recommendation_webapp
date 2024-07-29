@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -31,6 +32,36 @@ const login = async (req, res) => {
         expiresIn: "7d",
       }
     );
+
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.APP_EMAIL,
+        pass: process.env.APP_PASSWORD,
+      },
+    });
+
+    // Define the email options
+    const mailOptions = {
+      from: process.env.APP_EMAIL,
+      to: email,
+      subject: "Successful Login Notification",
+      text: `Dear ${existingUser.firstName},\n\nYou have successfully logged in to your account.\n\nBest regards,\n JobHunt`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+
+
+
+
 
     return res.status(200).json({
       token,
@@ -78,6 +109,32 @@ const signup = async (req, res) => {
         expiresIn: "7d",
       }
     );
+
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.APP_EMAIL,
+        pass: process.env.APP_PASSWORD,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: process.env.APP_EMAIL,
+      to: email,
+      subject: "Welcome to JobHunt!",
+      text: `Hello ${firstName} ${lastName},\n\nThank you for signing up! Your account has been created successfully.\n\nBest regards,\nJobHunt`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
 
     return res.status(201).json({
       token,
