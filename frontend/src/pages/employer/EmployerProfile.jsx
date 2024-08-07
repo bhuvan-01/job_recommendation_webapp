@@ -2,7 +2,7 @@ import { setUser } from '@/app/auth/authSlice';
 import Header from '@/components/Header';
 import apiClient from '@/services/apiClient';
 import { Building2, Linkedin, Plus, User } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 const EmployerProfile = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const [jobsCreated, setJobsCreated] = useState([]);
   const [isAddingDetails, setIsAddingDetails] = useState(false);
   const [companyDetails, setCompanyDetails] = useState({
     name: '',
@@ -19,6 +20,23 @@ const EmployerProfile = () => {
     website: '',
     overview: '',
   });
+
+  useEffect(() => {
+    const fetchEmployerJobs = async () => {
+      try {
+        const res = await apiClient.get(`/jobs/employer/${user._id}`);
+        console.log('rezz: ', res);
+
+        if (res.status === 200) {
+          setJobsCreated(res.data.jobs);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (user) fetchEmployerJobs();
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -214,7 +232,9 @@ const EmployerProfile = () => {
             <section className='mb-4 border p-8 rounded-md space-y-4'>
               <article>
                 <h3 className='text-xl font-semibold mb-2'>Jobs Created</h3>
-                <h1 className='text-3xl font-bold text-blue-600'>20</h1>
+                <h1 className='text-3xl font-bold text-blue-600'>
+                  {jobsCreated.length}
+                </h1>
               </article>
               <article>
                 <h3 className='text-xl font-semibold mb-2'>Hired</h3>

@@ -11,6 +11,7 @@ import {
 } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, User } from 'lucide-react';
+import { IMG_URL } from '@/utils/constants';
 
 const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth);
@@ -20,7 +21,7 @@ const Navbar = () => {
     user?.firstName[0].toString() + user?.lastName[0].toString();
 
   return (
-    <div className='py-4  border-b-gray-100/75 bg-white/50 backdrop-blur-md sticky top-0'>
+    <div className='py-4  border-b-gray-100/75 backdrop-blur-md sticky top-0'>
       <div className='container max-w-[1400px] p-0 mx-auto w-[95%] flex justify-between items-center'>
         <Logo />
 
@@ -30,7 +31,13 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage src='../assets/images/profileDefault.png' />
+                    <AvatarImage
+                      src={
+                        user?.photo
+                          ? IMG_URL + '/' + user.photo
+                          : 'https://github.com/shadcn.png'
+                      }
+                    />
                     {user && <AvatarFallback>{fallbackName}</AvatarFallback>}{' '}
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -68,6 +75,31 @@ const Navbar = () => {
             </>
           ) : (
             <>
+               <Link
+                to='/login'
+                className=' font-medium text-sm p-2 px-4  text-white'
+              >
+               Home
+              </Link>
+             <Link
+                to='/login'
+                className=' font-medium text-sm p-2 px-4  text-white'
+              >
+                Find Jobs
+              </Link>
+              <Link
+                to='/login'
+                className=' font-medium text-sm p-2 px-4  text-white'
+              >
+                Companies
+              </Link>
+              <Link
+                to='/login'
+                className=' font-medium text-sm p-2 px-4  text-white'
+              >
+                Community
+              </Link>
+
               <Link
                 to='/login'
                 className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-white text-blue-600'

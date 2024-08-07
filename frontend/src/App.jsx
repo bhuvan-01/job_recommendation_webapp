@@ -4,11 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useLocation } from 'react-router-dom';
 import apiClient from './services/apiClient';
 import { setUser, startLoader, stopLoader } from './app/auth/authSlice';
+import socket from './socket';
+import useSocket from './hooks/useSocket';
+import useUser from './hooks/useUser';
 
 function App() {
   const location = useLocation();
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
+  const { user } = useUser();
+
+  useSocket(user?._id);
 
   useEffect(() => {
     const getUser = async () => {
@@ -16,13 +22,11 @@ function App() {
         dispatch(startLoader());
         const res = await apiClient.get('/auth/user');
 
-        // console.log(res);
-
         if (res.status === 200) {
           dispatch(setUser({ user: res.data.user }));
         }
       } catch (error) {
-        console.log(error.response);
+        console.log(error);
       } finally {
         dispatch(stopLoader());
       }

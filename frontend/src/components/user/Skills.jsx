@@ -12,7 +12,6 @@ const Skills = () => {
   const { user, updateUser } = useUser();
   const isLoading = useSelector((state) => state.auth.isLoading);
 
-  console.log('user: ', user);
   const {
     profile: { skills: initialSkills = [] },
   } = user;

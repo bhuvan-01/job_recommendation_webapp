@@ -1,27 +1,30 @@
-import App from "@/App";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Signup from "@/pages/Signup";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import UserDashboard from "../pages/user/UserDashboard";
-import PrivateRoute from "./PrivateRoute";
-import UserProfile from "@/pages/user/UserProfile";
-import EmployerProfile from "@/pages/employer/EmployerProfile";
-import EmployerDashboard from "@/pages/employer/EmployerDashboard";
-import EmployerDashboardContent from "@/components/EmployerDashboardContent";
-import CreateJobs from "@/pages/employer/CreateJobs";
-import EditJob from "@/pages/employer/EditJob";
-import NotFound from "@/pages/NotFound";
-import AppliedJobs from "@/pages/user/AppliedJobs";
-import JobRecommendations from "@/pages/user/RecommendedJobs";
-import SavedJobs from "@/pages/user/SavedJobs";
-import UserDashboardContent from "@/components/UserDashboardContent";
-import ApplyNow from "@/pages/user/ApplyNow";
-import ForgotPassword from '@/components/ForgotPassword'
+import App from '@/App';
+import Home from '@/pages/Home';
+import Login from '@/pages/Login';
+import Signup from '@/pages/Signup';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import UserDashboard from '../pages/user/UserDashboard';
+import PrivateRoute from './PrivateRoute';
+import UserProfile from '@/pages/user/UserProfile';
+import EmployerProfile from '@/pages/employer/EmployerProfile';
+import EmployerDashboard from '@/pages/employer/EmployerDashboard';
+import EmployerDashboardContent from '@/components/EmployerDashboardContent';
+import CreateJobs from '@/pages/employer/CreateJobs';
+import EditJob from '@/pages/employer/EditJob';
+import NotFound from '@/pages/NotFound';
+import Jobs from '@/pages/Jobs';
+import JobsApplied from '@/pages/user/JobsApplied';
+import JobDetailed from '@/pages/JobDetailed';
+import JobsList from '@/pages/JobsList';
+import JobsSaved from '@/pages/user/JobsSaved';
+import EmployerJobDetailed from '@/pages/employer/EmployerJobDetailed';
+import EmployerApplicationDetails from '@/pages/employer/EmployerApplicationDetails';
+import AboutUs from '@/components/AboutUs';
+import ContactUs from '@/components/ContactUs'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
@@ -29,49 +32,36 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "login",
+        path: 'login',
         element: <Login />,
       },
       {
-        path: "signup",
+        path: 'signup',
         element: <Signup />,
       },
+      // {
+      //   path:'/jobs/all',
+      //   element:
+      // },
       {
-        path: 'forgot-password',
-        element: <ForgotPassword />,
+        path:'aboutus',
+        element:<AboutUs/>
       },
+      { 
+        path:'contactus',
+        element:<ContactUs/>
+      },
+
       {
-        path: "/",
+        path: '/',
         element: <PrivateRoute />,
         children: [
           {
-            path: "dashboard/user",
+            path: 'dashboard/user',
             element: <UserDashboard />,
-            children: [
-              {
-                index: true,
-                element: <UserDashboardContent />,
-              },
-              {
-                path: "appliedjobs",
-                element: <AppliedJobs />,
-              },
-              {
-                path: "savedjobs",
-                element: <SavedJobs />,
-              },
-              {
-                path: "recommended",
-                element: <JobRecommendations />,
-              },
-              {
-                path: "jobs/:jobId/apply",
-                element: <ApplyNow />,
-              },
-            ],
           },
           {
-            path: "dashboard/employer",
+            path: 'dashboard/employer',
             element: <EmployerDashboard />,
             children: [
               {
@@ -79,39 +69,63 @@ const router = createBrowserRouter([
                 element: <EmployerDashboardContent />,
               },
               {
-                path: "jobs/add",
+                path: 'jobs/add',
                 element: <CreateJobs />,
               },
               {
-                path: "jobs/edit/:id",
+                path: 'jobs/:id',
+                element: <EmployerJobDetailed />,
+              },
+              {
+                path: 'jobs/edit/:id',
                 element: <EditJob />,
+              },
+              {
+                path: 'jobs/edit/:id',
+                element: <EditJob />,
+              },
+              {
+                path: 'jobs/applications/:id',
+                element: <EmployerApplicationDetails />,
               },
             ],
           },
           {
-            path: "profile/user",
+            path: 'profile/user',
             element: <UserProfile />,
-            children: [
-              // {
-              //   path:'/edit',
-              //   element
-              // }
-            ],
           },
           {
-            path: "profile/employer",
+            path: 'profile/employer',
             element: <EmployerProfile />,
           },
-
-          // new router added
-
-          // new router above
+        ],
+      },
+      {
+        path: 'jobs',
+        element: <Jobs />,
+        children: [
+          {
+            index: true,
+            element: <JobsList />,
+          },
+          {
+            path: 'applied',
+            element: <JobsApplied />,
+          },
+          {
+            path: 'saved',
+            element: <JobsSaved />,
+          },
+          {
+            path: ':id',
+            element: <JobDetailed />,
+          },
         ],
       },
     ],
   },
   {
-    path: "*",
+    path: '*',
     element: <NotFound />,
   },
 ]);

@@ -1,16 +1,20 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import backgroundImage from '../assets/images/bgimage.jpg'
+import Navbar from './Navbar';
 
 const Hero = () => {
   const { user, token } = useSelector((state) => state.auth);
 
   return (
-    <section className='bg-gray-50'>
+    <section className='bg-gray-50 bg-cover bg-center bg-no-repeat bg-fixed'
+    style={{ backgroundImage: `url(${backgroundImage})`, height: '100vh' }}>
+      <Navbar />
       <div className='mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center'>
         <div className='mx-auto max-w-2xl text-center'>
           <h1 className='text-3xl font-extrabold sm:text-5xl'>
             Land Your Dream Job
-            <strong className='font-extrabold text-blue-600 sm:block'>
+            <strong className='font-extrabold text-white sm:block'>
               {' '}
               with Top Companies
             </strong>
@@ -43,7 +47,7 @@ const Hero = () => {
             )}
 
             <a
-              className='block w-full rounded px-12 py-3 text-sm font-medium text-blue-600 shadow hover:text-blue-700 focus:outline-none focus:ring active:text-blue-500 sm:w-auto'
+              className='block w-full rounded  bg-blue-600 px-12 py-3 text-sm font-medium text-white shadow hover:text-blue-700 focus:outline-none focus:ring active:text-blue-500 sm:w-auto'
               href='#learn-more'
             >
               Learn More

@@ -97,6 +97,7 @@ const CreateJobs = () => {
           navigate('/dashboard/employer');
         }
       } catch (error) {
+        toast.error(error.response.data.message);
         console.error('Error creating job:', error);
       }
     },
@@ -152,7 +153,7 @@ const CreateJobs = () => {
     <div className='container max-w-[1400px] mx-auto w-[95%] gap-8 my-8'>
       <h1 className='text-3xl font-semibold mb-6'>Create a New Job</h1>
 
-      <div className='flex gap-4'>
+      <div className='md:flex gap-4 space-y-4 md:space-y-0'>
         <form onSubmit={formik.handleSubmit} className='basis-8/12 space-y-4'>
           <div>
             <Label className='mb-2 font-semibold'>Job Title</Label>
@@ -292,8 +293,8 @@ const CreateJobs = () => {
               className='p-2 border rounded w-full'
             >
               <option value='' label='Select job type' />
-              <option value='Part-time' label='Part-time' />
-              <option value='Full-time' label='Full-time' />
+              <option value='Part-Time' label='Part-Time' />
+              <option value='Full-Time' label='Full-Time' />
               <option value='Internship' label='Internship' />
               <option value='Contract' label='Contract' />
               <option value='Temporary' label='Temporary' />
@@ -316,7 +317,7 @@ const CreateJobs = () => {
             >
               <option value='' label='Select location type' />
               <option value='Remote' label='Remote' />
-              <option value='Onsite' label='Onsite' />
+              <option value='On-Site' label='On-Site' />
               <option value='Hybrid' label='Hybrid' />
             </select>
             {formik.touched.locationType && formik.errors.locationType ? (
@@ -351,7 +352,7 @@ const CreateJobs = () => {
 
           <Button
             type='submit'
-            className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded'
+            className='bg-blue-500 w-full hover:bg-blue-600 text-white py-2 px-4 rounded'
           >
             Create Job
           </Button>

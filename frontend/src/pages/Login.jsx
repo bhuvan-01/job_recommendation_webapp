@@ -133,8 +133,7 @@ const Login = () => {
 
             <button
               type='submit'
-            
-              className='inline-block mb-4 shrink-0 rounded-md border gap-2 border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500'
+              className='inline-block mb-4 shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500'
             >
               Login
             </button>
@@ -149,7 +148,7 @@ const Login = () => {
               </p>
 
               <p className='mt-4 text-sm text-gray-500 sm:mt-0'>
-                <Link to='/forgot-password'>Forget Password</Link>
+                <Link to='/forget-password'>Forget Password</Link>
               </p>
             </div>
           </form>

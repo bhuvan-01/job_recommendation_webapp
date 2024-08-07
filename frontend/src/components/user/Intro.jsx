@@ -17,6 +17,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import apiClient from '@/services/apiClient';
+import toast from 'react-hot-toast';
 
 const BASE_URL = import.meta.env.VITE_API || 'http://localhost:5000';
 
@@ -75,8 +76,11 @@ const Intro = () => {
           },
         });
 
-        formik.setFieldValue('picture', response.data.user.photo);
-        setUploading(false);
+        if (response.status === 200) {
+          toast.success('Photo uploaded');
+          formik.setFieldValue('picture', response.data.user.photo);
+          setUploading(false);
+        }
       } catch (error) {
         console.error('Error uploading file:', error);
         setUploading(false);
@@ -98,7 +102,7 @@ const Intro = () => {
     <section className='border p-4  md:p-8 rounded-md'>
       <div className='md:flex gap-4 items-center'>
         <img
-          src={userPhotoUrl}
+          src={user?.photo ? userPhotoUrl : 'https://github.com/shadcn.png'}
           className='w-20 md:w-32 aspect-square object-cover rounded-full shadow-lg'
           alt='User'
           loading='lazy'

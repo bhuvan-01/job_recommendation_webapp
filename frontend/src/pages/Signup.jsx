@@ -14,8 +14,6 @@ const Signup = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
-
-  // validate the form data
   const formik = useFormik({
     initialValues: {
       firstName: '',

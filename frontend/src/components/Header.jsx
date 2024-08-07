@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
@@ -23,13 +23,17 @@ import { useDispatch } from 'react-redux';
 import { logout } from '@/app/auth/authSlice';
 import { clearToken } from '@/services/apiClient';
 import useUser from '@/hooks/useUser';
+import { IMG_URL } from '@/utils/constants';
+import Notifications from './Notifications';
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useUser();
   const handleLogout = () => {
     dispatch(logout());
     clearToken();
+    navigate('/');
   };
 
   // console.log('user: ', user);
@@ -50,18 +54,37 @@ const Header = () => {
             <MessageSquareText size={18} />
             <span className='hidden md:visible'>Messages</span>
           </Link>
-          <Link
-            to='/messages'
-            className='flex font-semibold gap-2 items-center hover:text-blue-600 p-4 px-2'
-          >
-            <Bell size={18} />
-            <span className='hidden md:visible'>Notifications</span>
-          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant='transparent'
+                to='/notifications'
+                className='flex font-semibold gap-2 items-center hover:text-blue-600 p-4 px-2'
+              >
+                <Bell size={18} />
+                <span className='hidden md:visible'>Notifications</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className='w-[400px] mr-24'>
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {/* <DropdownMenuItem>Profile</DropdownMenuItem> */}
+
+              <Notifications />
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
-                <AvatarImage src='https://github.com/shadcn.png' />
+                <AvatarImage
+                  src={
+                    user?.photo
+                      ? IMG_URL + '/' + user.photo
+                      : 'https://github.com/shadcn.png'
+                  }
+                />
                 {user && <AvatarFallback>{fallbackName}</AvatarFallback>}
               </Avatar>
             </DropdownMenuTrigger>

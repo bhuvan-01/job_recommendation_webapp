@@ -4,10 +4,6 @@ const jobSlice = createSlice({
   name: 'job',
   initialState: {
     jobs: [],
-    // loading: false,
-    // error: null,
-    savedJobs: [],
-    appliedJobs: [],
   },
   reducers: {
     addJob: (state, action) => {
@@ -27,19 +23,40 @@ const jobSlice = createSlice({
         state.jobs[index] = action.payload;
       }
     },
-    saveJob: (state, action) => {
-      const job = action.payload;
-      // Ensure the job isn't already saved
-      if (!state.savedJobs.find(savedJob => savedJob._id === job._id)) {
-        state.savedJobs.push(job);
+    jobApplied: (state, action) => {
+      const jobIndex = state.jobs.findIndex(
+        (job) => job._id === action.payload.jobId
+      );
+      if (jobIndex !== -1) {
+        const job = state.jobs[jobIndex];
+        if (!job.applications.some((app) => app.user === action.payload.user)) {
+          job.applications.push({
+            application: action.payload.application,
+            user: action.payload.user,
+          });
+        }
       }
     },
-
-    appliedJob: (state, action) => {
-      const job = action.payload;
-      // Ensure the job isn't already applied
-      if (!state.appliedJobs.find(appliedJob => appliedJob._id === job._id)) {
-        state.appliedJobs.push(job);
+    jobSaved: (state, action) => {
+      const jobIndex = state.jobs.findIndex(
+        (job) => job._id === action.payload.jobId
+      );
+      if (jobIndex !== -1) {
+        const job = state.jobs[jobIndex];
+        if (!job.savedBy.includes(action.payload.userId)) {
+          job.savedBy.push(action.payload.userId);
+        }
+      }
+    },
+    removeJobSaved: (state, action) => {
+      const jobIndex = state.jobs.findIndex(
+        (job) => job._id === action.payload.jobId
+      );
+      if (jobIndex !== -1) {
+        const job = state.jobs[jobIndex];
+        job.savedBy = job.savedBy.filter(
+          (userId) => userId !== action.payload.userId
+        );
       }
     },
   },
@@ -47,6 +64,14 @@ const jobSlice = createSlice({
 
 const { actions, reducer } = jobSlice;
 
-export const { addJob, deleteJob, storeJobs, updateJob,saveJob, appliedJob} = actions;
+export const {
+  addJob,
+  deleteJob,
+  storeJobs,
+  updateJob,
+  jobApplied,
+  jobSaved,
+  removeJobSaved,
+} = actions;
 
 export default reducer;
