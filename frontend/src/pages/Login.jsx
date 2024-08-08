@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/app/auth/authSlice';
 import { useEffect } from 'react';
-
+import Navbar from '@/components/Navbar'
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,6 +59,7 @@ const Login = () => {
 
   return (
     <section className='bg-white '>
+      <Navbar/>
       <div className='flex min-h-screen'>
         <div className='relative w-0 basis-0 md:basis-1/2'>
           <img

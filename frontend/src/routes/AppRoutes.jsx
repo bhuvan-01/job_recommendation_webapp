@@ -20,7 +20,8 @@ import JobsSaved from '@/pages/user/JobsSaved';
 import EmployerJobDetailed from '@/pages/employer/EmployerJobDetailed';
 import EmployerApplicationDetails from '@/pages/employer/EmployerApplicationDetails';
 import AboutUs from '@/components/AboutUs';
-import ContactUs from '@/components/ContactUs'
+import ContactUs from '@/components/ContactUs';
+import Admin from '@/Admin/Admin';
 
 const router = createBrowserRouter([
   {
@@ -123,7 +124,12 @@ const router = createBrowserRouter([
         ],
       },
     ],
+    
   },
+  {
+    path:'admin',
+    element:<Admin/>
+    },
   {
     path: '*',
     element: <NotFound />,

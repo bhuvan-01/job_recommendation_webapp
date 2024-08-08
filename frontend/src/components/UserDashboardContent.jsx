@@ -37,6 +37,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { IMG_URL } from '@/utils/constants';
 import toast from 'react-hot-toast';
+import MapboxMap from '@/components/Mapbox'
 
 const experienceLevels = [
   { id: 'Internship', label: 'Internship' },
@@ -332,6 +333,7 @@ const UserDashboardContent = () => {
         </div>
 
         <Filters />
+        <MapboxMap/>
       </div>
       <div className='basis-9/12'>
         <section className='p-2'>

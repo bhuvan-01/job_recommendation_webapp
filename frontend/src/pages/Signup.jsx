@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/app/auth/authSlice';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import Navbar from '@/components/Navbar';
 
 const Signup = () => {
   const [isEmployer, setIsEmployer] = useState(false); // Add state for user type
@@ -75,6 +76,7 @@ const Signup = () => {
 
   return (
     <section className='bg-white'>
+      <Navbar />
       <div className='flex min-h-screen'>
         <div className='relative basis-0 md:basis-1/2'>
           <img

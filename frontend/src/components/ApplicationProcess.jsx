@@ -34,10 +34,10 @@ const ApplicationProcess = () => {
         ))}
       </div>
       <div className="mt-8 space-x-4">
-        <button className="bg-white text-teal-700 px-4 py-2 rounded hover:bg-gray-200 transition">
+        <button className="bg-white text-white px-4 py-2 rounded hover:bg-gray-200 transition">
           More Info
         </button>
-        <button className="bg-teal-700 text-white px-4 py-2 rounded hover:bg-teal-600 transition">
+        <button className="bg-white text-white px-4 py-2 rounded hover:bg-teal-600 transition">
           Register Now
         </button>
       </div>

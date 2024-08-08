@@ -1,20 +1,20 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import apiClient from '@/services/apiClient'; // Assuming this is correctly set up
+import apiClient from '@/services/apiClient'; 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ';
 
 const MapboxMap = ({ apiUrl }) => {
     const mapContainerRef = useRef(null);
-    const [jobs, setJobs] = useState([]); // State to hold job data
+    const [jobs, setJobs] = useState([]); 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await apiClient.get('/jobs'); // Modify the URL as per your API
-                console.log('Job Data Fetched:', response.data) // Check the fetched data
-                setJobs(response.data); // Assuming the response data is the array of jobs
+                const response = await apiClient.get('/jobs'); 
+                console.log('Job Data Fetched:', response.data) 
+                setJobs(response.data); 
             } catch (error) {
                 console.error('Failed to fetch jobs', error);
             }
@@ -33,11 +33,11 @@ const MapboxMap = ({ apiUrl }) => {
             zoom: 10
         });
 
-        const directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'metric',
-            profile: 'mapbox/driving'
-        });
+        // const directions = new MapboxDirections({
+        //     accessToken: mapboxgl.accessToken,
+        //     unit: 'metric',
+        //     profile: 'mapbox/driving'
+        // });
 
 
 

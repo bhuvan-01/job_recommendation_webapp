@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import { useSelector } from 'react-redux';
 import {
@@ -15,10 +15,18 @@ import { IMG_URL } from '@/utils/constants';
 
 const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth);
-  const handleLogout = () => {};
+  const location = useLocation(); // Get the current route
+
+  const handleLogout = () => {
+    // Logout functionality here
+  };
 
   const fallbackName =
     user?.firstName[0].toString() + user?.lastName[0].toString();
+
+  // Determine if the current page is the login or signup page
+  const isLoginPage = location.pathname === '/login';
+  const isSignupPage = location.pathname === '/signup';
 
   return (
     <div className='py-4  border-b-gray-100/75 backdrop-blur-md sticky top-0'>
@@ -38,7 +46,7 @@ const Navbar = () => {
                           : 'https://github.com/shadcn.png'
                       }
                     />
-                    {user && <AvatarFallback>{fallbackName}</AvatarFallback>}{' '}
+                    {user && <AvatarFallback>{fallbackName}</AvatarFallback>}
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -75,43 +83,48 @@ const Navbar = () => {
             </>
           ) : (
             <>
-               <Link
-                to='/login'
+              <Link
+                to='/'
                 className=' font-medium text-sm p-2 px-4  text-white'
               >
-               Home
+                Home
               </Link>
-             <Link
-                to='/login'
+              <Link
+                to='/jobs'
                 className=' font-medium text-sm p-2 px-4  text-white'
               >
                 Find Jobs
               </Link>
               <Link
-                to='/login'
+                to='/companies'
                 className=' font-medium text-sm p-2 px-4  text-white'
               >
                 Companies
               </Link>
               <Link
-                to='/login'
+                to='/community'
                 className=' font-medium text-sm p-2 px-4  text-white'
               >
                 Community
               </Link>
 
-              <Link
-                to='/login'
-                className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-white text-blue-600'
-              >
-                Login
-              </Link>
-              <Link
-                to='/signup'
-                className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-blue-600 text-white'
-              >
-                Get started
-              </Link>
+              {!isLoginPage && (
+                <Link
+                  to='/login'
+                  className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-white text-blue-600'
+                >
+                  Login
+                </Link>
+              )}
+
+              {!isSignupPage && (
+                <Link
+                  to='/signup'
+                  className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-blue-600 text-white'
+                >
+                   Sign Up
+                </Link>
+              )}
             </>
           )}
         </div>
