@@ -6,6 +6,7 @@ const {
   signup,
   forgotPassword,
   resetPassword,
+  verifyOTP,
   getLoggedinUser,
 } = require('../controllers/auth');
 const isLoggedin = require('../middlewares/isLoggedin');
@@ -15,6 +16,7 @@ router.post('/login', validateData(userLoginSchema), login);
 router.post('/signup', validateData(userSignupSchema), signup);
 router.post('/forget-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+router.post('/verify-otp', verifyOTP);
 router.get('/user', isLoggedin, getLoggedinUser);
 
 module.exports = router;

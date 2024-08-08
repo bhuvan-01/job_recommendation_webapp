@@ -22,6 +22,7 @@ import EmployerApplicationDetails from '@/pages/employer/EmployerApplicationDeta
 import AboutUs from '@/components/AboutUs';
 import ContactUs from '@/components/ContactUs';
 import Admin from '@/Admin/Admin';
+import ForgotPassword from '@/pages/ForgotPassword'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <Signup />,
+      },
+      {
+        path: 'forgot-password',
+        element: <ForgotPassword />,
       },
       // {
       //   path:'/jobs/all',

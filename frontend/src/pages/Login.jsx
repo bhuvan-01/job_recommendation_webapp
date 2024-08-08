@@ -149,7 +149,7 @@ const Login = () => {
               </p>
 
               <p className='mt-4 text-sm text-gray-500 sm:mt-0'>
-                <Link to='/forget-password'>Forget Password</Link>
+                <Link to='/forgot-password'>Forget Password</Link>
               </p>
             </div>
           </form>
