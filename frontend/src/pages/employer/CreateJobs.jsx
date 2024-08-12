@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import axios from 'axios'; // Import axios
 import apiClient from '@/services/apiClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { addJob } from '@/app/jobs/jobSlice';
@@ -43,6 +44,33 @@ const CreateJobs = () => {
   const navigate = useNavigate();
   const [requirement, setRequirement] = useState('');
 
+  const getCoordinates = async (address) => {
+    try {
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json`,
+        {
+          params: {
+            access_token: 'pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ',
+            limit: 1,
+          },
+        }
+      );
+
+      if (response.data.features.length > 0) {
+        const location = response.data.features[0].center;
+        return {
+          longitude: location[0],
+          latitude: location[1],
+        };
+      } else {
+        throw new Error('No location found for the provided address');
+      }
+    } catch (error) {
+      console.error('Error fetching coordinates:', error.message);
+      throw new Error('Failed to fetch coordinates');
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -71,6 +99,13 @@ const CreateJobs = () => {
       };
 
       try {
+        // Fetch the coordinates for the given location
+        const coordinates = await getCoordinates(values.location);
+
+        // Include the coordinates in the job data
+        jobData.latitude = coordinates.latitude;
+        jobData.longitude = coordinates.longitude;
+
         const res = await apiClient.post('/jobs', jobData);
 
         console.log('Job created:', res);
@@ -97,7 +132,7 @@ const CreateJobs = () => {
           navigate('/dashboard/employer');
         }
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || 'Failed to create job');
         console.error('Error creating job:', error);
       }
     },

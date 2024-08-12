@@ -35,6 +35,8 @@ const JobSchema = new Schema(
     location: { type: String, required: true },
     salary: { type: String, required: true },
     company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
     applications: [
       {
         application: {
