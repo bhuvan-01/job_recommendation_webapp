@@ -60,5 +60,5 @@ const JobSchema = new Schema(
     timestamps: true,
   }
 );
-
+JobSchema.index({ title: 'text', description: 'text' });
 module.exports = mongoose.model('Job', JobSchema);
