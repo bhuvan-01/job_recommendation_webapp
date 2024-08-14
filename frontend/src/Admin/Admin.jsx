@@ -1,31 +1,34 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
-const AdminPanel = () => {
+const AdminPanel = ({ children }) => {
   return (
-    <div className="min-h-screen flex">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white">
-        <div className="p-4">
-          <h2 className="text-2xl font-semibold">Admin Panel</h2>
+      <div className="w-64 bg-white shadow-md">
+        <div className="p-4 text-xl font-semibold">
+          Admin Panel
         </div>
-        <ul className="mt-4">
-          <li className="p-4 hover:bg-gray-700">
-            <a href="#">Dashboard</a>
-          </li>
-          <li className="p-4 hover:bg-gray-700">
-            <a href="#">Users</a>
-          </li>
-          <li className="p-4 hover:bg-gray-700">
-            <a href="#">Job Postings</a>
-          </li>
-        </ul>
+        <nav className="mt-4">
+          <Link to="dashboard" className="block p-4 hover:bg-gray-200">
+            Dashboard
+          </Link>
+          <Link to="users" className="block p-4 hover:bg-gray-200">
+            Users
+          </Link>
+          <Link to="jobs" className="block p-4 hover:bg-gray-200">
+            Jobs
+          </Link>
+        </nav>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-10 bg-gray-100">
-        <h1 className="text-3xl font-bold">Welcome to the Admin Panel</h1>
-        <p className="mt-4">Select an option from the sidebar to get started.</p>
-      </div>
+      {/* Main Content Area
+      <div className="flex-1 p-6">
+        {children}
+     
+      </div> */}
+      <Outlet /> 
     </div>
   );
 };

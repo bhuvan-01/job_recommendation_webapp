@@ -8,6 +8,7 @@ import Quotes from '@/components/quotes';
 import FeaturedJobs from '@/components/FeaturedJobs';
 import ApplicationProcess from '@/components/ApplicationProcess';
  import FooterWithSocialLinks from '@/components/Footer'
+// import AnimatedCanvas from '@/components/AnimatedCanvas';
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
       <HiringSectors/>
       <ApplicationProcess/>
       <FeaturedJobs/>
+      {/* <AnimatedCanvas/> */}
       {/* <Working /> */}
       <FooterWithSocialLinks />
     </>

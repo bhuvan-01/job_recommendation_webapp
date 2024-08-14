@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@amcharts/amcharts4/core;
+@amcharts/amcharts4/charts;
+@amcharts/amcharts4/themes/animated;
+
+
 :root {
   scroll-behavior: smooth;
 }

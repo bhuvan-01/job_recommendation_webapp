@@ -21,8 +21,12 @@ import EmployerJobDetailed from '@/pages/employer/EmployerJobDetailed';
 import EmployerApplicationDetails from '@/pages/employer/EmployerApplicationDetails';
 import AboutUs from '@/components/AboutUs';
 import ContactUs from '@/components/ContactUs';
-import Admin from '@/Admin/Admin';
-import ForgotPassword from '@/pages/ForgotPassword'
+import ForgotPassword from '@/pages/ForgotPassword';
+import AdminPanel from '@/Admin/Admin';
+import UserManagement from '@/Admin/UserManagement';
+import JobManagement from '@/Admin/JobManagement';
+
+
 
 const router = createBrowserRouter([
   {
@@ -45,10 +49,8 @@ const router = createBrowserRouter([
         path: 'forgot-password',
         element: <ForgotPassword />,
       },
-      // {
-      //   path:'/jobs/all',
-      //   element:
-      // },
+
+     
       {
         path:'aboutus',
         element:<AboutUs/>
@@ -57,11 +59,24 @@ const router = createBrowserRouter([
         path:'contactus',
         element:<ContactUs/>
       },
+      {
+        path:'admin',
+        element:<AdminPanel/>,
+        children:[
+          {
+            path:'users',
+            element:<UserManagement/>
+          },
+          { path: "jobs", 
+            element: <JobManagement /> },
+        ]
+        },
 
       {
         path: '/',
         element: <PrivateRoute />,
         children: [
+          
           {
             path: 'dashboard/user',
             element: <UserDashboard />,
@@ -131,10 +146,7 @@ const router = createBrowserRouter([
     ],
     
   },
-  {
-    path:'admin',
-    element:<Admin/>
-    },
+  
   {
     path: '*',
     element: <NotFound />,

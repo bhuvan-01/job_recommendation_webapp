@@ -13,6 +13,10 @@ const path = require('path');
 const socketIo = require('socket.io');
 const http = require('http');
 const chalk = require('chalk');
+const adminRoutes = require('./routes/admin');
+const adminJobRoutes = require('./routes/adminJobRoutes'); // Import the new admin job routes
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -44,6 +48,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin/jobs', adminJobRoutes);
+
 
 //chalk configs
 const error = chalk.red;
