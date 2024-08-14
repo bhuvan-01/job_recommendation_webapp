@@ -1,3 +1,4 @@
+const { parse } = require('dotenv');
 const Job = require('../models/Job');
 const User = require('../models/User');
 const axios = require('axios');
@@ -71,29 +72,52 @@ exports.deleteJob = async (req, res) => {
   }
 };
 
+const constructMongoQuery = (query) => {
+  const mongoQuery = {};
+  console.log('query: ', query);
+
+  // Title field
+  if (query.title && query.title.length > 0) {
+    let keywords = query.title.map(kw => `"${kw}"`).join(' ');
+    mongoQuery.$text = { $search: keywords,  };
+  }
+
+  // Experience field
+  if (query.experience && query.experience.length > 0) {
+    mongoQuery.experience = query.experience;
+  }
+
+  // Salary range field
+  if (query.salaryRange) {
+    const { min, max } = query.salaryRange;
+    if (min !== null && max !== null) {
+      mongoQuery.salary = { $gte: min, $lte: max };
+    } else if (min !== null) {
+      mongoQuery.salary = { $gte: min };
+    } else if (max !== null) {
+      mongoQuery.salary = { $lte: max };
+    }
+  }
+
+  return mongoQuery;
+};
 // get jobs
 exports.getJobs = async (req, res) => {
+  let mongoQuery = {};
+  if (req.query.s) {
+    const response = await axios.post(process.env.FLASK_API + '/parse-query', { query: req.query.s });
+    const query = response.data;
+    mongoQuery = constructMongoQuery(query);
+
+  }
+  else {
+    mongoQuery = {}
+  }
+
   try {
-    const {
-      keyword,
-      location,
-      industry,
-      minSalary,
-      jobType,
-      experience,
-      locationType,
-    } = req.query;
-    let query = {};
+    console.log('mongoQuery: ', mongoQuery);
 
-    if (keyword) query.title = { $regex: keyword, $options: 'i' };
-    if (location) query.location = { $regex: location, $options: 'i' };
-    if (industry) query.industry = { $in: industry };
-    if (minSalary) query.salary = { $gte: minSalary };
-    if (jobType) query.jobType = { $in: jobType };
-    if (experience) query.experience = { $in: experience };
-    if (locationType) query.locationType = { $in: locationType };
-
-    const jobs = await Job.find(query).populate('company');
+    const jobs = await Job.find(mongoQuery).populate('company');
     return res.status(200).json(jobs);
   } catch (error) {
     console.log(error);
