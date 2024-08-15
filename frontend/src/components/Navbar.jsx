@@ -12,6 +12,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, User } from 'lucide-react';
 import { IMG_URL } from '@/utils/constants';
+import ContactImage from '../assets/images/contactIcon.png';
+
 
 const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth);
@@ -43,7 +45,7 @@ const Navbar = () => {
                       src={
                         user?.photo
                           ? IMG_URL + '/' + user.photo
-                          : 'https://github.com/shadcn.png'
+                          : ContactImage
                       }
                     />
                     {user && <AvatarFallback>{fallbackName}</AvatarFallback>}

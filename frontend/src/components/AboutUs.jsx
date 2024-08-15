@@ -1,6 +1,6 @@
-// src/AboutUs.js
-
 import React from 'react';
+import About1 from '../assets/images/about1.jpg';
+import About2 from '../assets/images/about2.jpeg'
 
 const AboutUs = () => {
   return (
@@ -26,7 +26,7 @@ const AboutUs = () => {
             <div className="mt-10 lg:mt-0 lg:col-start-2 lg:row-start-1">
               <img
                 className="w-full rounded-lg shadow-lg"
-                src="https://via.placeholder.com/600x400"
+                src={About1}
                 alt="Company"
               />
             </div>
@@ -44,7 +44,7 @@ const AboutUs = () => {
             <div className="mt-10 lg:mt-0 lg:col-start-1 lg:row-start-2">
               <img
                 className="w-full rounded-lg shadow-lg"
-                src="https://via.placeholder.com/600x400"
+                src= {About2}
                 alt="Mission"
               />
             </div>

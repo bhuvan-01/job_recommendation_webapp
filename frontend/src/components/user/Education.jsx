@@ -14,6 +14,7 @@ const EducationSection = () => {
   const { education: initialEducation = [] } = user.profile;
   const [isEditing, setIsEditing] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [universitySuggestions, setUniversitySuggestions] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -37,7 +38,6 @@ const EducationSection = () => {
     }),
     onSubmit: (values) => {
       if (editingIndex !== null) {
-        // Update existing education
         const updatedEducation = formik.values.education.map((edu, index) => {
           return index === editingIndex ? formik.values.newEducation : edu;
         });
@@ -50,7 +50,6 @@ const EducationSection = () => {
           },
         });
       } else {
-        // Add new education
         const updatedEducation = [
           ...formik.values.education,
           values.newEducation,
@@ -121,6 +120,34 @@ const EducationSection = () => {
     setIsEditing(false);
   };
 
+  const fetchUniversitySuggestions = async (query) => {
+    if (query.length > 1) {
+      try {
+        const response = await fetch(
+          `http://universities.hipolabs.com/search?name=${query}&country=United+Kingdom`
+        );
+        const data = await response.json();
+        setUniversitySuggestions(data);
+      } catch (error) {
+        console.error('Error fetching university suggestions:', error);
+        setUniversitySuggestions([]);
+      }
+    } else {
+      setUniversitySuggestions([]);
+    }
+  };
+
+  const handleSchoolInputChange = (e) => {
+    const { value } = e.target;
+    formik.setFieldValue('newEducation.school', value);
+    fetchUniversitySuggestions(value);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    formik.setFieldValue('newEducation.school', suggestion.name);
+    setUniversitySuggestions([]); // Clear suggestions after selection
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -148,7 +175,7 @@ const EducationSection = () => {
             <Input
               name='newEducation.school'
               value={formik.values.newEducation.school}
-              onChange={formik.handleChange}
+              onChange={handleSchoolInputChange}
               placeholder='School'
               className='p-2 border rounded'
             />
@@ -158,6 +185,19 @@ const EducationSection = () => {
                   {formik.errors.newEducation.school}
                 </div>
               )}
+            {universitySuggestions.length > 0 && (
+              <div className='bg-white shadow-md rounded-md p-2 mt-2'>
+                {universitySuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    className='cursor-pointer p-1 hover:bg-gray-200'
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className='mb-4'>

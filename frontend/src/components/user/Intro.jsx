@@ -18,6 +18,7 @@ import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import apiClient from '@/services/apiClient';
 import toast from 'react-hot-toast';
+import ContactImage from '../../assets/images/contactIcon.png';
 
 const BASE_URL = import.meta.env.VITE_API || 'http://localhost:5000';
 
@@ -96,13 +97,13 @@ const Intro = () => {
 
   const userPhotoUrl = user?.photo
     ? `${BASE_URL}/${user.photo}`
-    : 'https://randomuser.me/api/portraits/men/37.jpg';
+    : ContactImage;
 
   return (
     <section className='border p-4  md:p-8 rounded-md'>
       <div className='md:flex gap-4 items-center'>
         <img
-          src={user?.photo ? userPhotoUrl : 'https://github.com/shadcn.png'}
+          src={user?.photo ? userPhotoUrl : ContactImage}
           className='w-20 md:w-32 aspect-square object-cover rounded-full shadow-lg'
           alt='User'
           loading='lazy'
