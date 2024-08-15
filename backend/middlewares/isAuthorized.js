@@ -1,4 +1,4 @@
-// middlewares/isAuthorized.js
+
 const isAuthorized = (req, res, next) => {
   if (req.user && (req.user.role === 'admin' || req.user.role === 'employer')) {
       next();

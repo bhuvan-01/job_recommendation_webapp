@@ -25,6 +25,8 @@ import { clearToken } from '@/services/apiClient';
 import useUser from '@/hooks/useUser';
 import { IMG_URL } from '@/utils/constants';
 import Notifications from './Notifications';
+import ContactImage from '../assets/images/contactIcon.png';
+
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -82,7 +84,7 @@ const Header = () => {
                   src={
                     user?.photo
                       ? IMG_URL + '/' + user.photo
-                      : 'https://github.com/shadcn.png'
+                      : ContactImage
                   }
                 />
                 {user && <AvatarFallback>{fallbackName}</AvatarFallback>}

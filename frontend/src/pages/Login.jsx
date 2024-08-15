@@ -71,12 +71,11 @@ const Login = () => {
           <div className='bg-black/50 w-0 md:w-full md:absolute top-0 bottom-0 left-0 right-0'></div>
           <div className='hidden md:block absolute bottom-0 p-12'>
             <h2 className='mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl'>
-              Welcome to JobHunt 🚀
+              Welcome to JOB Wipe
             </h2>
 
             <p className='mt-4 leading-relaxed text-white/90'>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
+            Unlock your potential. Log in to explore opportunities that inspire progress and foster success in your career.
             </p>
           </div>
         </div>

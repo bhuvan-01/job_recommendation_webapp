@@ -1,11 +1,15 @@
+import AdminHeader from '@/Admin/AdminHeader';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 const AdminPanel = ({ children }) => {
   return (
+
+    <div> <AdminHeader/>
+    
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+    
       <div className="w-64 bg-white shadow-md">
         <div className="p-4 text-xl font-semibold">
           Admin Panel
@@ -29,6 +33,7 @@ const AdminPanel = ({ children }) => {
      
       </div> */}
       <Outlet /> 
+    </div>
     </div>
   );
 };

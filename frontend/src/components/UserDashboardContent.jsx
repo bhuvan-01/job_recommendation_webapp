@@ -1,4 +1,26 @@
-import { Link } from 'react-router-dom';
+import {
+  keywordQueryChanged,
+  locationQueryChanged,
+  resetSearchState,
+  searchResultsReceived,
+  searchResultsRequested,
+  searchResultsRequestFailed,
+  selectedExperienceLevelsChanged,
+  selectedIndustriesChanged,
+  selectedJobTypesChanged,
+  selectedLocationTypesChanged,
+} from '@/app/appSlice';
+import {
+  jobApplied,
+  jobSaved,
+  removeJobSaved,
+  storeJobs,
+} from '@/app/jobs/jobSlice';
+import MapboxMap from '@/components/Mapbox';
+import useUser from '@/hooks/useUser';
+import apiClient from '@/services/apiClient';
+import { IMG_URL } from '@/utils/constants';
+import axios from 'axios';
 import {
   Bookmark,
   Building2,
@@ -9,36 +31,15 @@ import {
   Search,
   SquareArrowOutUpRight,
 } from 'lucide-react';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
-import apiClient from '@/services/apiClient';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  jobApplied,
-  storeJobs,
-  jobSaved,
-  removeJobSaved,
-} from '@/app/jobs/jobSlice';
-import useUser from '@/hooks/useUser';
-import { Input } from './ui/input';
-import {
-  keywordQueryChanged,
-  locationQueryChanged,
-  selectedExperienceLevelsChanged,
-  selectedJobTypesChanged,
-  selectedLocationTypesChanged,
-  selectedIndustriesChanged,
-  searchResultsRequested,
-  searchResultsReceived,
-  searchResultsRequestFailed,
-  resetSearchState,
-} from '@/app/appSlice';
-import { useNavigate } from 'react-router-dom';
-import { IMG_URL } from '@/utils/constants';
 import toast from 'react-hot-toast';
-import MapboxMap from '@/components/Mapbox';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import ContactImage from '../assets/images/contactIcon.png';
 import Pagination from './Pagination';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
 
 const experienceLevels = [
   { id: 'Internship', label: 'Internship' },
@@ -200,6 +201,7 @@ const UserDashboardContent = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -245,8 +247,47 @@ const UserDashboardContent = () => {
     dispatch(keywordQueryChanged(e.target.value));
   };
 
-  const handleLocationChange = (e) => {
-    dispatch(locationQueryChanged(e.target.value));
+  const handleLocationChange = async (e) => {
+    // dispatch(locationQueryChanged(e.target.value));
+    const query = e.target.value;
+
+    dispatch(locationQueryChanged(query));
+
+    if (query.length > 2) {
+      try {
+        const response = await axios.get(
+          'http://api.positionstack.com/v1/forward',
+
+          {
+            params: {
+              access_key: 'ed488739b1580aa82d782b7fa032981c',
+
+              query: query,
+
+              limit: 5,
+
+              output: 'json',
+            },
+          }
+        );
+
+        if (response.data && response.data.data) {
+          setLocationSuggestions(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching location suggestions:', error);
+
+        setLocationSuggestions([]);
+      }
+    } else {
+      setLocationSuggestions([]);
+    }
+  };
+
+  const handleLocationSelect = (location) => {
+    dispatch(locationQueryChanged(location.label));
+
+    setLocationSuggestions([]);
   };
 
   const handleJobApply = async (id) => {
@@ -311,11 +352,7 @@ const UserDashboardContent = () => {
       <div className='hidden md:block basis-3/12 md:space-y-4'>
         <div className='hidden md:block border p-4 rounded-md text-center'>
           <img
-            src={
-              user?.photo
-                ? IMG_URL + '/' + user.photo
-                : 'https://github.com/shadcn.png'
-            }
+            src={user?.photo ? IMG_URL + '/' + user.photo : ContactImage}
             className='w-24 h-24 mx-auto rounded-full'
             alt='User Avatar'
           />
@@ -359,7 +396,7 @@ const UserDashboardContent = () => {
                 <Search size={16} />
               </div>
 
-              <div className='w-full md:w-fit flex pr-2 items-center gap-2 border rounded-md'>
+              <div className='w-full md:w-fit flex pr-2 items-center gap-2 border  rounded-md relative'>
                 <Input
                   type='text'
                   placeholder='Location'
@@ -370,6 +407,19 @@ const UserDashboardContent = () => {
                   className='border-none focus-visible:ring-0 shadow-none'
                 />
                 <MapPin size={16} />
+                {locationSuggestions.length > 0 && (
+                  <ul className='absolute top-full mt-2 w-full bg-white shadow-lg rounded-md z-10'>
+                    {locationSuggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleLocationSelect(suggestion)}
+                        className='p-2 cursor-pointer hover:bg-gray-100'
+                      >
+                        {suggestion.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           ) : null}
@@ -477,7 +527,7 @@ const UserDashboardContent = () => {
                 </div>
               ))}
             </div>
-            <Pagination page={page}  setPage={setPage} />
+            <Pagination page={page} setPage={setPage} />
           </div>
         </section>
       </div>
