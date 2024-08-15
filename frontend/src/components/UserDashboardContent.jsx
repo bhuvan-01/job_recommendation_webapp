@@ -37,7 +37,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { IMG_URL } from '@/utils/constants';
 import toast from 'react-hot-toast';
-import MapboxMap from '@/components/Mapbox'
+import MapboxMap from '@/components/Mapbox';
+import Pagination from './Pagination';
 
 const experienceLevels = [
   { id: 'Internship', label: 'Internship' },
@@ -184,6 +185,9 @@ const Filters = () => {
 
 const UserDashboardContent = () => {
   const jobs = useSelector((state) => state.jobs.jobs);
+  const totalCount = useSelector((state) => state.jobs.totalCount);
+  const [page, setPage] = useState(1);
+
   const {
     keywordQuery,
     locationQuery,
@@ -196,12 +200,14 @@ const UserDashboardContent = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchJobs = async () => {
       dispatch(searchResultsRequested());
       try {
         const res = await apiClient.get('/jobs', {
           params: {
+            page,
             keyword: keywordQuery,
             location: locationQuery,
             experience: selectedExperienceLevels,
@@ -214,7 +220,7 @@ const UserDashboardContent = () => {
         console.log(res);
 
         if (res.status === 200) {
-          dispatch(searchResultsReceived(res.data));
+          dispatch(searchResultsReceived(res.data.jobs));
           dispatch(storeJobs(res.data));
         }
       } catch (error) {
@@ -226,6 +232,7 @@ const UserDashboardContent = () => {
     fetchJobs();
   }, [
     dispatch,
+    page,
     keywordQuery,
     locationQuery,
     selectedExperienceLevels,
@@ -333,7 +340,7 @@ const UserDashboardContent = () => {
         </div>
 
         <Filters />
-        <MapboxMap/>
+        <MapboxMap />
       </div>
       <div className='basis-9/12'>
         <section className='p-2'>
@@ -367,7 +374,7 @@ const UserDashboardContent = () => {
             </div>
           ) : null}
           <div className='flex mt-4 justify-between items-center'>
-            <h1 className='text-xl'>Search results ({jobs?.length})</h1>
+            <h1 className='text-xl'>Search results ({totalCount})</h1>
             <select
               className='p-2 border rounded-md font-medium'
               name='sort'
@@ -398,7 +405,8 @@ const UserDashboardContent = () => {
                         {job.title}
                       </h2>
                       <p className='text-gray-600 text-sm font-medium'>
-                      {job.company ? job.company.name : 'Unknown Company'} {'•'} {job.location}
+                        {job.company ? job.company.name : 'Unknown Company'}{' '}
+                        {'•'} {job.location}
                       </p>
                     </div>
                   </div>
@@ -469,6 +477,7 @@ const UserDashboardContent = () => {
                 </div>
               ))}
             </div>
+            <Pagination page={page}  setPage={setPage} />
           </div>
         </section>
       </div>

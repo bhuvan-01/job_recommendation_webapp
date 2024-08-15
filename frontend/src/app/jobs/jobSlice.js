@@ -4,13 +4,18 @@ const jobSlice = createSlice({
   name: 'job',
   initialState: {
     jobs: [],
+    totalCount: 0,
+    currentPage: 1,
+    totalPages: 1,
   },
   reducers: {
     addJob: (state, action) => {
       state.jobs.push(action.payload);
     },
     storeJobs: (state, action) => {
-      state.jobs = action.payload;
+      state.jobs = action.payload.jobs;
+      state.totalCount = action.payload.count;
+      state.totalPages = action.payload.totalPages;
     },
     deleteJob: (state, action) => {
       state.jobs = state.jobs.filter((job) => job._id !== action.payload);

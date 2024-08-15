@@ -79,7 +79,7 @@ const constructMongoQuery = (query) => {
   // Title field
   if (query.title && query.title.length > 0) {
     let keywords = query.title.map(kw => `"${kw}"`).join(' ');
-    mongoQuery.$text = { $search: keywords,  };
+    mongoQuery.$text = { $search: keywords, };
   }
 
   // Experience field
@@ -113,12 +113,15 @@ exports.getJobs = async (req, res) => {
   else {
     mongoQuery = {}
   }
-
+  const perPage = req.query.perPage || 10
+  const page = req.query.page || 1
+  const skip = (page - 1) * perPage
   try {
-    console.log('mongoQuery: ', mongoQuery);
-
-    const jobs = await Job.find(mongoQuery).populate('company');
-    return res.status(200).json(jobs);
+    const jobs = await Job.find(mongoQuery).populate('company').skip(skip).limit(perPage);
+    // total pages
+    const count = await Job.countDocuments(mongoQuery);
+    const totalPages = Math.ceil(count / perPage);
+    return res.status(200).json({ jobs, totalPages, count, currentPage: page });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

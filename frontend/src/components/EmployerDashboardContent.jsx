@@ -32,7 +32,7 @@ const EmployerDashboardContent = () => {
         console.log(res);
 
         if (res.status === 200) {
-          dispatch(storeJobs(res.data.jobs));
+          dispatch(storeJobs(res.data));
         }
       } catch (error) {
         console.error('Error fetching jobs:', error);
