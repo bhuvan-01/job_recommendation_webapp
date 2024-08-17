@@ -1,48 +1,106 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Building2 } from 'lucide-react';
-import { Button } from './ui/button';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import mapImage from './../assets/images/ukmap.jpeg';
+import { Button } from './ui/button';
+import apiClient from './../services/apiClient';
 
 const FeaturedJobs = () => {
-  const jobs = useSelector((state) => state.jobs.jobs);
-  const featuredJobs = jobs.filter((job) => job.isFeatured);
+  const [jobs, setJobs] = useState([]);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const navigate = useNavigate();
+
+  // Static jobs to display when user is not logged in
+  const staticJobs = [
+    {
+      title: 'Network Engineer',
+      company: 'Data Solutions',
+      location: 'Berlin',
+    },
+    {
+      title: 'UX Designer',
+      company: 'EduWorld',
+      location: 'Chicago',
+    },
+    {
+      title: 'Product Manager',
+      company: 'Finance Forward',
+      location: 'Toronto',
+    },
+    {
+      title: 'Project Manager',
+      company: 'Data Solutions',
+      location: 'Sydney',
+    },
+    {
+      title: 'Business Analyst',
+      company: 'Tech Innovators',
+      location: 'Chicago',
+    },
+  ];
+
+  useEffect(() => {
+    if (isLoggedIn) {
+     
+      apiClient.get('/api/jobs')
+        .then(response => {
+          setJobs(response.data);
+          console.log(setJobs)
+        })
+        .catch(error => {
+          console.error('Error fetching jobs:', error);
+        });
+    } else {
+      setJobs(staticJobs);
+    }
+  }, [isLoggedIn]);
+
+  const handleJobClick = (jobId) => {
+    if (isLoggedIn) {
+      navigate(`/jobs/${jobId}`);
+    } else {
+      alert('You need to log in to view job details. Redirecting to login page.');
+      navigate('/login');
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (isLoggedIn) {
+      navigate('/dashboard');
+    } else {
+      alert('You need to log in to access the dashboard. Redirecting to login page.');
+      navigate('/login');
+    }
+  };
 
   return (
-    <div className='container px-0 max-w-[1400px] mx-auto w-[95%] my-4 grid grid-cols-1 md:grid-cols-2 gap-4'>
-      <div className='space-y-4'>
-        <h2 className='text-2xl font-semibold'>Featured Jobs</h2>
-        <div className='space-y-4'>
-          {featuredJobs.slice(0, 5).map((job, index) => (
-            <div key={index} className='border rounded-md p-4 flex gap-4'>
-              <div className='w-16 h-16 rounded-md bg-gray-100 flex justify-center items-center'>
-                <Building2 size={24} />
-              </div>
-              <div className='flex-1'>
-                <h3 className='text-lg font-semibold'>{job.title}</h3>
-                <p className='text-gray-600'>
-                  {job.company ? `${job.company.name} • ${job.location}` : job.location}
-                </p>
-                <p className='text-gray-600 text-sm'>
-                  {job?.description.length > 100
-                    ? job?.description.slice(0, 100) + '...'
-                    : job?.description}
-                </p>
-                <Link
-                  to={`/jobs/${job._id}`}
-                  className='text-blue-600 hover:underline'
-                >
-                  View Details
-                </Link>
-              </div>
+    <div className='container px-0 max-w-[1200px] mx-auto w-[90%] my-4 grid grid-cols-1 md:grid-cols-2 gap-4'>
+      {/* Left Column: Job Listings */}
+      <div className='space-y-2'>
+        <h2 className='text-xl font-semibold'>Featured Jobs</h2>
+        {jobs.map((job, index) => (
+          <div
+            key={index}
+            onClick={() => handleJobClick(job._id)}
+            className='border rounded-md p-3 flex flex-col justify-between hover:shadow-lg transition-shadow cursor-pointer'
+          >
+            <div>
+              <h3 className='text-md font-semibold'>{job.title}</h3>
+              <p className='text-gray-600 text-sm'>{job.company} • {job.location}</p>
             </div>
-          ))}
-        </div>
-        <Link to='/jobs'>
-          <Button className='w-full bg-blue-500 mt-4'>Show All Job Vacancies</Button>
-        </Link>
+            <div className='mt-2'>
+              <button className='text-blue-600 hover:underline text-sm'>
+                View Details
+              </button>
+            </div>
+          </div>
+        ))}
+        <Button onClick={handleButtonClick} className='w-full bg-blue-500 mt-3 text-sm'>
+          Show All Job Vacancies
+        </Button>
       </div>
+      
+      {/* Right Column: Map */}
       <div className='hidden md:block'>
         <img src={mapImage} alt='Map' className='w-full h-full object-cover rounded-md' />
       </div>

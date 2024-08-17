@@ -2,10 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';  // Include CSS for directions
+import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'; 
 import apiClient from '@/services/apiClient';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ';
+
 const MapboxMap = ({ apiUrl }) => {
     const mapContainerRef = useRef(null);
     const [jobs, setJobs] = useState([]);
@@ -18,6 +19,7 @@ const MapboxMap = ({ apiUrl }) => {
             try {
                 const response = await apiClient.get(apiUrl || '/jobs');
                 setJobs(response.data);
+                console.log('Jobs fetched:', response.data);
             } catch (error) {
                 console.error('Failed to fetch jobs', error);
             }
@@ -35,6 +37,7 @@ const MapboxMap = ({ apiUrl }) => {
         navigator.geolocation.getCurrentPosition(position => {
             const { latitude, longitude } = position.coords;
             setUserLocation([longitude, latitude]);
+            console.log('User location:', [longitude, latitude]);
         }, () => {
             console.error('Unable to retrieve your location');
         }, {
@@ -43,7 +46,10 @@ const MapboxMap = ({ apiUrl }) => {
     }, []);
 
     useEffect(() => {
-        if (!userLocation || !jobs.length) return;
+        if (!userLocation || !jobs.jobs || !jobs.jobs.length || !mapContainerRef.current) {
+            console.log('Map cannot be initialized, missing data:', { userLocation, jobs });
+            return;
+        }
 
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
@@ -51,6 +57,8 @@ const MapboxMap = ({ apiUrl }) => {
             center: userLocation,
             zoom: 12,
         });
+
+        console.log('Map initialized at location:', userLocation);
 
         const fullscreenControl = new mapboxgl.FullscreenControl();
         map.addControl(fullscreenControl);
@@ -74,6 +82,7 @@ const MapboxMap = ({ apiUrl }) => {
             } else {
                 map.removeControl(directionsRef.current);
             }
+            console.log('Fullscreen mode:', isFullscreenNow);
         });
 
         new mapboxgl.Marker({ color: 'blue' })
@@ -81,7 +90,7 @@ const MapboxMap = ({ apiUrl }) => {
             .setPopup(new mapboxgl.Popup({ offset: 25 }).setText('You are here'))
             .addTo(map);
 
-        jobs.forEach((job) => {
+        jobs.jobs.forEach((job) => {
             if (typeof job.latitude === 'number' && typeof job.longitude === 'number') {
                 const popupContent = document.createElement('div');
                 popupContent.innerHTML = `<strong>${job.title}</strong><p>${job.description}</p>`;
@@ -90,6 +99,7 @@ const MapboxMap = ({ apiUrl }) => {
                     .setLngLat([job.longitude, job.latitude])
                     .setPopup(popup)
                     .addTo(map);
+                console.log('Added job marker:', job);
             } else {
                 console.error('Invalid job location data', job);
             }
@@ -97,6 +107,7 @@ const MapboxMap = ({ apiUrl }) => {
 
         return () => {
             map.remove();
+            console.log('Map removed');
         };
     }, [userLocation, jobs]);
 
