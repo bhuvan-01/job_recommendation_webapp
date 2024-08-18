@@ -97,12 +97,7 @@ const Navbar = () => {
               >
                 Find Jobs
               </Link>
-              <Link
-                to='/companies'
-                className=' font-medium text-sm p-2 px-4  text-white'
-              >
-                Companies
-              </Link>
+              
               <Link
                 to='/community'
                 className=' font-medium text-sm p-2 px-4  text-white'

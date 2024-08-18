@@ -1,5 +1,5 @@
 import React from 'react';
-import application from '../assets/images/applicationprocess2.png'
+import application from '../assets/images/hiring.png'
 
 const ApplicationProcess = () => {
   return (

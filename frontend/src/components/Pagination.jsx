@@ -5,14 +5,14 @@ export default function Pagination({ page, setPage }) {
 
   const pageNumbers = [];
 
-  // Calculate which pages to show
-  const startPage = Math.max(1, page - 1); // Show two pages before current
-  const endPage = Math.min(totalPages, page + 1); // Show two pages after current
+  
+  const startPage = Math.max(1, page - 1); 
+  const endPage = Math.min(totalPages, page + 1); 
 
   if (startPage > 1) {
-    pageNumbers.push(1); // Always show the first page
+    pageNumbers.push(1); 
     if (startPage > 2) {
-      pageNumbers.push('...'); // Ellipsis if there is a gap
+      pageNumbers.push('...'); 
     }
   }
 
@@ -22,9 +22,9 @@ export default function Pagination({ page, setPage }) {
 
   if (endPage < totalPages) {
     if (endPage < totalPages - 1) {
-      pageNumbers.push('...'); // Ellipsis if there is a gap
+      pageNumbers.push('...'); 
     }
-    pageNumbers.push(totalPages); // Always show the last page
+    pageNumbers.push(totalPages);
   }
 
   const onPageChange = (e, page) => {

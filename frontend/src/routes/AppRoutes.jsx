@@ -25,6 +25,9 @@ import ForgotPassword from '@/pages/ForgotPassword';
 import AdminPanel from '@/Admin/Admin';
 import UserManagement from '@/Admin/UserManagement';
 import JobManagement from '@/Admin/JobManagement';
+import Features from '@/components/Features';
+import Newsletter from '@/components/NewsLetters';
+import Community from '@/components/Community';
 
 
 
@@ -50,10 +53,22 @@ const router = createBrowserRouter([
         element: <ForgotPassword />,
       },
 
+        {path:'features',
+          element:<Features/>
+        },
+
+        {path:'community',
+          element:<Community/>
+        },
+
      
       {
         path:'aboutus',
         element:<AboutUs/>
+      },
+
+      { path:'newsletters',
+        element:<Newsletter/>
       },
       { 
         path:'contactus',

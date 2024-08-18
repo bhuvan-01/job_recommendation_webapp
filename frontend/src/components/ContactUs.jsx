@@ -1,8 +1,9 @@
-// src/ContactUs.js
-
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import callback from '../assets/images/callback.png';
+import contact from '../assets/images/contact.jpg'
+
 
 const ContactUs = () => {
   const formik = useFormik({
@@ -22,9 +23,7 @@ const ContactUs = () => {
       message: Yup.string().required('Message is required'),
     }),
     onSubmit: (values, { resetForm }) => {
-      // Add your form submission logic here
       console.log('Form submitted', values);
-      // Clear the form after submission
       resetForm();
     },
   });
@@ -36,25 +35,25 @@ const ContactUs = () => {
           <div className="lg:col-start-1 lg:row-start-1">
             <h2 className="text-3xl font-extrabold text-gray-900">Contact Us</h2>
             <p className="mt-4 text-lg leading-6 text-gray-600">
-              We would love to hear from you! Whether you have a question about our services, pricing, or anything else, our team is ready to answer all your questions.
+              We would love to hear from you! Whether you have a question about our services, or anything else, our team is ready to answer all your questions.
             </p>
             <div className="mt-6">
               <h3 className="text-lg font-medium text-gray-900">Contact Details</h3>
               <p className="mt-2 text-gray-600">
-                <strong>Address:</strong> 123 Main Street, Anytown, USA
+                <strong>Address:</strong> Leicester, United Kingdom, LE27FP
               </p>
               <p className="mt-2 text-gray-600">
-                <strong>Email:</strong> contact@company.com
+                <strong>Email:</strong> jobwipe@company.com
               </p>
               <p className="mt-2 text-gray-600">
-                <strong>Phone:</strong> +1 (555) 123-4567
+                <strong>Phone:</strong> +447741528220
               </p>
             </div>
           </div>
           <div className="lg:col-start-2 lg:row-start-1 mt-10 lg:mt-0">
             <img
               className="w-full h-full object-cover rounded-lg shadow-lg"
-              src="https://images.unsplash.com/photo-1564865887089-cb82fe5d9d9e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+              src={contact}
               alt="Contact"
             />
           </div>
@@ -63,7 +62,7 @@ const ContactUs = () => {
           <div className="lg:col-start-1 lg:row-start-1">
             <img
               className="w-full h-full object-cover rounded-lg shadow-lg"
-              src="https://images.unsplash.com/photo-1606760227541-2f4e65c68b15?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+              src={callback}
               alt="Form"
             />
           </div>
