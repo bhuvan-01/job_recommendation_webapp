@@ -31,7 +31,7 @@ const Navbar = () => {
   const isSignupPage = location.pathname === '/signup';
 
   return (
-    <div className='py-4  border-b-gray-100/75 backdrop-blur-md sticky top-0'>
+    <div className='py-4  border-b-gray-100/75  sticky top-0'>
       <div className='container max-w-[1400px] p-0 mx-auto w-[95%] flex justify-between items-center'>
         <Logo />
 
