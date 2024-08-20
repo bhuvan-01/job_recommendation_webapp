@@ -1,140 +1,69 @@
-import React, { useLayoutEffect, useRef } from 'react';
-import * as am4core from '@amcharts/amcharts4/core';
-import * as am4charts from '@amcharts/amcharts4/charts';
-import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import { useTable } from 'react-table';
+import React, { useState, useEffect } from 'react';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { Box, Typography } from '@mui/material';
+import apiClient from '@/services/apiClient'; // Make sure this path is correct
 
-am4core.useTheme(am4themes_animated);
+function SimplePieChart() {
+  const [data, setData] = useState([]);
 
-const ApplicationHiredPieChart = () => {
-  const chartRef = useRef(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jobsPostedPromise = apiClient.get('/jobs/employer-stats/jobs-posted');
+        const applicationsPromise = apiClient.get('/jobs/employer-stats/applications');
+        const jobsSavedPromise = apiClient.get('/jobs/employer-stats/jobs-saved');
+        const hiredPromise = apiClient.get('/jobs/employer-stats/hired');
 
-  useLayoutEffect(() => {
-    let chart = am4core.create(chartRef.current, am4charts.PieChart);
+        const results = await Promise.all([
+          jobsPostedPromise,
+          applicationsPromise,
+          jobsSavedPromise,
+          hiredPromise
+        ]);
 
-    // Add data
-    chart.data = [
-      { category: 'Applied Jobs', value: 80 }, // Example data
-      { category: 'Hired People', value: 20 }, // Example data
-    ];
+        const formattedData = [
+          { name: 'Total Jobs', value: results[0].data.totalJobsPosted || 0 },
+          { name: 'Applied Jobs', value: results[1].data.totalApplications || 0 }, // Adjust property names based on actual API response
+          { name: 'Saved Jobs', value: results[2].data.totalJobsSaved || 0 },
+          { name: 'Hired Jobs', value: results[3].data.totalPeopleHired || 0 }
+        ];
 
-    // Create series
-    let pieSeries = chart.series.push(new am4charts.PieSeries());
-    pieSeries.dataFields.value = 'value';
-    pieSeries.dataFields.category = 'category';
-    pieSeries.slices.template.tooltipText = '{category}: {value}%';
-    pieSeries.slices.template.stroke = am4core.color('#fff');
-    pieSeries.slices.template.strokeWidth = 2;
-    pieSeries.slices.template.strokeOpacity = 1;
-
-    chartRef.current = chart;
-
-    return () => {
-      chart.dispose();
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
+
+    fetchData();
   }, []);
 
-  return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4 text-center">Applications vs. Hires</h2>
-      <div ref={chartRef} style={{ width: '100%', height: '300px' }} />
-    </div>
-  );
-};
-
-const RecentJobsTable = ({ data }) => {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Job Title',
-        accessor: 'jobTitle',
-      },
-      {
-        Header: 'Date Posted',
-        accessor: 'datePosted',
-      },
-      {
-        Header: 'Applications',
-        accessor: 'applications',
-      },
-    ],
-    []
-  );
-
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4 text-center lg:text-left">Recent Job Postings</h2>
-      <table {...getTableProps()} className="min-w-full bg-white text-left">
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  key={column.id} // Assign the key directly
-                  {...column.getHeaderProps()}
-                  className="py-2 px-4 border-b-2 border-gray-300"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
+    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', p: 3 }}>
+      <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
+        Job Stats Overview
+      </Typography>
+      <PieChart width={400} height={400}>
+        <Pie
+          data={data}
+          cx={200}
+          cy={200}
+          labelLine={false}
+          outerRadius={120}
+          fill="#8884d8"
+          dataKey="value"
+          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr key={row.id} {...row.getRowProps()}> {/* Assign the key directly */}
-                {row.cells.map((cell) => (
-                  <td
-                    key={cell.column.id} // Assign the key directly
-                    {...cell.getCellProps()}
-                    className="py-2 px-4 border-b border-gray-200"
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+        </Pie>
+        <Tooltip />
+        <Legend align="center" verticalAlign="bottom" height={36}/>
+      </PieChart>
+    </Box>
   );
-};
+}
 
-const GridAndPieChart = () => {
-  const recentJobsData = [
-    {
-      jobTitle: 'Frontend Developer',
-      datePosted: '2024-08-01',
-      applications: 32,
-    },
-    {
-      jobTitle: 'Backend Developer',
-      datePosted: '2024-08-03',
-      applications: 27,
-    },
-    {
-      jobTitle: 'UI/UX Designer',
-      datePosted: '2024-08-05',
-      applications: 15,
-    },
-  ];
-
-  return (
-    <div className="max-w-7xl mx-auto p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <ApplicationHiredPieChart />
-        <RecentJobsTable data={recentJobsData} />
-      </div>
-    </div>
-  );
-};
-
-export default GridAndPieChart;
+export default SimplePieChart;

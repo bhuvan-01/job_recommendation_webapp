@@ -23,18 +23,20 @@ const AdminHeader = () => {
   const handleLogout = () => {
     dispatch(logout());
     clearToken();
-    navigate('/login'); // Redirect to admin login after logout
+    navigate('/login'); 
   };
 
   return (
-    <div className='py-2 border-b border-b-gray-100/75 bg-white/50 backdrop-blur-md sticky top-0'>
-      <div className='container px-0 w-[95%] mx-auto max-w-[1400px] flex justify-between items-center'>
-        <Logo />
+    <div className="py-2 border-b border-b-gray-100/75 bg-white/50 backdrop-blur-md sticky top-0 z-50">
+      <div className="container px-4 md:px-6 lg:px-8 w-[95%] mx-auto max-w-[1400px] flex justify-between items-center">
+        <Link to="/">
+          <Logo />
+        </Link>
 
-        <div className='flex gap-2 items-center'>
+        <div className="flex gap-2 items-center">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant='transparent'>
+              <Button variant="transparent">
                 LogOut
               </Button>
             </DropdownMenuTrigger>
@@ -42,12 +44,12 @@ const AdminHeader = () => {
               <DropdownMenuLabel>Admin Panel</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className='cursor-pointer'
+                className="cursor-pointer"
                 onClick={handleLogout}
               >
                 <LogOut
                   size={16}
-                  className='text-gray-800 dark:text-gray-300 mr-2'
+                  className="text-gray-800 dark:text-gray-300 mr-2"
                 />
                 Logout
               </DropdownMenuItem>

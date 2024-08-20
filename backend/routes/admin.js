@@ -5,6 +5,7 @@ const {
   updateUser,
   getAllUsers,
   approveJob,
+  getAdminStats
 } = require('../controllers/admin');
 const isLoggedin = require('../middlewares/isLoggedin');
 const isAdmin = require('../middlewares/isAdmin');
@@ -25,5 +26,7 @@ router.get('/users', isLoggedin, isAdmin, getAllUsers);
 
 // Approve a job
 router.put('/jobs/:id/approve', isLoggedin, isAdmin, approveJob);
+
+router.get('/stats', isLoggedin, isAdmin, getAdminStats);
 
 module.exports = router;

@@ -3,6 +3,9 @@ import { Outlet } from 'react-router-dom';
 import DashboardCards from './../../components/DashboardCard';
 import EmployerLineChart from '@/components/charts/EmployerLine';
 import GridAndPieChart from '@/components/charts/GridAndPieChart';
+// import StackedBar from '@/components/charts/StackedBar';
+import GroupedBarChart from '@/components/charts/GroupedBar'
+
 
 const EmployerDashboard = () => {
   return (
@@ -13,6 +16,8 @@ const EmployerDashboard = () => {
       <DashboardCards/>
       <EmployerLineChart/>
       <GridAndPieChart/>
+      {/* <StackedBar/> */}
+      <GroupedBarChart/>
     </div>
   );
 };

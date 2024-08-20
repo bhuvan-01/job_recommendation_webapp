@@ -90,3 +90,33 @@ exports.approveJob = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
+
+
+exports.getAdminStats = async (req, res) => {
+  try {
+    // Total Job Seekers
+    const totalJobSeekers = await User.countDocuments({ role: 'user' });
+
+    // Total Employers
+    const totalEmployers = await User.countDocuments({ role: 'employer' });
+
+    // Total Jobs
+    const totalJobs = await Job.countDocuments();
+
+    const totalHired = await Job.aggregate([
+      { $unwind: '$applications' },
+      { $match: { 'applications.status': 'hired' } }, 
+      { $count: 'totalHired' }
+    ]);
+
+    res.status(200).json({
+      totalJobSeekers,
+      totalEmployers,
+      totalJobs,
+      totalHired: totalHired[0]?.totalHired || 0,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error });
+  }
+};
+

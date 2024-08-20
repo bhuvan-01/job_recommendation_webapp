@@ -28,6 +28,7 @@ import JobManagement from '@/Admin/JobManagement';
 import Features from '@/components/Features';
 import Newsletter from '@/components/NewsLetters';
 import Community from '@/components/Community';
+import  AdminDashboard from '@/Admin/AdminDashbaord'
 
 
 
@@ -84,6 +85,11 @@ const router = createBrowserRouter([
           },
           { path: "jobs", 
             element: <JobManagement /> },
+
+          {
+            path:"dashboard",
+            element: <AdminDashboard/>
+          },
         ]
         },
 
