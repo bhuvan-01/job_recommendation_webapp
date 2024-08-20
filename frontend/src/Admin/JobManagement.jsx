@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchAdminJobs,
-  deleteAdminJob,
-} from '../app/jobFormSlice';
-import JobFormModal from '../Admin/JobFormModel';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAdminJobs, deleteAdminJob } from "../app/jobFormSlice";
+import JobFormModal from "../Admin/JobFormModel";
 
 const JobsList = () => {
   const dispatch = useDispatch();
   const { jobs, loading, error } = useSelector((state) => state.jobForm);
   const [currentJob, setCurrentJob] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     dispatch(fetchAdminJobs());
@@ -26,13 +23,16 @@ const JobsList = () => {
     setModalOpen(true);
   };
 
-  const filteredJobs = jobs.filter((job) =>
-    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredJobs = Array.isArray(jobs)
+    ? jobs.filter(
+        (job) =>
+          job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching jobs: {error.message || error}</div>; // Fix the error rendering here
+  if (error) return <div>Error fetching jobs: {error.message || error}</div>;
 
   return (
     <div className="container mx-auto mt-5 flex flex-col">
@@ -56,7 +56,9 @@ const JobsList = () => {
           <div key={job._id} className="p-4 mb-2 shadow rounded bg-white">
             <h3 className="font-semibold">{job.title}</h3>
             <p>{job.description}</p>
-            <div><b>Type:</b> {job.jobType} | <b>Location:</b> {job.location}</div>
+            <div>
+              <b>Type:</b> {job.jobType} | <b>Location:</b> {job.location}
+            </div>
             <button
               onClick={() => handleCreateOrUpdate(job)}
               className="text-blue-500 hover:text-blue-700 mr-2"

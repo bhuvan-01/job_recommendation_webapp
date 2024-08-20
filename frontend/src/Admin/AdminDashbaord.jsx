@@ -3,6 +3,9 @@ import { FaUsers, FaBuilding, FaBriefcase, FaUserCheck } from 'react-icons/fa';
 import apiClient from '../services/apiClient';
 import JobStatsLineChart from '../Admin/charts/LineChart'; // Import the Line Chart Component
 import PieChartComponent from '../Admin/charts/PieCharts';
+import AdminStatsLineChart from '../Admin/charts/DetailedLineChart';
+import AdminStatsBarChart from '../Admin/charts/BarChart';
+
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalJobSeekers: 0,
@@ -71,12 +74,24 @@ const AdminDashboard = () => {
 
       {/* Line Chart for Job Stats */}
       <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Job Stats Overview</h2>
+        <h2 className="text-xl font-bold mb-4 ">Job Stats Overview</h2>
         <JobStatsLineChart stats={stats} />
       </div>
-      <div>
-            <PieChartComponent stats={stats} />
+
+      {/* Pie Chart and Bar Chart on the Same Line */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <PieChartComponent stats={stats} />
         </div>
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <AdminStatsBarChart />
+        </div>
+      </div>
+
+      {/* Detailed Line Chart Below */}
+      <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
+        <AdminStatsLineChart />
+      </div>
     </div>
   );
 };
