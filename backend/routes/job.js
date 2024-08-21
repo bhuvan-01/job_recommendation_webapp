@@ -11,23 +11,19 @@ const {
   removeSavedJob,
   getUserAppliedJobs,
   getUserSavedJobs,
-  getTotalJobsPostedByEmployer,
-  getTotalApplicationsByEmployer,
-  getTotalJobsSavedByEmployer,
-  getTotalPeopleHiredByEmployer,
+  getEmployerDashboardStats,
+  getEmployerStatsByMonth
 
 } = require('../controllers/job');
 const isLoggedin = require('../middlewares/isLoggedin');
 const isEmployer = require('../middlewares/isEmployer');
-const isAdmin = require('../middlewares/isAdmin');
 const router = express.Router();
 
 
 //job stats
-router.get('/employer-stats/jobs-posted', isLoggedin, isEmployer, getTotalJobsPostedByEmployer);
-router.get('/employer-stats/applications', isLoggedin, isEmployer, getTotalApplicationsByEmployer);
-router.get('/employer-stats/hired', isLoggedin, isEmployer, getTotalPeopleHiredByEmployer);
-router.get('/employer-stats/jobs-saved', isLoggedin, isEmployer, getTotalJobsSavedByEmployer);
+router.get('/employer-stats', isLoggedin, isEmployer, getEmployerDashboardStats);
+router.get('/employer-stats/monthly',isLoggedin, isEmployer, getEmployerStatsByMonth);
+
 
 
 router.post('/', isLoggedin, isEmployer, createJob);

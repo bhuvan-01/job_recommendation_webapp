@@ -11,18 +11,15 @@ const DashboardCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobsPostedPromise = apiClient.get('/jobs/employer-stats/jobs-posted');
-        const applicationsPromise = apiClient.get('/jobs/employer-stats/applications');
-        const hiredPromise = apiClient.get('/jobs/employer-stats/hired');
+        // Fetching data from the new API endpoint
+        const response = await apiClient.get('/jobs/employer-stats');
+        const { totalJobsPosted, totalApplications, totalPeopleHired } = response.data;
 
-        const [jobsPostedResponse, applicationsResponse, hiredResponse] = await Promise.all([
-          jobsPostedPromise, applicationsPromise, hiredPromise
-        ]);
-
+        // Update the stats with the fetched data
         setStats([
-          { ...stats[0], value: jobsPostedResponse.data.totalJobsPosted },
-          { ...stats[1], value: hiredResponse.data.totalHired },
-          { ...stats[2], value: applicationsResponse.data.totalApplications }
+          { ...stats[0], value: totalJobsPosted },
+          { ...stats[1], value: totalPeopleHired },
+          { ...stats[2], value: totalApplications }
         ]);
       } catch (error) {
         console.error('Error fetching chart data:', error);
