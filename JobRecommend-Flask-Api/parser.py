@@ -6,6 +6,7 @@ nlp = spacy.load("en_core_web_sm")
 
 currencies = ["USD", "CAD", "EUR"]
 
+
 def parse_currency(query):
     for curr in currencies:
         if curr in query:
@@ -58,12 +59,79 @@ def parse_salary(salary_text):
     return None
 
 
+EXPERIENCES = {
+    "Internship": [
+        "intern",
+        "internship",
+        "internships",
+        "interning",
+        "interned",
+        "interns",
+    ],
+    "Entry Level": [
+        "entry",
+        "entry-level",
+        "entry level",
+        "beginner",
+        "beginners",
+        "beginning",
+        "beginnings",
+        "novice",
+        "novices",
+        "fresher",
+        "freshers",
+        "freshmen",
+    ],
+    "Associate": [
+        "associate",
+        "associates",
+        "associating",
+        "associated",
+        "associateship",
+        "associateships",
+    ],
+    "Mid Level": [
+        "mid",
+        "mid-level",
+        "mid level",
+        "intermediate",
+    ],
+    "Senior Level": [
+        "senior",
+        "expert",
+        "experienced",
+        "professional",
+        "specialist",
+        "experienced",
+        "seasoned",
+        "veteran",
+        "master",
+        "skilled",
+        "knowledgeable",
+        "well-versed",
+        "well-informed",
+        "well-trained",
+        "well-acquainted",
+        "well-qualified",
+    ],
+}
+
+
 def parse_query_spacy(query):
     doc = nlp(query)
 
     # Extract experience level
     experience_levels = ["entry", "junior", "mid", "senior", "expert"]
-    experience = next((level for level in experience_levels if level in query.lower()), "")
+    for tokens in EXPERIENCES.values():
+        experience_levels += tokens
+    experience = next(
+        (level for level in experience_levels if level in query.lower()), ""
+    )
+    for level, tokens in EXPERIENCES.items():
+        if experience in tokens:
+            experience = level
+            break
+
     # Extract salary range or individual salary
     salary_range = parse_salary_range(query)
 
