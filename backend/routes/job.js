@@ -12,7 +12,8 @@ const {
   getUserAppliedJobs,
   getUserSavedJobs,
   getEmployerDashboardStats,
-  getEmployerStatsByMonth
+  getEmployerStatsByMonth,
+  getRecommended,
 
 } = require('../controllers/job');
 const isLoggedin = require('../middlewares/isLoggedin');
@@ -24,7 +25,7 @@ const router = express.Router();
 router.get('/employer-stats', isLoggedin, isEmployer, getEmployerDashboardStats);
 router.get('/employer-stats/monthly',isLoggedin, isEmployer, getEmployerStatsByMonth);
 
-
+router.get('/recommended', isLoggedin, getRecommended)
 
 router.post('/', isLoggedin, isEmployer, createJob);
 router.put('/:id', isLoggedin, isEmployer, updateJob);

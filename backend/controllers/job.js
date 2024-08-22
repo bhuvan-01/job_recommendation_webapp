@@ -392,3 +392,17 @@ exports.getEmployerStatsByMonth = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+
+exports.getRecommended = async (req, res) => {
+  const userId = req.user._id;
+  
+  try {
+           const response = await fetch(process.env.FLASK_API + `/recommendedjob/${userId}`);
+
+      return res.json(await response.json());
+  } catch (error) {
+      console.error('Error calling Flask API:', error);
+      return res.status(500).json({ error: 'Failed to fetch recommended jobs' });
+  }
+}

@@ -180,3 +180,20 @@ exports.updateApplicationStatus = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+exports.getApplicationsForEmployer = async (req, res) => {
+    try {
+        const employerId = req.user._id;  
+        const jobs = await Job.find({ employer: employerId });
+
+        const jobIds = jobs.map(job => job._id);
+        const applications = await Application.find({ job: { $in: jobIds } }).populate('job');
+
+        res.json(applications);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Server error");
+    }
+};
+

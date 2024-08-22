@@ -29,7 +29,9 @@ import Features from '@/components/Features';
 import Newsletter from '@/components/NewsLetters';
 import Community from '@/components/Community';
 import  AdminDashboard from '@/Admin/AdminDashbaord';
-import Analytics from '@/pages/employer/Analytics'; // Import the Analytics component
+import Analytics from '@/pages/employer/Analytics'; 
+import ApplicationsList from '@/pages/employer/AllApplications';
+import JobRecommendations from '@/pages/user/RecommendedJobs'
 
 
 
@@ -132,6 +134,11 @@ const router = createBrowserRouter([
                 path: 'jobs/applications/:id',
                 element: <EmployerApplicationDetails />,
               },
+
+              {
+                path:'applications',
+                element:<ApplicationsList/>
+              },
               {
                 path: 'analytics', 
                 element: <Analytics />,
@@ -167,6 +174,10 @@ const router = createBrowserRouter([
           {
             path: ':id',
             element: <JobDetailed />,
+          },
+          {
+            path: "recommended",
+            element: <JobRecommendations />,
           },
         ],
       },
