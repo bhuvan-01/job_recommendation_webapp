@@ -94,10 +94,10 @@ exports.getJobs = async (req, res) => {
   } else {
     mongoQuery = {};
   }
-  console.log("mongoQuery: ", mongoQuery);
 
-
-  if (location) mongoQuery.location = { $regex: location, $options: 'i' };
+  if (location) {
+    mongoQuery.location = { $regex: location.split(',')[0], $options: 'i' };
+  }
   if (industry) mongoQuery.industry = { $in: industry };
   if (minSalary) mongoQuery.salary = { $gte: minSalary };
   if (jobType) mongoQuery.jobType = { $in: jobType };
@@ -106,6 +106,7 @@ exports.getJobs = async (req, res) => {
   const perPage = req.query.perPage || 10;
   const page = req.query.page || 1;
   const skip = (page - 1) * perPage;
+
   try {
     const jobs = await Job.find(mongoQuery)
       .populate("company")
