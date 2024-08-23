@@ -15,7 +15,7 @@ const ApplicationSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Accepted', 'Rejected'],
+      enum: ['Pending', 'Accepted', 'Rejected', 'Hired'],
       default: 'Pending',
     },
     coverLetter: { type: String },

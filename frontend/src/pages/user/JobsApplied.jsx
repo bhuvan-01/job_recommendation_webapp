@@ -9,12 +9,14 @@ const JobsApplied = () => {
 
   const getStatusClassName = (status) => {
     switch (status) {
-      case 'Pending': // Corrected typo from 'Pedning' to 'Pending'
+      case 'Pending':
         return 'bg-gray-200 text-gray-700 p-1 text-xs rounded-md font-medium';
       case 'Accepted':
         return 'bg-green-200 text-green-700 p-1 text-xs rounded-md font-medium';
       case 'Rejected':
         return 'bg-red-200 text-red-700 p-1 text-xs rounded-md font-medium';
+      case 'Hired':  // Added "Hired" case
+        return 'bg-blue-200 text-blue-700 p-1 text-xs rounded-md font-medium';
       default:
         return 'bg-gray-200 text-gray-700 p-1 text-xs rounded-md font-medium';
     }

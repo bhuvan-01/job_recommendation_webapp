@@ -128,6 +128,12 @@ exports.updateApplicationStatus = async (req, res) => {
     const applicationId = req.params.id;
     const { status } = req.body;
 
+    // Ensure the status is one of the allowed values
+    const allowedStatuses = ["Pending", "Accepted", "Rejected", "Hired"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
     const application = await Application.findByIdAndUpdate(
       applicationId,
       { $set: { status } },
@@ -140,15 +146,20 @@ exports.updateApplicationStatus = async (req, res) => {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    const notificationMessage =
-      status === "Accepted"
-        ? `Your application for the position of ${application.job.title} has been accepted.`
-        : `Your application for the position of ${application.job.title} has been rejected.`;
+    // Prepare the notification message based on the status
+    let notificationMessage;
+    if (status === "Accepted") {
+      notificationMessage = `Your application for the position of ${application.job.title} has been accepted.`;
+    } else if (status === "Rejected") {
+      notificationMessage = `Your application for the position of ${application.job.title} has been rejected.`;
+    } else if (status === "Hired") {
+      notificationMessage = `Congratulations! You have been hired for the position of ${application.job.title}.`;
+    }
 
     const notification = new Notification({
       recipient: application.applicant._id,
       message: notificationMessage,
-      type: status === "Accepted" ? "info" : "warning",
+      type: status === "Accepted" || status === "Hired" ? "info" : "warning",
     });
 
     await notification.save();
@@ -159,20 +170,10 @@ exports.updateApplicationStatus = async (req, res) => {
       status,
     });
 
-    // Send email to the applicant
-    if (status === "Accepted" || status === "Rejected") {
-      const emailSubject = `Your job application for ${
-        application.job.title
-      } has been ${status.toLowerCase()}`;
-      let emailText = `Dear ${application.applicant.firstName},\n\n`;
-
-      if (status === "Accepted") {
-        emailText += `Congratulations! Your application for the position of ${application.job.title} has been accepted. We look forward to working with you.\n\n`;
-      } else if (status === "Rejected") {
-        emailText += `We regret to inform you that your application for the position of ${application.job.title} has not been successful at this time. We appreciate your interest in our company and wish you the best in your job search.\n\n`;
-      }
-
-      emailText += `Best regards,\nThe HR Team`;
+    // Send an email to the applicant if the status is Hired
+    if (status === "Hired") {
+      const emailSubject = `You have been hired for ${application.job.title}`;
+      const emailText = `Dear ${application.applicant.firstName},\n\nCongratulations! You have been hired for the position of ${application.job.title}. We are excited to welcome you to the team.\n\nBest regards,\nThe HR Team`;
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -207,6 +208,7 @@ exports.updateApplicationStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 exports.getApplicationsForEmployer = async (req, res) => {
   try {

@@ -46,6 +46,17 @@ const EmployerApplicationDetails = () => {
     }
   };
 
+  const handleHire = async () => {
+    try {
+      await apiClient.put(`/applications/${id}/status`, {
+        status: 'Hired',
+      });
+      setApplicationDetails((prev) => ({ ...prev, status: 'Hired' }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const downloadResume = () => {
     const resumeUrl = applicationDetails.resume;
     const link = document.createElement('a');
@@ -78,7 +89,7 @@ const EmployerApplicationDetails = () => {
     doc.text(20, 180, 'Cover Letter:');
     doc.text(20, 190, coverLetter);
 
-    doc.save('application-details.pdf'); // This will download the PDF
+    doc.save('application-details.pdf'); 
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -166,11 +177,11 @@ const EmployerApplicationDetails = () => {
         <h2 className='text-xl font-semibold mb-2'>Application Status</h2>
         <p className='text-gray-700'>
           <strong>Status:</strong>{' '}
-          <span className='bg-gray-200 ml-2 p-1 text-xs rounded-md'>
+          <span className={`ml-2 p-1 text-xs rounded-md ${status === 'Hired' ? 'bg-green-200' : 'bg-gray-200'}`}>
             {status}
           </span>
         </p>
-        {status !== 'Accepted' && (
+        {status === 'Pending' && (
           <div className='flex space-x-4 my-2'>
             <button
               className='bg-green-500 text-white px-4 py-2 rounded-md  hover:bg-green-600'
@@ -183,6 +194,16 @@ const EmployerApplicationDetails = () => {
               onClick={handleReject}
             >
               Reject
+            </button>
+          </div>
+        )}
+        {status === 'Accepted' && (
+          <div className='flex space-x-4 my-2'>
+            <button
+              className='bg-blue-500 text-white px-4 py-2 rounded-md  hover:bg-blue-600'
+              onClick={handleHire}
+            >
+              Hire
             </button>
           </div>
         )}

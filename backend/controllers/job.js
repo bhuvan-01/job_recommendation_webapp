@@ -72,6 +72,7 @@ const constructMongoQuery = (query) => {
 
   return mongoQuery;
 };
+
 // get jobs
 exports.getJobs = async (req, res) => {
   const {
