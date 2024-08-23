@@ -1,6 +1,7 @@
 import apiClient from '@/services/apiClient';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import jsPDF from 'jspdf';
 
 const EmployerApplicationDetails = () => {
   const { id } = useParams();
@@ -45,10 +46,57 @@ const EmployerApplicationDetails = () => {
     }
   };
 
+  const downloadResume = () => {
+    const resumeUrl = applicationDetails.resume;
+    const link = document.createElement('a');
+    link.href = resumeUrl;
+    link.download = 'resume.pdf'; // You can change the name here
+    link.click();
+  };
+
+  const downloadApplicationPDF = () => {
+    const doc = new jsPDF();
+    const { job, applicant, status, coverLetter } = applicationDetails;
+
+    doc.text(20, 10, `Job Title: ${job.title}`);
+    doc.text(20, 20, `Location: ${job.location}`);
+    doc.text(20, 30, `Salary: $${job.salary}`);
+    doc.text(20, 40, `Experience Required: ${job.experience} years`);
+    doc.text(20, 50, `Industry: ${job.industry}`);
+    doc.text(20, 60, `Job Type: ${job.jobType}`);
+    doc.text(20, 70, `Location Type: ${job.locationType}`);
+
+    doc.text(20, 90, `Applicant Name: ${applicant.fullName}`);
+    doc.text(20, 100, `Email: ${applicant.email}`);
+    doc.text(20, 110, `Phone Number: ${applicationDetails.phoneNumber}`);
+    doc.text(20, 120, `Experience: ${applicationDetails.experience} years`);
+    doc.text(20, 130, `Visa Sponsorship: ${applicationDetails.visaStatus}`);
+    doc.text(20, 140, `Willing to Relocate: ${applicationDetails.relocation}`);
+    doc.text(20, 150, `Master's Degree: ${applicationDetails.mastersDegree}`);
+    doc.text(20, 160, `Status: ${status}`);
+
+    doc.text(20, 180, 'Cover Letter:');
+    doc.text(20, 190, coverLetter);
+
+    doc.save('application-details.pdf'); // This will download the PDF
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (!applicationDetails) return <div>No application found.</div>;
 
-  const { job, applicant, status, coverLetter } = applicationDetails;
+  const {
+    job,
+    applicant,
+    status,
+    coverLetter,
+    email,
+    phoneNumber,
+    experience,
+    visaStatus,
+    relocation,
+    mastersDegree,
+    resume,
+  } = applicationDetails;
 
   return (
     <div className='container mx-auto my-4 md:my-8 max-w-[1400px] w-[95%] bg-white p-6 rounded-lg shadow-md'>
@@ -65,7 +113,7 @@ const EmployerApplicationDetails = () => {
             <strong>Salary:</strong> ${job.salary}
           </p>
           <p className='text-gray-700'>
-            <strong>Experience:</strong> {job.experience}
+            <strong>Experience Required:</strong> {job.experience} years
           </p>
           <p className='text-gray-700'>
             <strong>Industry:</strong> {job.industry}
@@ -84,90 +132,33 @@ const EmployerApplicationDetails = () => {
           Applicant Information
         </h2>
         <p className='text-gray-700'>
-          <strong>Name:</strong> {applicant.fullName}
+          <strong>Full Name:</strong> {applicant.fullName}
         </p>
         <p className='text-gray-700'>
-          <strong>Email:</strong> {applicant.email}
+          <strong>Email:</strong> {email}
         </p>
         <p className='text-gray-700'>
-          <strong>Bio:</strong> {applicant.bio}
+          <strong>Phone Number:</strong> {phoneNumber}
         </p>
-        <div className='flex space-x-4 mb-4'>
-          <a href={applicant?.links?.linkedin} className='text-blue-500'>
-            LinkedIn
-          </a>
-          <a href={applicant?.links?.github} className='text-blue-500'>
-            GitHub
-          </a>
-          <a href={applicant?.links?.twitter} className='text-blue-500'>
-            Twitter
-          </a>
-        </div>
-
-        <div className='mb-4'>
-          <h3 className='text-lg font-semibold py-2 border-b mb-2'>Skills:</h3>
-          <ul className='flex flex-wrap items-center gap-2 my-2 '>
-            {applicant.profile.skills.map((skill, index) => (
-              <li
-                key={index}
-                className='text-gray-700 bg-gray-100 p-2 px-4 rounded-full text-xs'
-              >
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className='mb-4'>
-          <h3 className='text-lg font-semibold py-2 border-b mb-2'>
-            Projects:
-          </h3>
-          {applicant.profile.projects.map((project, index) => (
-            <div key={index} className='mb-2 shadow-sm p-4 rounded-md border'>
-              <p className='text-gray-700'>
-                <strong>Title:</strong> {project.title}
-              </p>
-              <p className='text-gray-700'>
-                <strong>Description:</strong> {project.description}
-              </p>
-              <div className='flex items-center gap-4'>
-                <a href={project.url} className='text-blue-500'>
-                  Project URL
-                </a>
-                <br />
-                <a href={project.github} className='text-blue-500'>
-                  GitHub
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className='mb-4'>
-          <h3 className='text-lg font-semibold py-2 border-b mb-2'>
-            Experience:
-          </h3>
-          {applicant.profile.experience.map((exp, index) => (
-            <div key={index} className='mb-2 shadow-sm p-4 rounded-md border'>
-              <p className='text-gray-700'>
-                <strong>Company:</strong> {exp.company}
-              </p>
-              <p className='text-gray-700'>
-                <strong>Role:</strong> {exp.role}
-              </p>
-              <p className='text-gray-700'>
-                <strong>Start Date:</strong>{' '}
-                {new Date(exp.startDate).toLocaleDateString()}
-              </p>
-              <p className='text-gray-700'>
-                <strong>End Date:</strong>{' '}
-                {new Date(exp.endDate).toLocaleDateString()}
-              </p>
-              <p className='text-gray-700'>
-                <strong>Description:</strong> {exp.description}
-              </p>
-            </div>
-          ))}
+        <p className='text-gray-700'>
+          <strong>Years of Experience:</strong> {experience} years
+        </p>
+        <p className='text-gray-700'>
+          <strong>Visa Sponsorship Required:</strong> {visaStatus}
+        </p>
+        <p className='text-gray-700'>
+          <strong>Willing to Relocate:</strong> {relocation}
+        </p>
+        <p className='text-gray-700'>
+          <strong>Completed Master&apos;s Degree:</strong> {mastersDegree}
+        </p>
+        <div className='mt-4'>
+          <button
+            onClick={downloadResume}
+            className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'
+          >
+            Download Resume
+          </button>
         </div>
       </div>
 
@@ -200,6 +191,15 @@ const EmployerApplicationDetails = () => {
       <div className='mb-6'>
         <h2 className='text-xl font-semibold mb-2'>Cover Letter</h2>
         <p className='text-gray-700'>{coverLetter}</p>
+      </div>
+
+      <div className='mt-8'>
+        <button
+          onClick={downloadApplicationPDF}
+          className='bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600'
+        >
+          Download Application as PDF
+        </button>
       </div>
     </div>
   );

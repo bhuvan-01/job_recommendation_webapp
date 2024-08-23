@@ -1,14 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
-import Logo from './Logo';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Button } from './ui/button';
-import {
-  Bell,
-  LogOut,
-  MessageSquareText,
-  User,
-  BarChart2,
-} from 'lucide-react';
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "./Logo";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { Bell, LogOut, MessageSquareText, User, BarChart2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,15 +10,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { useDispatch } from 'react-redux';
-import { logout } from '@/app/auth/authSlice';
-import { clearToken } from '@/services/apiClient';
-import useUser from '@/hooks/useUser';
-import { IMG_URL } from '@/utils/constants';
-import Notifications from './Notifications';
-import ContactImage from '../assets/images/contactIcon.png';
-import { DashboardIcon, DashIcon } from '@radix-ui/react-icons';
+} from "./ui/dropdown-menu";
+import { useDispatch } from "react-redux";
+import { logout } from "@/app/auth/authSlice";
+import { clearToken } from "@/services/apiClient";
+import useUser from "@/hooks/useUser";
+import { IMG_URL } from "@/utils/constants";
+import Notifications from "./Notifications";
+import ContactImage from "../assets/images/contactIcon.png";
+import { DashboardIcon, DashIcon } from "@radix-ui/react-icons";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -34,7 +28,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logout());
     clearToken();
-    navigate('/');
+    navigate("/");
   };
 
   const fallbackName =
@@ -76,7 +70,7 @@ const Header = () => {
             <DropdownMenuTrigger>
               <Avatar>
                 <AvatarImage
-                  src={user?.photo ? IMG_URL + '/' + user.photo : ContactImage}
+                  src={user?.photo ? IMG_URL + "/" + user.photo : ContactImage}
                 />
                 {user && <AvatarFallback>{fallbackName}</AvatarFallback>}
               </Avatar>
@@ -87,9 +81,9 @@ const Header = () => {
               <DropdownMenuItem>
                 <Link
                   to={
-                    user?.role === 'employer'
-                      ? '/profile/employer'
-                      : '/profile/user'
+                    user?.role === "employer"
+                      ? "/profile/employer"
+                      : "/profile/user"
                   }
                   className="flex items-center"
                 >
@@ -101,25 +95,35 @@ const Header = () => {
                 </Link>
               </DropdownMenuItem>
 
-              {user?.role === 'employer' && (
+              {user?.role === "employer" && (
                 <DropdownMenuItem>
-                  <Link
-                    to="/dashboard/employer"
-                    className="flex items-center"
-                  >
+                  <Link to="/dashboard/employer" className="flex items-center">
                     <DashboardIcon
                       size={16}
                       className="text-gray-800 dark:text-gray-300 mr-2"
                     />
                     Dashboard
                   </Link>
-                  
                 </DropdownMenuItem>
-                
+              )}
+
+              {user?.role === "employer" && (
+                <DropdownMenuItem>
+                  <Link
+                    to="/dashboard/employer/applications"
+                    className="flex items-center"
+                  >
+                    <BarChart2
+                      size={16}
+                      className="text-gray-800 dark:text-gray-300 mr-2"
+                    />
+                    Applications
+                  </Link>
+                </DropdownMenuItem>
               )}
 
               {/* Conditionally render the Analytics link if the user is an employer */}
-              {user?.role === 'employer' && (
+              {user?.role === "employer" && (
                 <DropdownMenuItem>
                   <Link
                     to="/dashboard/employer/analytics"
@@ -131,11 +135,8 @@ const Header = () => {
                     />
                     Analytics
                   </Link>
-                  
                 </DropdownMenuItem>
-                
               )}
-              
 
               <DropdownMenuItem
                 className="cursor-pointer"

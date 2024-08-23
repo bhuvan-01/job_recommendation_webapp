@@ -4,11 +4,15 @@ import apiClient from '@/services/apiClient';
 import { Banknote, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+
+
 
 const JobDetailed = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -26,6 +30,13 @@ const JobDetailed = () => {
 
     if (id) fetchJob();
   }, [id]);
+
+
+
+  
+  const handleJobApply = (jobId) => {
+    navigate(`/apply/${jobId}`);
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -84,7 +95,7 @@ const JobDetailed = () => {
                 >
                   Save
                 </Button>
-                <Button className='px-8 basis-1/2 md:basis-auto'>Apply</Button>
+                <Button onClick={() => handleJobApply(job._id)} className='px-8 basis-1/2 md:basis-auto'>Apply</Button>
               </div>
             </div>
             {/* right col */}

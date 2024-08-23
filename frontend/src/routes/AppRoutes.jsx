@@ -32,6 +32,8 @@ import  AdminDashboard from '@/Admin/AdminDashbaord';
 import Analytics from '@/pages/employer/Analytics'; 
 import ApplicationsList from '@/pages/employer/AllApplications';
 import JobRecommendations from '@/pages/user/RecommendedJobs'
+import ApplyNowPage from '@/pages/user/ApplyNow';
+import SuccessPage from '@/pages/user/SuccessPage' 
 
 
 
@@ -106,6 +108,15 @@ const router = createBrowserRouter([
             path: 'dashboard/user',
             element: <UserDashboard />,
           },
+          {
+            path:'apply/:jobId',
+            element:<ApplyNowPage/>
+          },
+          {
+            path:'applications/success',
+            element:<SuccessPage />
+          },
+
           {
             path: 'dashboard/employer',
             element: <EmployerDashboard />,
