@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   createUser,
   deleteUser,
@@ -6,31 +6,17 @@ const {
   getAllUsers,
   approveJob,
   getAdminStats,
-  getAdminStatsByMonth
-} = require('../controllers/admin');
-const isLoggedin = require('../middlewares/isLoggedin');
-const isAdmin = require('../middlewares/isAdmin');
-
+  getAdminStatsByMonth,
+} = require("../controllers/admin");
+const isLoggedin = require("../middlewares/isLoggedin");
+const isAdmin = require("../middlewares/isAdmin");
 const router = express.Router();
 
-// Create a new user
-router.post('/users', isLoggedin, isAdmin, createUser);
-
-// Delete a user
-router.delete('/users/:id', isLoggedin, isAdmin, deleteUser);
-
-// Update a user
-router.put('/users/:id', isLoggedin, isAdmin, updateUser);
-
-// Get all users
-router.get('/users', isLoggedin, isAdmin, getAllUsers);
-
-// Approve a job
-router.put('/jobs/:id/approve', isLoggedin, isAdmin, approveJob);
-
-router.get('/stats', isLoggedin, isAdmin, getAdminStats);
-
-router.get('/stats-by-month', isLoggedin, isAdmin, getAdminStatsByMonth);
-
-
+router.post("/users", isLoggedin, isAdmin, createUser);
+router.delete("/users/:id", isLoggedin, isAdmin, deleteUser);
+router.put("/users/:id", isLoggedin, isAdmin, updateUser);
+router.get("/users", isLoggedin, isAdmin, getAllUsers);
+router.put("/jobs/:id/approve", isLoggedin, isAdmin, approveJob);
+router.get("/stats", isLoggedin, isAdmin, getAdminStats);
+router.get("/stats-by-month", isLoggedin, isAdmin, getAdminStatsByMonth);
 module.exports = router;

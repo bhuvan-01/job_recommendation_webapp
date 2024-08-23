@@ -33,7 +33,9 @@ import Analytics from '@/pages/employer/Analytics';
 import ApplicationsList from '@/pages/employer/AllApplications';
 import JobRecommendations from '@/pages/user/RecommendedJobs'
 import ApplyNowPage from '@/pages/user/ApplyNow';
-import SuccessPage from '@/pages/user/SuccessPage' 
+import SuccessPage from '@/pages/user/SuccessPage';
+import AllAdminApplication from '@/Admin/AllAdminApplication';
+
 
 
 
@@ -95,6 +97,10 @@ const router = createBrowserRouter([
           {
             path:"dashboard",
             element: <AdminDashboard/>
+          },
+          {
+            path:"adminapplications",
+            element:<AllAdminApplication/>
           },
         ]
         },

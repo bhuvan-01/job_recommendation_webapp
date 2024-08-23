@@ -8,8 +8,15 @@ const {
   updateApplicationStatus,
   getApplicationById,
   getApplicationsForEmployer,
+  getAllApplications,
+  deleteApplication
 } = require("../controllers/application");
 const isEmployer = require("../middlewares/isEmployer");
+const isAdmin = require("../middlewares/isAdmin")
+
+
+router.get("/all", isLoggedin, isAdmin, getAllApplications);
+router.delete("/:id", isLoggedin, isAdmin, deleteApplication);
 
 router.get("/", isLoggedin, getUserApplications);
 router.get("/:id", isLoggedin, getApplicationById);

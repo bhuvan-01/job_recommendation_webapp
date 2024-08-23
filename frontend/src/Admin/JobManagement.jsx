@@ -1,88 +1,79 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAdminJobs, deleteAdminJob } from "../app/jobFormSlice";
-import JobFormModal from "../Admin/JobFormModel";
+import React, { useState, useEffect } from 'react';
+import apiClient from '../services/apiClient'; // Ensure this is the correct path to your API client
 
-const JobsList = () => {
-  const dispatch = useDispatch();
-  const { jobs, loading, error } = useSelector((state) => state.jobForm);
-  const [currentJob, setCurrentJob] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+const JobList = () => {
+    const [jobs, setJobs] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    dispatch(fetchAdminJobs());
-  }, [dispatch]);
+    useEffect(() => {
+        fetchJobs();
+    }, []);
 
-  const handleDelete = async (jobId) => {
-    dispatch(deleteAdminJob(jobId));
-  };
+    const fetchJobs = async () => {
+        const response = await apiClient.get('/admin/jobs');
+        setJobs(response.data.jobs);
+    };
 
-  const handleCreateOrUpdate = (job) => {
-    setCurrentJob(job);
-    setModalOpen(true);
-  };
+    const handleDelete = async (jobId) => {
+        try {
+            await apiClient.delete(`/admin/jobs/${jobId}`);
+            setJobs(jobs.filter(job => job._id !== jobId)); // Optimistic update
+        } catch (error) {
+            console.error("Failed to delete job:", error);
+        }
+    };
 
-  const filteredJobs = Array.isArray(jobs)
-    ? jobs.filter(
-        (job) =>
-          job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.description.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+    const handleApprove = async (jobId) => {
+        // Implement job approval logic
+    };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching jobs: {error.message || error}</div>;
+    const handleReject = async (jobId) => {
+        // Implement job rejection logic
+    };
 
-  return (
-    <div className="container mx-auto mt-5 flex flex-col">
-      <div className="flex justify-between mb-4">
-        <button
-          onClick={() => handleCreateOrUpdate(null)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Create New Job
-        </button>
-        <input
-          type="text"
-          placeholder="Search jobs..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border-2 border-gray-300 p-2 rounded"
-        />
-      </div>
-      <div className="mt-3">
-        {filteredJobs.map((job) => (
-          <div key={job._id} className="p-4 mb-2 shadow rounded bg-white">
-            <h3 className="font-semibold">{job.title}</h3>
-            <p>{job.description}</p>
-            <div>
-              <b>Type:</b> {job.jobType} | <b>Location:</b> {job.location}
+    const handleView = async (jobId) => {
+        // Implement job view logic
+    };
+
+    const filteredJobs = jobs.filter(job =>
+        job.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+        <div className="container mx-auto p-4">
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search jobs..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
             </div>
-            <button
-              onClick={() => handleCreateOrUpdate(job)}
-              className="text-blue-500 hover:text-blue-700 mr-2"
-            >
-              Update
-            </button>
-            <button
-              onClick={() => handleDelete(job._id)}
-              className="text-red-500 hover:text-red-700"
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-      </div>
-      {modalOpen && (
-        <JobFormModal
-          job={currentJob}
-          closeModal={() => setModalOpen(false)}
-          fetchJobs={() => dispatch(fetchAdminJobs())}
-        />
-      )}
-    </div>
-  );
+            {filteredJobs.map((job) => (
+                <div key={job._id} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex justify-between items-center">
+                    <div>
+                        <h3 className="font-bold text-xl mb-2">{job.title}</h3>
+                        <p>Type: {job.jobType} | Location: {job.location} | Company: {job.company.name}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <button onClick={() => handleView(job._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            View
+                        </button>
+                        <button onClick={() => handleApprove(job._id)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Approve
+                        </button>
+                        <button onClick={() => handleReject(job._id)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Reject
+                        </button>
+                        <button onClick={() => handleDelete(job._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
 };
 
-export default JobsList;
+export default JobList;

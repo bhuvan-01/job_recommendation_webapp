@@ -28,6 +28,9 @@ const AdminPanel = () => {
             <Link to="jobs" className="block p-4 hover:bg-gray-200">
               Jobs
             </Link>
+            <Link to="adminapplications" className="block p-4 hover:bg-gray-200">
+              Applications
+            </Link>
           </nav>
         </div>
 
