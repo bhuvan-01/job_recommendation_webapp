@@ -55,7 +55,7 @@ const constructMongoQuery = (query) => {
 
   // Experience field
   if (query.experience && query.experience.length > 0) {
-    mongoQuery.experience = query.experience;
+    mongoQuery.experience = { $in: query.experience };
   }
 
   // Salary range field
@@ -74,19 +74,39 @@ const constructMongoQuery = (query) => {
 };
 // get jobs
 exports.getJobs = async (req, res) => {
+  const {
+    keyword,
+    location,
+    industry,
+    minSalary,
+    jobType,
+    experience,
+    locationType,
+  } = req.query;
+
   let mongoQuery = {};
-  if (req.query.s) {
+  if (keyword) {
     const response = await axios.post(process.env.FLASK_API + "/parse-query", {
-      query: req.query.s,
+      query: keyword,
     });
     const query = response.data;
     mongoQuery = constructMongoQuery(query);
   } else {
     mongoQuery = {};
   }
+
+  if (location) {
+    mongoQuery.location = { $regex: location.split(',')[0], $options: 'i' };
+  }
+  if (industry) mongoQuery.industry = { $in: industry };
+  if (minSalary) mongoQuery.salary = { $gte: minSalary };
+  if (jobType) mongoQuery.jobType = { $in: jobType };
+  if (experience) mongoQuery.experience = { $in: experience };
+  if (locationType) mongoQuery.locationType = { $in: locationType };
   const perPage = req.query.perPage || 10;
   const page = req.query.page || 1;
   const skip = (page - 1) * perPage;
+
   try {
     const jobs = await Job.find(mongoQuery)
       .populate("company")
@@ -396,13 +416,13 @@ exports.getEmployerStatsByMonth = async (req, res) => {
 
 exports.getRecommended = async (req, res) => {
   const userId = req.user._id;
-  
-  try {
-           const response = await fetch(process.env.FLASK_API + `/recommendedjob/${userId}`);
 
-      return res.json(await response.json());
+  try {
+    const response = await fetch(process.env.FLASK_API + `/recommendedjob/${userId}`);
+
+    return res.json(await response.json());
   } catch (error) {
-      console.error('Error calling Flask API:', error);
-      return res.status(500).json({ error: 'Failed to fetch recommended jobs' });
+    console.error('Error calling Flask API:', error);
+    return res.status(500).json({ error: 'Failed to fetch recommended jobs' });
   }
 }
