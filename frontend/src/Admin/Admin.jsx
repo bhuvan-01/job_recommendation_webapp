@@ -2,7 +2,6 @@ import AdminHeader from '@/Admin/AdminHeader';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-
 const AdminPanel = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -30,6 +29,13 @@ const AdminPanel = () => {
             </Link>
             <Link to="adminapplications" className="block p-4 hover:bg-gray-200">
               Applications
+            </Link>
+
+            <Link to="newsletter" className="block p-4 hover:bg-gray-200">
+              NewsLetter
+            </Link>
+            <Link to="callbackcontact" className="block p-4 hover:bg-gray-200">
+              Callback Contact
             </Link>
           </nav>
         </div>

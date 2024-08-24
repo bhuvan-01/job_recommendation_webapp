@@ -57,7 +57,7 @@ const Community = () => {
               Follow us on Instagram to get behind-the-scenes insights, career tips, and more visual content.
             </p>
             <a
-              href="https://www.instagram.com/yourprofile"
+              href="https://www.instagram.com/jobwipe?igsh=Z3EyZm01emRhbDQ5"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 inline-block bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition"

@@ -88,7 +88,7 @@ export default function FooterWithSocialLinks() {
 
             {/* Instagram */}
             <a
-              href="https://www.instagram.com/yourprofile"
+              href="https://www.instagram.com/jobwipe?igsh=Z3EyZm01emRhbDQ5 "
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -104,8 +104,6 @@ export default function FooterWithSocialLinks() {
                 />
               </svg>
             </a>
-
-            {/* Discord */}
             <a
               href="https://discord.gg/8Fr4yS7U  "
               target="_blank"

@@ -17,3 +17,27 @@ exports.subscribe = async (req, res) => {
         res.status(500).send('Failed to subscribe');
     }
 };
+
+
+exports.getAllSubscribers = async (req, res) => {
+    try {
+        const subscribers = await Subscriber.find();
+        res.json(subscribers);
+    } catch (error) {
+        res.status(500).send("Error retrieving subscribers.");
+    }
+};
+
+exports.deleteSubscriber = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await Subscriber.findByIdAndDelete(id);
+        if (result) {
+            res.send("Subscriber deleted successfully.");
+        } else {
+            res.status(404).send("Subscriber not found.");
+        }
+    } catch (error) {
+        res.status(500).send("Error deleting subscriber.");
+    }
+};

@@ -5,7 +5,6 @@ import JobStatsLineChart from '../Admin/charts/LineChart'; // Import the Line Ch
 import PieChartComponent from '../Admin/charts/PieCharts';
 import AdminStatsLineChart from '../Admin/charts/DetailedLineChart';
 import AdminStatsBarChart from '../Admin/charts/BarChart';
-import { Analytics } from '@/pages/employer/Analytics';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({

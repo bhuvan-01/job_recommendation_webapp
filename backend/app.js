@@ -14,8 +14,9 @@ const socketIo = require('socket.io');
 const http = require('http');
 const chalk = require('chalk');
 const adminRoutes = require('./routes/admin');
-const adminJobRoutes = require('./routes/adminJobRoutes'); // Import the new admin job routes
-const newsletterRoutes = require("./routes/newsLetter");
+const adminJobRoutes = require('./routes/adminJobRoutes'); 
+const newsletterRoutes = require('./routes/newsLetter');
+const contactRoutes = require('./routes/contact')
 
 
 
@@ -51,7 +52,8 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/jobs', adminJobRoutes);
-app.use("/api", newsletterRoutes);
+app.use('/api', newsletterRoutes);
+app.use('/api', contactRoutes);
 
 
 //chalk configs

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import apiClient from '@/services/apiClient'; 
 import callback from '../assets/images/callback.png';
-import contact from '../assets/images/contact.jpg'
-
+import contact from '../assets/images/contact.jpg';
 
 const ContactUs = () => {
   const formik = useFormik({
@@ -22,9 +22,17 @@ const ContactUs = () => {
       ),
       message: Yup.string().required('Message is required'),
     }),
-    onSubmit: (values, { resetForm }) => {
-      console.log('Form submitted', values);
-      resetForm();
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      apiClient.post('/contacts', values)
+        .then(response => {
+          alert('Your message has been sent successfully!');
+          resetForm();
+        })
+        .catch(error => {
+          console.error('There was an error sending your message:', error);
+          alert('Failed to send your message. Please try again.');
+        })
+        .finally(() => setSubmitting(false));
     },
   });
 
@@ -70,9 +78,7 @@ const ContactUs = () => {
             <h3 className="text-lg font-medium text-gray-900">Request a Callback</h3>
             <form className="space-y-6 mt-6" onSubmit={formik.handleSubmit}>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
-                </label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <div className="mt-1">
                   <input
                     id="name"
@@ -89,11 +95,8 @@ const ContactUs = () => {
                   ) : null}
                 </div>
               </div>
-
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <div className="mt-1">
                   <input
                     id="email"
@@ -110,11 +113,8 @@ const ContactUs = () => {
                   ) : null}
                 </div>
               </div>
-
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                  Phone
-                </label>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
                 <div className="mt-1">
                   <input
                     id="phone"
@@ -131,11 +131,8 @@ const ContactUs = () => {
                   ) : null}
                 </div>
               </div>
-
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                  Message
-                </label>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
                 <div className="mt-1">
                   <textarea
                     id="message"
@@ -151,7 +148,6 @@ const ContactUs = () => {
                   ) : null}
                 </div>
               </div>
-
               <div>
                 <button
                   type="submit"

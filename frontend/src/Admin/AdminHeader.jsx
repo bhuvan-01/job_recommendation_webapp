@@ -29,9 +29,8 @@ const AdminHeader = () => {
   return (
     <div className="py-2 border-b border-b-gray-100/75 bg-white/50 backdrop-blur-md sticky top-0 z-50">
       <div className="container px-4 md:px-6 lg:px-8 w-[95%] mx-auto max-w-[1400px] flex justify-between items-center">
-        <Link to="/">
           <Logo />
-        </Link>
+      
 
         <div className="flex gap-2 items-center">
           <DropdownMenu>

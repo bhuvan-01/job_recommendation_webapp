@@ -35,6 +35,8 @@ import JobRecommendations from '@/pages/user/RecommendedJobs'
 import ApplyNowPage from '@/pages/user/ApplyNow';
 import SuccessPage from '@/pages/user/SuccessPage';
 import AllAdminApplication from '@/Admin/AllAdminApplication';
+import AdminNewsLetter from '@/Admin/NewsletterManagement';
+import CallbackContact from '@/Admin/CallbackContact'
 
 
 
@@ -101,6 +103,14 @@ const router = createBrowserRouter([
           {
             path:"adminapplications",
             element:<AllAdminApplication/>
+          },
+          {
+            path:"newsletter",
+            element:<AdminNewsLetter/>
+          },
+          {
+            path:"callbackcontact",
+            element:<CallbackContact/>
           },
         ]
         },
