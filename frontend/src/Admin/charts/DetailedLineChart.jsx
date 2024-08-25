@@ -52,6 +52,7 @@ const AdminStatsLineChart = () => {
         const jobSeekersData = new Array(12).fill(0);
         const employersData = new Array(12).fill(0);
         const hiredData = new Array(12).fill(0);
+        const applicationsData = new Array(12).fill(0);
 
         data.monthlyJobs.forEach((item) => {
           const monthIndex = item._id.month - 1;
@@ -73,11 +74,17 @@ const AdminStatsLineChart = () => {
           hiredData[monthIndex] = item.totalHired;
         });
 
+        data.monthlyApplications.forEach((item) => {
+          const monthIndex = item._id.month - 1;
+          applicationsData[monthIndex] = item.totalApplications;
+        });
+
         const maxValue = Math.max(
           ...jobData,
           ...jobSeekersData,
           ...employersData,
-          ...hiredData
+          ...hiredData,
+          ...applicationsData
         );
 
         setChartData({
@@ -87,28 +94,40 @@ const AdminStatsLineChart = () => {
               label: "Total Jobs",
               data: jobData,
               borderColor: "#3f51b5",
-              fill: false,
+              backgroundColor: "rgba(63, 81, 181, 0.3)",
+              fill: true,
               tension: 0.4,
             },
             {
               label: "Total Job Seekers",
               data: jobSeekersData,
               borderColor: "#f50057",
-              fill: false,
+              backgroundColor: "rgba(245, 0, 87, 0.3)",
+              fill: true,
               tension: 0.4,
             },
             {
               label: "Total Employers",
               data: employersData,
               borderColor: "#4caf50",
-              fill: false,
+              backgroundColor: "rgba(76, 175, 80, 0.3)",
+              fill: true,
               tension: 0.4,
             },
             {
               label: "Total Hired",
               data: hiredData,
               borderColor: "#ff9800",
-              fill: false,
+              backgroundColor: "rgba(255, 152, 0, 0.3)",
+              fill: true,
+              tension: 0.4,
+            },
+            {
+              label: "Total Applications",
+              data: applicationsData,
+              borderColor: "#673ab7",
+              backgroundColor: "rgba(103, 58, 183, 0.3)",
+              fill: true,
               tension: 0.4,
             },
           ],
@@ -127,7 +146,7 @@ const AdminStatsLineChart = () => {
   }
 
   return (
-    <Box sx={{ padding: 3, backgroundColor: "white" }}>
+    <Box sx={{ padding: 3, backgroundColor: "white", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       <Typography variant="h6" gutterBottom>
         Monthly Admin Stats
       </Typography>
@@ -145,6 +164,9 @@ const AdminStatsLineChart = () => {
               title: {
                 display: true,
                 text: "Month",
+                font: {
+                  size: 14,
+                },
               },
               grid: {
                 display: false,
@@ -154,13 +176,17 @@ const AdminStatsLineChart = () => {
               title: {
                 display: true,
                 text: "Count",
+                font: {
+                  size: 14,
+                },
               },
               beginAtZero: true,
               ticks: {
                 precision: 0,
               },
               grid: {
-                display: false,
+                display: true,
+                color: "rgba(200, 200, 200, 0.3)",
               },
               suggestedMax: chartData.maxValue + 5,
             },

@@ -1,148 +1,117 @@
 import React, { useEffect, useState } from 'react';
+import Chart from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
-import { Box, Typography } from '@mui/material';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
-import apiClient from '@/services/apiClient'; // Make sure this path is correct
+import axios from 'axios';
+import apiClient from '@/services/apiClient';
 
-// Register the components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const AdminStatsBarChart = () => {
+const MonthlyStatsChart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    // Fetch data from the API
+    const fetchData = async () => {
       try {
         const response = await apiClient.get('/admin/stats-by-month');
         const data = response.data;
 
-        // All months
-        const months = [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-        ];
+        // Process the data to extract months and corresponding stats
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Initialize data arrays with zeroes for each month
-        const jobData = new Array(12).fill(0);
-        const jobSeekersData = new Array(12).fill(0);
-        const employersData = new Array(12).fill(0);
-        const hiredData = new Array(12).fill(0);
+        // Initialize data arrays
+        const jobData = Array(12).fill(0);
+        const jobSeekerData = Array(12).fill(0);
+        const employerData = Array(12).fill(0);
+        const hiredData = Array(12).fill(0);
+        const applicationData = Array(12).fill(0);
 
-        // Fill the data arrays with actual values from the response
-        data.monthlyJobs.forEach((item) => {
-          const monthIndex = item._id.month - 1; // Month is 1-based in MongoDB, 0-based in JS
-          jobData[monthIndex] = item.totalJobs;
+        // Populate the arrays with data from the API response
+        data.monthlyJobs.forEach(item => {
+          jobData[item._id.month - 1] = item.totalJobs;
         });
 
-        data.monthlyJobSeekers.forEach((item) => {
-          const monthIndex = item._id.month - 1;
-          jobSeekersData[monthIndex] = item.totalJobSeekers;
+        data.monthlyJobSeekers.forEach(item => {
+          jobSeekerData[item._id.month - 1] = item.totalJobSeekers;
         });
 
-        data.monthlyEmployers.forEach((item) => {
-          const monthIndex = item._id.month - 1;
-          employersData[monthIndex] = item.totalEmployers;
+        data.monthlyEmployers.forEach(item => {
+          employerData[item._id.month - 1] = item.totalEmployers;
         });
 
-        data.monthlyHired.forEach((item) => {
-          const monthIndex = item._id.month - 1;
-          hiredData[monthIndex] = item.totalHired;
+        data.monthlyHired.forEach(item => {
+          hiredData[item._id.month - 1] = item.totalHired;
         });
 
+        data.monthlyApplications.forEach(item => {
+          applicationData[item._id.month - 1] = item.totalApplications;
+        });
+
+        
         setChartData({
           labels: months,
           datasets: [
             {
-              label: 'Total Jobs',
+              label: 'Jobs',
               data: jobData,
-              backgroundColor: '#3f51b5',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
             },
             {
-              label: 'Total Job Seekers',
-              data: jobSeekersData,
-              backgroundColor: '#f50057',
+              label: 'Job Seekers',
+              data: jobSeekerData,
+              backgroundColor: 'rgba(153, 102, 255, 0.2)',
+              borderColor: 'rgba(153, 102, 255, 1)',
+              borderWidth: 1,
             },
             {
-              label: 'Total Employers',
-              data: employersData,
-              backgroundColor: '#4caf50',
+              label: 'Employers',
+              data: employerData,
+              backgroundColor: 'rgba(255, 159, 64, 0.2)',
+              borderColor: 'rgba(255, 159, 64, 1)',
+              borderWidth: 1,
             },
             {
-              label: 'Total Hired',
+              label: 'Hired',
               data: hiredData,
-              backgroundColor: '#ff9800',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Applications',
+              data: applicationData,
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              borderColor: 'rgba(255, 206, 86, 1)',
+              borderWidth: 1,
             },
           ],
         });
       } catch (error) {
-        console.error('Failed to fetch admin stats:', error);
+        console.error('Error fetching the data', error);
       }
     };
 
-    fetchStats();
+    fetchData();
   }, []);
 
-  if (!chartData) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <Box sx={{ padding: 3, backgroundColor: 'white' }}>
-      <Typography variant="h6" gutterBottom>
-        Monthly Admin Stats - Bar Chart
-      </Typography>
-      <Bar
-        data={chartData}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Month',
-              },
-              grid: {
-                display: false, // Optionally remove grid lines
+    <div style={{ width: '80%', margin: '0 auto' }}>
+      {chartData ? (
+        <Bar
+          data={chartData}
+          options={{
+            scales: {
+              y: {
+                beginAtZero: true,
               },
             },
-            y: {
-              title: {
-                display: true,
-                text: 'Count',
-              },
-              beginAtZero: true,
-              ticks: {
-                precision: 0, // Ensures the y-axis shows whole numbers
-              },
-              grid: {
-                display: false, // Optionally remove grid lines
-              },
-            },
-          },
-        }}
-      />
-    </Box>
+          }}
+        />
+      ) : (
+        <p>Loading data...</p>
+      )}
+    </div>
   );
 };
 
-export default AdminStatsBarChart;
+export default MonthlyStatsChart;

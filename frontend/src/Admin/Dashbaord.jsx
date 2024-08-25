@@ -8,10 +8,12 @@ import AdminStatsBarChart from './charts/BarChart';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
-    totalJobSeekers: 0,
-    totalEmployers: 0,
-    totalJobs: 0,
-    totalHired: 0,
+    "totalUsers": 0,
+    "totalJobSeekers": 0,
+    "totalEmployers": 0,
+    "totalJobs": 0,
+    "totalApplications": 0,
+    "totalHired": 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,28 +46,31 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-blue-500 p-4 rounded-lg shadow-md flex items-center justify-between text-white">
           <div>
-            <h3 className="text-lg font-semibold">Total Job Seekers</h3>
-            <p className="text-2xl font-bold">{stats.totalJobSeekers}</p>
+            <h3 className="text-lg font-semibold">Users</h3>
+            <p className="text-2xl font-bold">{stats.totalUsers}</p>
           </div>
           <FaUsers className="text-4xl" />
         </div>
+        
         <div className="bg-blue-500 p-4 rounded-lg shadow-md flex items-center justify-between text-white">
           <div>
-            <h3 className="text-lg font-semibold">Total Employers</h3>
-            <p className="text-2xl font-bold">{stats.totalEmployers}</p>
-          </div>
-          <FaBuilding className="text-4xl" />
-        </div>
-        <div className="bg-blue-500 p-4 rounded-lg shadow-md flex items-center justify-between text-white">
-          <div>
-            <h3 className="text-lg font-semibold">Total Jobs</h3>
+            <h3 className="text-lg font-semibold">Jobs</h3>
             <p className="text-2xl font-bold">{stats.totalJobs}</p>
           </div>
           <FaBriefcase className="text-4xl" />
         </div>
+
         <div className="bg-blue-500 p-4 rounded-lg shadow-md flex items-center justify-between text-white">
           <div>
-            <h3 className="text-lg font-semibold">Total Hired</h3>
+            <h3 className="text-lg font-semibold">Applications</h3>
+            <p className="text-2xl font-bold">{stats.totalApplications}</p>
+          </div>
+          <FaBuilding className="text-4xl" />
+        </div>
+
+        <div className="bg-blue-500 p-4 rounded-lg shadow-md flex items-center justify-between text-white">
+          <div>
+            <h3 className="text-lg font-semibold">Hired</h3>
             <p className="text-2xl font-bold">{stats.totalHired}</p>
           </div>
           <FaUserCheck className="text-4xl" />

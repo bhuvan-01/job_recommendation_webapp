@@ -48,7 +48,7 @@ const SubscriberList = () => {
           {subscribers.map((subscriber) => (
             <li
               key={subscriber._id}
-              className="flex justify-between items-center p-2 border-b"
+              className="flex justify-between items-center "
             >
               <span>{subscriber.email}</span>
               <button

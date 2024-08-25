@@ -134,9 +134,14 @@ exports.updateApplicationStatus = async (req, res) => {
       return res.status(400).json({ message: "Invalid status value" });
     }
 
+    const updateObject = {
+      status: status,
+      hiredAt: status == "Hired" ? new Date() : null,
+    };
+
     const application = await Application.findByIdAndUpdate(
       applicationId,
-      { $set: { status } },
+      { $set: updateObject },
       { new: true }
     )
       .populate("applicant")
@@ -170,7 +175,6 @@ exports.updateApplicationStatus = async (req, res) => {
       status,
     });
 
-    // Send an email to the applicant if the status is Hired
     if (status === "Hired") {
       const emailSubject = `You have been hired for ${application.job.title}`;
       const emailText = `Dear ${application.applicant.firstName},\n\nCongratulations! You have been hired for the position of ${application.job.title}. We are excited to welcome you to the team.\n\nBest regards,\nThe HR Team`;

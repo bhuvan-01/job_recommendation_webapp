@@ -294,7 +294,7 @@ exports.getEmployerDashboardStats = async (req, res) => {
     // Count total people hired
     const hiredApplications = await Application.find({
       job: { $in: jobIds },
-      status: "hired",
+      status: "Hired",
     });
 
     const uniqueHires = new Set(
@@ -349,8 +349,8 @@ exports.getEmployerStatsByMonth = async (req, res) => {
       {
         $group: {
           _id: {
-            month: { $month: "$applications.appliedAt" },
-            year: { $year: "$applications.appliedAt" },
+            month: { $month: "$createdAt" },
+            year: { $year: "$createdAt" },
           },
           totalApplications: { $sum: 1 },
         },
@@ -385,7 +385,7 @@ exports.getEmployerStatsByMonth = async (req, res) => {
           job: {
             $in: await Job.find({ company: user.company }).distinct("_id"),
           },
-          status: "hired",
+          status: "Hired",
           hiredAt: { $exists: true },
         },
       },

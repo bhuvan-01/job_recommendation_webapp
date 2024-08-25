@@ -1,86 +1,49 @@
 import React from 'react';
-import { PieChart, Pie, Sector, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Pie } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const PieChart = ({ stats }) => {
+    const data = {
+        labels: ['Total Users', 'Total Jobs', 'Total Applications', 'Total Hired'],
+        datasets: [
+            {
+                label: 'Overview',
+                data: [stats.totalUsers, stats.totalJobs, stats.totalApplications, stats.totalHired],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', // red
+                    'rgba(54, 162, 235, 0.6)', // blue
+                    'rgba(255, 206, 86, 0.6)', // yellow
+                    'rgba(75, 192, 192, 0.6)'  // green
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }
+        ]
+    };
 
-const renderActiveShape = (props) => {
-    const RADIAN = Math.PI / 180;
-    const {
-        cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-        fill, payload, percent, value
-    } = props;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? 'start' : 'end';
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    boxWidth: 20
+                }
+            }
+        }
+    };
 
     return (
-        <g>
-            <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-                {payload.name}
-            </text>
-            <Sector
-                cx={cx}
-                cy={cy}
-                innerRadius={innerRadius}
-                outerRadius={outerRadius}
-                startAngle={startAngle}
-                endAngle={endAngle}
-                fill={fill}
-            />
-            <Sector
-                cx={cx}
-                cy={cy}
-                startAngle={startAngle}
-                endAngle={endAngle}
-                innerRadius={outerRadius + 6}
-                outerRadius={outerRadius + 10}
-                fill={fill}
-            />
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none"/>
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none"/>
-            <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value} (${(percent * 100).toFixed(2)}%)`}</text>
-        </g>
+        <div className="w-full h-64">
+            <Pie data={data} options={options} />
+        </div>
     );
 };
 
-const PieChartComponent = ({ stats }) => {
-    const data = [
-        { name: 'Job Seekers', value: stats.totalJobSeekers },
-        { name: 'Employers', value: stats.totalEmployers },
-        { name: 'Jobs', value: stats.totalJobs },
-        { name: 'Hired', value: stats.totalHired },
-    ];
-
-    return (
-        <ResponsiveContainer width="100%" height={400}>
-            <PieChart>
-                <Pie
-                    activeIndex={0}
-                    activeShape={renderActiveShape}
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    onMouseEnter={(e, index) => {}}
-                >
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-            </PieChart>
-        </ResponsiveContainer>
-    );
-};
-
-export default PieChartComponent;
+export default PieChart;

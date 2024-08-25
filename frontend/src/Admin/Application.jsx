@@ -60,7 +60,7 @@ const EmployerAllApplications = () => {
               <p className='text-gray-600'>Job Title: {app?.job?.title || 'Untitled Job'}</p>
             </div>
             <Link to={`jobs/applications/${app._id}`}>
-                <Button>View</Button>
+                <Button className="text-right">View</Button>
               </Link>
             <Button onClick={() => handleDelete(app._id)} className='ml-4'>
               Delete

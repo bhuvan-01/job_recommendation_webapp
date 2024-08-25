@@ -1,32 +1,64 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Line } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
 
-const DashboardLineChart = ({ stats }) => {
-  // Assuming stats is an object with totalJobSeekers, totalEmployers, totalJobs, and totalHired
-  // We'll convert this object into an array suitable for the LineChart
-  const data = [
-    { category: 'Total Job Seekers', count: stats.totalJobSeekers },
-    { category: 'Total Employers', count: stats.totalEmployers },
-    { category: 'Total Jobs', count: stats.totalJobs },
-    { category: 'Total Hired', count: stats.totalHired }
-  ];
+const LineChart = ({ stats }) => {
+    const data = {
+        labels: ['Total Users', 'Job Seekers', 'Employers', 'Jobs', 'Applications', 'Hired'],
+        datasets: [
+            {
+                label: 'Company Statistics',
+                data: [
+                    stats.totalUsers,
+                    stats.totalJobSeekers,
+                    stats.totalEmployers,
+                    stats.totalJobs,
+                    stats.totalApplications,
+                    stats.totalHired
+                ],
+                borderColor: 'rgb(59, 130, 246)', // Tailwind blue-500
+                backgroundColor: 'rgba(59, 130, 246, 0.5)', // Semi-transparent blue
+                fill: true,
+                tension: 0.4,
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }
+        ]
+    };
 
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart
-        data={data}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="category" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {/* We'll use index as a workaround to create separate lines for each stat */}
-        <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    color: 'rgb(31, 41, 55)', // Tailwind gray-800
+                }
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(156, 163, 175, 0.3)', // Tailwind gray-400
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(156, 163, 175, 0.3)', // Tailwind gray-400
+                }
+            }
+        }
+    };
+
+    return (
+        <div className="w-full h-64 md:h-96">
+            <Line data={data} options={options} />
+        </div>
+    );
 };
 
-export default DashboardLineChart;
+export default LineChart;

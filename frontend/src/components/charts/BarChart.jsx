@@ -10,9 +10,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import apiClient from '@/services/apiClient'; // Make sure this path is correct
+import apiClient from '@/services/apiClient'; 
 
-// Register the components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -31,21 +30,18 @@ const EmployerStatsBarChart = () => {
         const response = await apiClient.get('/jobs/employer-stats/monthly');
         const data = response.data;
 
-        // All months
         const months = [
           "January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"
         ];
 
-        // Initialize data arrays with zeroes for each month
         const jobsPostedData = new Array(12).fill(0);
         const applicationsData = new Array(12).fill(0);
         const jobsSavedData = new Array(12).fill(0);
         const peopleHiredData = new Array(12).fill(0);
 
-        // Fill the data arrays with actual values from the response
         data.monthlyJobsPosted.forEach((item) => {
-          const monthIndex = item._id.month - 1; // Month is 1-based in MongoDB, 0-based in JS
+          const monthIndex = item._id.month - 1;
           jobsPostedData[monthIndex] = item.totalJobsPosted;
         });
 
