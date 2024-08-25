@@ -1,4 +1,4 @@
-import AdminHeader from '@/Admin/AdminHeader';
+import AdminHeader from '@/Admin/Header';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
@@ -35,7 +35,7 @@ const AdminPanel = () => {
               NewsLetter
             </Link>
             <Link to="callbackcontact" className="block p-4 hover:bg-gray-200">
-              Callback Contact
+              Contact
             </Link>
           </nav>
         </div>

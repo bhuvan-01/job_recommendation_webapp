@@ -28,15 +28,15 @@ import JobManagement from '@/Admin/JobManagement';
 import Features from '@/components/Features';
 import Newsletter from '@/components/NewsLetters';
 import Community from '@/components/Community';
-import  AdminDashboard from '@/Admin/AdminDashbaord';
+import  AdminDashboard from '@/Admin/Dashbaord';
 import Analytics from '@/pages/employer/Analytics'; 
 import ApplicationsList from '@/pages/employer/AllApplications';
 import JobRecommendations from '@/pages/user/RecommendedJobs'
 import ApplyNowPage from '@/pages/user/ApplyNow';
 import SuccessPage from '@/pages/user/SuccessPage';
-import AllAdminApplication from '@/Admin/AllAdminApplication';
+import AllAdminApplication from '@/Admin/Application';
 import AdminNewsLetter from '@/Admin/NewsletterManagement';
-import CallbackContact from '@/Admin/CallbackContact'
+import CallbackContact from '@/Admin/Contact'
 
 
 
@@ -111,6 +111,10 @@ const router = createBrowserRouter([
           {
             path:"callbackcontact",
             element:<CallbackContact/>
+          },
+          {
+            path: "jobs/applications/:id",
+            element: <EmployerApplicationDetails />,
           },
         ]
         },

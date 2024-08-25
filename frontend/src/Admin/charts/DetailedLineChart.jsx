@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
+import { Box, Typography } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,9 +9,9 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-import apiClient from '@/services/apiClient'; // Make sure this path is correct
+  Legend,
+} from "chart.js";
+import apiClient from "@/services/apiClient";
 
 // Register the components
 ChartJS.register(
@@ -30,24 +30,31 @@ const AdminStatsLineChart = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await apiClient.get('/admin/stats-by-month');
+        const response = await apiClient.get("/admin/stats-by-month");
         const data = response.data;
 
-        // All months
         const months = [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
         ];
 
-        // Initialize data arrays with zeroes for each month
         const jobData = new Array(12).fill(0);
         const jobSeekersData = new Array(12).fill(0);
         const employersData = new Array(12).fill(0);
         const hiredData = new Array(12).fill(0);
 
-        // Fill the data arrays with actual values from the response
         data.monthlyJobs.forEach((item) => {
-          const monthIndex = item._id.month - 1; // Month is 1-based in MongoDB, 0-based in JS
+          const monthIndex = item._id.month - 1;
           jobData[monthIndex] = item.totalJobs;
         });
 
@@ -66,7 +73,6 @@ const AdminStatsLineChart = () => {
           hiredData[monthIndex] = item.totalHired;
         });
 
-        // Calculate the maximum value for the y-axis
         const maxValue = Math.max(
           ...jobData,
           ...jobSeekersData,
@@ -78,34 +84,38 @@ const AdminStatsLineChart = () => {
           labels: months,
           datasets: [
             {
-              label: 'Total Jobs',
+              label: "Total Jobs",
               data: jobData,
-              borderColor: '#3f51b5',
+              borderColor: "#3f51b5",
               fill: false,
+              tension: 0.4,
             },
             {
-              label: 'Total Job Seekers',
+              label: "Total Job Seekers",
               data: jobSeekersData,
-              borderColor: '#f50057',
+              borderColor: "#f50057",
               fill: false,
+              tension: 0.4,
             },
             {
-              label: 'Total Employers',
+              label: "Total Employers",
               data: employersData,
-              borderColor: '#4caf50',
+              borderColor: "#4caf50",
               fill: false,
+              tension: 0.4,
             },
             {
-              label: 'Total Hired',
+              label: "Total Hired",
               data: hiredData,
-              borderColor: '#ff9800',
+              borderColor: "#ff9800",
               fill: false,
+              tension: 0.4,
             },
           ],
-          maxValue, // Store the calculated max value for later use
+          maxValue,
         });
       } catch (error) {
-        console.error('Failed to fetch admin stats:', error);
+        console.error("Failed to fetch admin stats:", error);
       }
     };
 
@@ -117,7 +127,7 @@ const AdminStatsLineChart = () => {
   }
 
   return (
-    <Box sx={{ padding: 3, backgroundColor: 'white' }}>
+    <Box sx={{ padding: 3, backgroundColor: "white" }}>
       <Typography variant="h6" gutterBottom>
         Monthly Admin Stats
       </Typography>
@@ -127,32 +137,32 @@ const AdminStatsLineChart = () => {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top',
+              position: "top",
             },
           },
           scales: {
             x: {
               title: {
                 display: true,
-                text: 'Month',
+                text: "Month",
               },
               grid: {
-                display: false, // Removes the grid lines on the x-axis
+                display: false,
               },
             },
             y: {
               title: {
                 display: true,
-                text: 'Count',
+                text: "Count",
               },
               beginAtZero: true,
               ticks: {
-                precision: 0, // Ensures the y-axis shows whole numbers
+                precision: 0,
               },
               grid: {
-                display: false, // Removes the grid lines on the y-axis
+                display: false,
               },
-              suggestedMax: chartData.maxValue + 5, // Adds a margin to the highest value to scale the graph better
+              suggestedMax: chartData.maxValue + 5,
             },
           },
         }}

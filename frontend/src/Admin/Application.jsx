@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import apiClient from '@/services/apiClient';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const EmployerAllApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -58,7 +59,9 @@ const EmployerAllApplications = () => {
               </h1>
               <p className='text-gray-600'>Job Title: {app?.job?.title || 'Untitled Job'}</p>
             </div>
-
+            <Link to={`jobs/applications/${app._id}`}>
+                <Button>View</Button>
+              </Link>
             <Button onClick={() => handleDelete(app._id)} className='ml-4'>
               Delete
             </Button>

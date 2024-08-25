@@ -248,7 +248,6 @@ const UserDashboardContent = () => {
   };
 
   const handleLocationChange = async (e) => {
-    // dispatch(locationQueryChanged(e.target.value));
     const query = e.target.value;
 
     dispatch(locationQueryChanged(query));

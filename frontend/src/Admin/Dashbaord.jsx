@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FaUsers, FaBuilding, FaBriefcase, FaUserCheck } from 'react-icons/fa';
 import apiClient from '../services/apiClient';
-import JobStatsLineChart from '../Admin/charts/LineChart'; // Import the Line Chart Component
-import PieChartComponent from '../Admin/charts/PieCharts';
-import AdminStatsLineChart from '../Admin/charts/DetailedLineChart';
-import AdminStatsBarChart from '../Admin/charts/BarChart';
+import JobStatsLineChart from './charts/LineChart'; // Import the Line Chart Component
+import PieChartComponent from './charts/PieCharts';
+import AdminStatsLineChart from './charts/DetailedLineChart';
+import AdminStatsBarChart from './charts/BarChart';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({

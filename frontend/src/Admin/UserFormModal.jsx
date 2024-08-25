@@ -9,7 +9,7 @@ const UserFormModal = ({ user, closeModal, fetchUsers }) => {
     lastName: '',
     email: '',
     role: '',
-    password: ''  // Initialize password field
+    password: ''  
   });
 
   useEffect(() => {
