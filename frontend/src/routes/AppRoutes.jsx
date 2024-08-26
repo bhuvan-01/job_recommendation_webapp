@@ -1,50 +1,46 @@
-import App from '@/App';
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import Signup from '@/pages/Signup';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import UserDashboard from '../pages/user/UserDashboard';
-import PrivateRoute from './PrivateRoute';
-import UserProfile from '@/pages/user/UserProfile';
-import EmployerProfile from '@/pages/employer/EmployerProfile';
-import EmployerDashboard from '@/pages/employer/EmployerDashboard';
-import EmployerDashboardContent from '@/components/EmployerDashboardContent';
-import CreateJobs from '@/pages/employer/CreateJobs';
-import EditJob from '@/pages/employer/EditJob';
-import NotFound from '@/pages/NotFound';
-import Jobs from '@/pages/Jobs';
-import JobsApplied from '@/pages/user/JobsApplied';
-import JobDetailed from '@/pages/JobDetailed';
-import JobsList from '@/pages/JobsList';
-import JobsSaved from '@/pages/user/JobsSaved';
-import EmployerJobDetailed from '@/pages/employer/EmployerJobDetailed';
-import EmployerApplicationDetails from '@/pages/employer/EmployerApplicationDetails';
-import AboutUs from '@/components/AboutUs';
-import ContactUs from '@/components/ContactUs';
-import ForgotPassword from '@/pages/ForgotPassword';
-import AdminPanel from '@/Admin/Admin';
-import UserManagement from '@/Admin/UserManagement';
-import JobManagement from '@/Admin/JobManagement';
-import Features from '@/components/Features';
-import Newsletter from '@/components/NewsLetters';
-import Community from '@/components/Community';
-import  AdminDashboard from '@/Admin/Dashbaord';
-import Analytics from '@/pages/employer/Analytics'; 
-import ApplicationsList from '@/pages/employer/AllApplications';
-import JobRecommendations from '@/pages/user/RecommendedJobs'
-import ApplyNowPage from '@/pages/user/ApplyNow';
-import SuccessPage from '@/pages/user/SuccessPage';
-import AllAdminApplication from '@/Admin/Application';
-import AdminNewsLetter from '@/Admin/NewsletterManagement';
-import CallbackContact from '@/Admin/Contact'
-
-
-
-
+import App from "@/App";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import UserDashboard from "../pages/user/UserDashboard";
+import PrivateRoute from "./PrivateRoute";
+import UserProfile from "@/pages/user/UserProfile";
+import EmployerProfile from "@/pages/employer/EmployerProfile";
+import EmployerDashboard from "@/pages/employer/EmployerDashboard";
+import EmployerDashboardContent from "@/components/EmployerDashboardContent";
+import CreateJobs from "@/pages/employer/CreateJobs";
+import EditJob from "@/pages/employer/EditJob";
+import NotFound from "@/pages/NotFound";
+import Jobs from "@/pages/Jobs";
+import JobsApplied from "@/pages/user/JobsApplied";
+import JobDetailed from "@/pages/JobDetailed";
+import JobsList from "@/pages/JobsList";
+import JobsSaved from "@/pages/user/JobsSaved";
+import EmployerJobDetailed from "@/pages/employer/EmployerJobDetailed";
+import EmployerApplicationDetails from "@/pages/employer/EmployerApplicationDetails";
+import AboutUs from "@/components/AboutUs";
+import ContactUs from "@/components/ContactUs";
+import ForgotPassword from "@/pages/ForgotPassword";
+import AdminPanel from "@/Admin/Admin";
+import UserManagement from "@/Admin/UserManagement";
+import JobManagement from "@/Admin/JobManagement";
+import Features from "@/components/Features";
+import Newsletter from "@/components/NewsLetters";
+import Community from "@/components/Community";
+import AdminDashboard from "@/Admin/Dashbaord";
+import Analytics from "@/pages/employer/Analytics";
+import ApplicationsList from "@/pages/employer/AllApplications";
+import JobRecommendations from "@/pages/user/RecommendedJobs";
+import ApplyNowPage from "@/pages/user/ApplyNow";
+import SuccessPage from "@/pages/user/SuccessPage";
+import AllAdminApplication from "@/Admin/Application";
+import AdminNewsLetter from "@/Admin/NewsletterManagement";
+import CallbackContact from "@/Admin/Contact";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
       {
@@ -52,93 +48,84 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'login',
+        path: "login",
         element: <Login />,
       },
       {
-        path: 'signup',
+        path: "signup",
         element: <Signup />,
       },
       {
-        path: 'forgot-password',
+        path: "forgot-password",
         element: <ForgotPassword />,
       },
 
-        {path:'features',
-          element:<Features/>
-        },
+      { path: "features", element: <Features /> },
 
-        {path:'community',
-          element:<Community/>
-        },
+      { path: "community", element: <Community /> },
 
-     
       {
-        path:'aboutus',
-        element:<AboutUs/>
+        path: "aboutus",
+        element: <AboutUs />,
       },
 
-      { path:'newsletters',
-        element:<Newsletter/>
-      },
-      { 
-        path:'contactus',
-        element:<ContactUs/>
+      { path: "newsletters", element: <Newsletter /> },
+      {
+        path: "contactus",
+        element: <ContactUs />,
       },
       {
-        path:'admin',
-        element:<AdminPanel/>,
-        children:[
+        path: "admin",
+        element: <AdminPanel />,
+        children: [
           {
-            path:'users',
-            element:<UserManagement/>
+            path: "users",
+            element: <UserManagement />,
           },
-          { path: "jobs", 
-            element: <JobManagement /> },
+          { path: "jobs", element: <JobManagement /> },
 
           {
-            path:"dashboard",
-            element: <AdminDashboard/>
+            path: "dashboard",
+            element: <AdminDashboard />,
           },
           {
-            path:"adminapplications",
-            element:<AllAdminApplication/>
+            path: "adminapplications",
+            element: <AllAdminApplication />,
           },
           {
-            path:"newsletter",
-            element:<AdminNewsLetter/>
+            path: "newsletter",
+            element: <AdminNewsLetter />,
           },
           {
-            path:"callbackcontact",
-            element:<CallbackContact/>
+            path: "callbackcontact",
+            element: <CallbackContact />,
           },
           {
             path: "jobs/applications/:id",
             element: <EmployerApplicationDetails />,
           },
-        ]
-        },
+        ],
+      },
 
       {
-        path: '/',
+        path: "/",
         element: <PrivateRoute />,
         children: [
-          
           {
-            path: 'dashboard/user',
+            path: "dashboard/user",
             element: <UserDashboard />,
           },
           {
-            path:'apply/:jobId',
-            element:<ApplyNowPage/>
+            path: "apply/:jobId",
+            element: <ApplyNowPage />,
           },
           {
-            path:'applications/success',
-            element:<SuccessPage />
+            path: "applications/success",
+            element: <SuccessPage />,
           },
 
           {
-            path: 'dashboard/employer',
+            path: "dashboard/employer",
             element: <EmployerDashboard />,
             children: [
               {
@@ -146,48 +133,48 @@ const router = createBrowserRouter([
                 element: <EmployerDashboardContent />,
               },
               {
-                path: 'jobs/add',
+                path: "jobs/add",
                 element: <CreateJobs />,
               },
               {
-                path: 'jobs/:id',
+                path: "jobs/:id",
                 element: <EmployerJobDetailed />,
               },
               {
-                path: 'jobs/edit/:id',
+                path: "jobs/edit/:id",
                 element: <EditJob />,
               },
               {
-                path: 'jobs/edit/:id',
+                path: "jobs/edit/:id",
                 element: <EditJob />,
               },
               {
-                path: 'jobs/applications/:id',
+                path: "jobs/applications/:id",
                 element: <EmployerApplicationDetails />,
               },
 
               {
-                path:'applications',
-                element:<ApplicationsList/>
+                path: "applications",
+                element: <ApplicationsList />,
               },
               {
-                path: 'analytics', 
+                path: "analytics",
                 element: <Analytics />,
               },
             ],
           },
           {
-            path: 'profile/user',
+            path: "profile/user",
             element: <UserProfile />,
           },
           {
-            path: 'profile/employer',
+            path: "profile/employer",
             element: <EmployerProfile />,
           },
         ],
       },
       {
-        path: 'jobs',
+        path: "jobs",
         element: <Jobs />,
         children: [
           {
@@ -195,15 +182,15 @@ const router = createBrowserRouter([
             element: <JobsList />,
           },
           {
-            path: 'applied',
+            path: "applied",
             element: <JobsApplied />,
           },
           {
-            path: 'saved',
+            path: "saved",
             element: <JobsSaved />,
           },
           {
-            path: ':id',
+            path: ":id",
             element: <JobDetailed />,
           },
           {
@@ -213,11 +200,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
-    
   },
-  
+
   {
-    path: '*',
+    path: "*",
     element: <NotFound />,
   },
 ]);

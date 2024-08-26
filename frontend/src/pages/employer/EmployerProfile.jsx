@@ -38,7 +38,7 @@ const EmployerProfile = () => {
     if (user) fetchEmployerJobs();
 
     if (user?.company) {
-      setCompanyDetails(user.company); // Pre-fill the form with the existing company details
+      setCompanyDetails(user.company);
     }
   }, [user]);
 
