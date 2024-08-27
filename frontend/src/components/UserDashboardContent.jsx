@@ -398,7 +398,7 @@ const UserDashboardContent = () => {
         </div>
 
         <Filters />
-        <MapboxMap />
+        <MapboxMap jobs={jobs} />
       </div>
       <div className="basis-9/12">
         <section className="p-2">
@@ -549,7 +549,7 @@ const UserDashboardContent = () => {
                 </div>
               ))}
             </div>
-            <Pagination page={page} setPage={setPage} />
+            {jobs.length != 0 &&  <Pagination page={page} setPage={setPage} />}
           </div>
         </section>
       </div>

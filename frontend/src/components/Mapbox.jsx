@@ -7,26 +7,12 @@ import apiClient from '@/services/apiClient';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ';
 
-const MapboxMap = ({ apiUrl }) => {
+const MapboxMap = ({ apiUrl, jobs }) => {
     const mapContainerRef = useRef(null);
-    const [jobs, setJobs] = useState([]);
     const [userLocation, setUserLocation] = useState(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const directionsRef = useRef(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await apiClient.get(apiUrl || '/jobs');
-                setJobs(response.data);
-                console.log('Jobs fetched:', response.data);
-            } catch (error) {
-                console.error('Failed to fetch jobs', error);
-            }
-        };
-
-        fetchData();
-    }, [apiUrl]);
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -46,7 +32,7 @@ const MapboxMap = ({ apiUrl }) => {
     }, []);
 
     useEffect(() => {
-        if (!userLocation || !jobs.jobs || !jobs.jobs.length || !mapContainerRef.current) {
+        if (!userLocation || !jobs || !jobs.length || !mapContainerRef.current) {
             console.log('Map cannot be initialized, missing data:', { userLocation, jobs });
             return;
         }
@@ -90,7 +76,7 @@ const MapboxMap = ({ apiUrl }) => {
             .setPopup(new mapboxgl.Popup({ offset: 25 }).setText('You are here'))
             .addTo(map);
 
-        jobs.jobs.forEach((job) => {
+        jobs.forEach((job) => {
             if (typeof job.latitude === 'number' && typeof job.longitude === 'number') {
                 const popupContent = document.createElement('div');
                 popupContent.innerHTML = `<strong>${job.title}</strong><p>${job.description}</p>`;
