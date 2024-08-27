@@ -55,6 +55,9 @@ const JobSchema = new Schema(
         ref: "User",
       },
     ],
+
+    viewCount: { type: Number, default: 0 },
+
   },
   {
     timestamps: true,

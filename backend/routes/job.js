@@ -14,6 +14,7 @@ const {
   getEmployerDashboardStats,
   getEmployerStatsByMonth,
   getRecommended,
+  incrementJobViewCount
 
 } = require('../controllers/job');
 const isLoggedin = require('../middlewares/isLoggedin');
@@ -38,6 +39,8 @@ router.post('/apply/:id', isLoggedin, applyToJob);
 router.post('/save/:id', isLoggedin, saveJob);
 router.delete('/save/:id', isLoggedin, removeSavedJob);
 router.get('/applied-jobs', isLoggedin, getUserAppliedJobs);
+router.patch("/:jobId/increment-view", incrementJobViewCount);
+
 
 
 module.exports = router;

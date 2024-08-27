@@ -147,6 +147,7 @@ const EmployerDashboardContent = () => {
                   <p className='text-gray-600'>
                     <strong>Salary:</strong> ${job?.salary}
                   </p>
+                  <p>Views:{job?.viewCount || 0} views</p>
                   <Link
                     to={`/dashboard/employer/jobs/${job._id}`}
                     className='bg-blue-600 p-2 px-4 font-medium rounded-md text-sm text-white'

@@ -4,10 +4,12 @@ import { Outlet } from "react-router-dom";
 
 const EmployerDashboard = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Outlet />
-      <FooterWithSocialLinks/>
+      <div className="flex-grow">
+        <Outlet />
+      </div>
+      <FooterWithSocialLinks />
     </div>
   );
 };

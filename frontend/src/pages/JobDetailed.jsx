@@ -89,12 +89,7 @@ const JobDetailed = () => {
               </ul>
 
               <div className='flex items-center gap-2'>
-                <Button
-                  className='px-8 basis-1/2 md:basis-auto'
-                  variant='outline'
-                >
-                  Save
-                </Button>
+               
                 <Button onClick={() => handleJobApply(job._id)} className='px-8 basis-1/2 md:basis-auto'>Apply</Button>
               </div>
             </div>

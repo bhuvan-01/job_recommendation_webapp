@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../services/apiClient';
 
-// Async thunks for CRUD operations with added logging
-
 export const fetchAdminJobs = createAsyncThunk(
   'jobForm/fetchAdminJobs',
   async (_, { rejectWithValue }) => {
@@ -10,7 +8,7 @@ export const fetchAdminJobs = createAsyncThunk(
       console.log('Fetching jobs...');
       const response = await apiClient.get('/jobs');
       console.log('Fetched Jobs:', response.data);
-      return response.data.jobs; // Extract the jobs array from the response
+      return response.data.jobs;
     } catch (error) {
       console.error('Fetch Jobs Error:', error);
       return rejectWithValue(
@@ -90,7 +88,7 @@ const jobFormSlice = createSlice({
       })
       .addCase(fetchAdminJobs.fulfilled, (state, action) => {
         console.log('Fetching jobs: Fulfilled:', action.payload);
-        state.jobs = action.payload; // Now storing only the jobs array
+        state.jobs = action.payload; 
         state.loading = false;
       })
       .addCase(fetchAdminJobs.rejected, (state, action) => {

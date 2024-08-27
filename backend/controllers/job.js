@@ -97,7 +97,7 @@ exports.getJobs = async (req, res) => {
   }
 
   if (location) {
-    mongoQuery.location = { $regex: location.split(',')[0], $options: 'i' };
+    mongoQuery.location = { $regex: location.split(",")[0], $options: "i" };
   }
   if (industry) mongoQuery.industry = { $in: industry };
   if (minSalary) mongoQuery.salary = { $gte: minSalary };
@@ -414,16 +414,39 @@ exports.getEmployerStatsByMonth = async (req, res) => {
   }
 };
 
-
 exports.getRecommended = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const response = await fetch(process.env.FLASK_API + `/recommendedjob/${userId}`);
+    const response = await fetch(
+      process.env.FLASK_API + `/recommendedjob/${userId}`
+    );
 
     return res.json(await response.json());
   } catch (error) {
-    console.error('Error calling Flask API:', error);
-    return res.status(500).json({ error: 'Failed to fetch recommended jobs' });
+    console.error("Error calling Flask API:", error);
+    return res.status(500).json({ error: "Failed to fetch recommended jobs" });
   }
-}
+};
+
+exports.incrementJobViewCount = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+
+    // Increment the view count by 1
+    const job = await Job.findByIdAndUpdate(
+      jobId,
+      { $inc: { viewCount: 1 } }, 
+      { new: true } 
+    );
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    res.json(job);
+  } catch (error) {
+    console.error("Error incrementing view count:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

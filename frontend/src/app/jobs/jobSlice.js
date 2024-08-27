@@ -64,6 +64,15 @@ const jobSlice = createSlice({
         );
       }
     },
+
+    incrementJobViewCount: (state, action) => {
+      const jobIndex = state.jobs.findIndex(
+        (job) => job._id === action.payload.jobId
+      );
+      if (jobIndex !== -1) {
+        state.jobs[jobIndex].viewCount += 1;
+      }
+    },
   },
 });
 
@@ -77,6 +86,7 @@ export const {
   jobApplied,
   jobSaved,
   removeJobSaved,
+  incrementJobViewCount,
 } = actions;
 
 export default reducer;

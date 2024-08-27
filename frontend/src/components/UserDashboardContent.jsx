@@ -15,6 +15,7 @@ import {
   jobSaved,
   removeJobSaved,
   storeJobs,
+  incrementJobViewCount
 } from "@/app/jobs/jobSlice";
 import MapboxMap from "@/components/Mapbox";
 import useUser from "@/hooks/useUser";
@@ -350,6 +351,23 @@ const UserDashboardContent = () => {
     }
   };
 
+  const incrementViewCount = async (jobId) => {
+    try {
+      await apiClient.patch(`/jobs/${jobId}/increment-view`);
+      dispatch(incrementJobViewCount({ jobId }));
+    } catch (error) {
+      console.error("Failed to increment view count", error);
+    }
+  };
+
+  const handleJobDetails = (jobId) => {
+    incrementViewCount(jobId);
+    navigate(`/jobs/${jobId}`);
+  };
+
+
+
+
   return (
     <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 my-4">
       <div className="hidden md:block basis-3/12 md:space-y-4">
@@ -448,6 +466,7 @@ const UserDashboardContent = () => {
                 <div
                   key={index}
                   className="aspect-square w-full border rounded-md p-4 flex flex-col"
+                  onClick={() => handleJobDetails(job._id)}
                 >
                   <div className="w-full items-center flex gap-4">
                     <div className="w-16 h-16 aspect-square rounded-md bg-gray-200 flex justify-center items-center">
@@ -503,7 +522,7 @@ const UserDashboardContent = () => {
                         : "Apply"}
                     </Button>
                     <Button
-                      onClick={() => navigate(`/jobs/${job._id}`)}
+                     onClick={() => handleJobDetails(job._id)}
                       className="w-full p-2"
                       variant="outline"
                     >
