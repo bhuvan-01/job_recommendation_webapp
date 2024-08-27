@@ -436,8 +436,8 @@ exports.incrementJobViewCount = async (req, res) => {
     // Increment the view count by 1
     const job = await Job.findByIdAndUpdate(
       jobId,
-      { $inc: { viewCount: 1 } }, 
-      { new: true } 
+      { $inc: { viewCount: 1 } },
+      { new: true } // return the updated job document
     );
 
     if (!job) {

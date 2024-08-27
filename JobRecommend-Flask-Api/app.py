@@ -38,6 +38,7 @@ def recommandedjobs(user_id):
 
     # Fetch all job data from the database
     job_data = list(mongo.db.jobs.find())
+
     recommendations = recommend(user_profile["profile"], job_data)
     return dumps(recommendations)
 
@@ -54,4 +55,4 @@ def parse_query():
 
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(port=8080, debug=True)
