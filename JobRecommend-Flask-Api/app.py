@@ -1,111 +1,142 @@
-from bson import ObjectId
 from flask import Flask, jsonify, request
-from flask_cors import CORS
-from flask_pymongo import PyMongo
-from dotenv import load_dotenv
-import os
-from recommendation import recommend
-from keyword_extraction import extract_keywords  # Assuming you have a keyword extraction module
-from bson.json_util import dumps
-from parser import parse_query_spacy
-
-load_dotenv()
+from pymongo import MongoClient
+from bson import ObjectId
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+import pickle
 
 app = Flask(__name__)
-CORS(app)
 
-mongo_uri = os.getenv("MONGO_URI")
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://job-portal:BHUlei272@job-portal.tbvdt6i.mongodb.net/?retryWrites=true&w=majority&appName=Job-portal')
+db = client['test']
+def extract_text_from_field(field):
+    """
+    Helper function to extract text from a list of dictionaries or strings.
+    """
+    if isinstance(field, list):
+        # If the field is a list, extract text from each item
+        texts = []
+        for item in field:
+            if isinstance(item, dict):
+                # Assuming each dictionary has a key 'name' or similar that contains the text
+                texts.append(item.get("name", ""))
+            elif isinstance(item, str):
+                texts.append(item)
+        return " ".join(texts)
+    elif isinstance(field, str):
+        return field
+    return ""
 
-if not mongo_uri:
-    raise ValueError("No MONGO_URI found. Please ensure it is set in the .env file.")
-app.config["MONGO_URI"] = mongo_uri
+def get_user_profile(user):
+    # Extract text from skills and experience fields
+    skills_text = extract_text_from_field(user["profile"]["skills"])
+    experience_text = extract_text_from_field(user["profile"]["experience"])
 
-mongo = PyMongo(app)
+    # Combine skills and experience into a single string
+    user_profile = skills_text + " " + experience_text
+
+    # Fetch jobs where the current user has saved or applied
+    user_id = ObjectId(user["_id"])
+
+    # Find jobs saved by the user
+    saved_jobs = db.jobs.find({"savedBy": user_id})
+
+    # Find jobs applied by the user
+    applied_jobs = db.jobs.find({"applications.user": user_id})
+
+    # Combine job descriptions of saved and applied jobs
+    job_descriptions = []
+    for job in saved_jobs:
+        job_descriptions.append(get_job_description(job))
+    for job in applied_jobs:
+        job_descriptions.append(get_job_description(job))
+
+    # Add the job descriptions to the user profile
+    if job_descriptions:
+        user_profile += " " + " ".join(job_descriptions)
+
+    return user_profile
+
+def get_job_description(job):
+    # Combine job title, description, and requirements into a single string
+    return job["title"] + " " + job["description"] + " " + " ".join(job["requirements"])
+
+def get_recommendations(user_id):
+    # Fetch the user data
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return []
+
+    user_profile = get_user_profile(user)
+
+    # Fetch all jobs with precomputed vectors
+    jobs = db.jobs.find({"recommendation_cache.tfidf_vector": {"$exists": True}})
+    
+    job_ids = []
+    job_descriptions = []
+
+    for job in jobs:
+        job_ids.append(str(job["_id"]))
+        job_descriptions.append(get_job_description(job))
+    
+    # Combine user profile with all job descriptions for consistent vectorization
+    all_documents = [user_profile] + job_descriptions
+
+    # Vectorize the combined documents using TF-IDF
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(all_documents)
+
+    # The first vector corresponds to the user profile
+    user_tfidf_vector = tfidf_matrix[0].toarray()
+
+    # The rest corresponds to the job descriptions
+    job_vectors = tfidf_matrix[1:].toarray()
+
+    # Calculate cosine similarity between user profile vector and job vectors
+    cosine_similarities = cosine_similarity(user_tfidf_vector, job_vectors).flatten()
+
+    # Sort jobs by similarity score
+    sorted_indices = np.argsort(cosine_similarities)[::-1]
+    
+    top_20_jobs = [job_ids[i] for i in sorted_indices[:20]]
+
+    return top_20_jobs
 
 
-@app.route("/")
-def hello():
-    return "Welcome to the Flask API: server is running now"
+@app.route('/recommendations/<user_id>', methods=['GET'])
+def recommend_jobs(user_id):
+    top_20_jobs = get_recommendations(user_id)
+    return jsonify({"recommended_job_ids": top_20_jobs})
 
+def update_recommendation_cache(job_id):
+    # Fetch the specific job from the database  
+    job = db.jobs.find_one({"_id": ObjectId(job_id)})
+    if not job:
+        raise ValueError(f"Job with id {job_id} not found.")
 
-# @app.route("/recommededjob/<user_id>", methods=["GET"])
-# def recommandedjobs(user_id):
-#     # Fetch user data from the database
-#     user_profile = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    job_description = get_job_description(job)
 
-#     if user_profile is None:
-#         return jsonify({"error": "User not found"}), 404
+    # Vectorize the job description using TF-IDF
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_vector = vectorizer.fit_transform([job_description]).toarray().flatten()
 
-#     # Fetch all job data from the database
-#     job_data = list(mongo.db.jobs.find())
+    # Serialize the vector using pickle to store it in MongoDB
+    tfidf_vector_serialized = pickle.dumps(tfidf_vector).decode('latin1')
 
-#     # Use the recommendation function to get job recommendations
-#     recommendations = recommend(user_profile["profile"], job_data)
-#     return dumps(recommendations)
-
-
-@app.route("/parse-query", methods=["POST"])
-def parse_query():
-    data = request.json
-    query = data.get("query", "")
-    if not query:
-        return jsonify({"error": "Query not provided"}), 400
-
-    parsed_query = parse_query_spacy(query)
-    return jsonify(parsed_query)
-
-
-@app.route("/extract-job-keywords/<job_id>", methods=["POST"])
-def extract_job_keywords(job_id):
-    # Fetch the job from the database based on the job ID
-    job = mongo.db.jobs.find_one({"_id": ObjectId(job_id)})
-
-    if job is None:
-        return jsonify({"error": "Job not found"}), 404
-
-    # Extract keywords for the job
-    job_text = f"{job.get('title', '')} {job.get('description', '')} {' '.join(job.get('requirements', []))} {job.get('location', '')}"
-    job_keywords = extract_keywords(job_text, top_n=15)
-
-    # Update the job document with the extracted keywords
-    mongo.db.jobs.update_one({"_id": ObjectId(job_id)}, {"$set": {"keywords": job_keywords}})
-
-    return jsonify({"message": "Keywords extracted and job updated", "keywords": job_keywords})
-
-
-@app.route("/user-recommendations", methods=["POST"])
-def user_recommendations():
-    data = request.json
-    user_id = data.get("user_id")
-    saved_jobs = data.get("saved_jobs", [])
-    applied_jobs = data.get("applied_jobs", [])
-
-    if not user_id:
-        return jsonify({"error": "User ID not provided"}), 400
-
-    # Fetch user data from the database
-    user_profile = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-
-    if user_profile is None:
-        return jsonify({"error": "User not found"}), 404
-
-    # Update user's saved jobs and applied jobs
-    mongo.db.users.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": {"saved_jobs": saved_jobs, "applied_jobs": applied_jobs}}
+    # Update the job document with the new vector in the recommendation_cache
+    db.jobs.update_one(
+        {"_id": ObjectId(job_id)},
+        {"$set": {"recommendation_cache.tfidf_vector": tfidf_vector_serialized}}
     )
 
-    # Fetch all job data from the database
-    job_data = list(mongo.db.jobs.find())
+    return tfidf_vector_serialized
 
-    # Use the recommendation function to get job recommendations
-    recommendations = recommend(user_profile["profile"], job_data)
+@app.route('/update_recommendation_cache/<job_id>', methods=['POST'])
+def update_cache(job_id):
+    updated_vector = update_recommendation_cache(job_id)
+    return jsonify({"status": "success", "job_id": job_id, "updated_vector": updated_vector}), 200
 
-    # Extract just the job IDs from the recommendations
-    recommended_job_ids = [str(job["_id"]) for job in recommendations]
-
-    return jsonify({"recommended_job_ids": recommended_job_ids})
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(port=8080, debug=True)

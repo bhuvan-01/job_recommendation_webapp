@@ -456,48 +456,18 @@ exports.getEmployerStatsByMonth = async (req, res) => {
   }
 };
 
-// exports.getRecommended = async (req, res) => {
-//   const userId = req.user._id;
-
-//   try {
-//     const response = await fetch(
-//       process.env.FLASK_API + `/recommendedjob/${userId}`
-//     );
-
-//     return res.json(await response.json());
-//   } catch (error) {
-//     console.error("Error calling Flask API:", error);
-//     return res.status(500).json({ error: "Failed to fetch recommended jobs" });
-//   }
-// };
-
 exports.getUserRecommendations = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const savedJobs = await Job.find({ savedBy: userId }).select("_id");
-    const appliedJobs = await Job.find({ "applications.user": userId }).select(
-      "_id"
+    const response = await fetch(
+      process.env.FLASK_API + `/recommendations/${userId}`
     );
 
-    const savedJobIds = savedJobs.map((job) => job._id);
-    const appliedJobIds = appliedJobs.map((job) => job._id);
-    console.log(appliedJobIds);
-
-    const flaskApiUrl = `http://127.0.0.1:8080/user-recommendations`;
-
-    const response = await axios.post(flaskApiUrl, {
-      user_id: userId,
-      saved_jobs: savedJobIds,
-      applied_jobs: appliedJobIds,
-    });
-
-    return res.json(response.data);
+    return res.json(await response.json());
   } catch (error) {
-    console.error("Error calling Flask API:", error.message);
-    return res
-      .status(500)
-      .json({ error: "Failed to fetch user recommendations" });
+    console.error("Error calling Flask API:", error);
+    return res.status(500).json({ error: "Failed to fetch recommended jobs" });
   }
 };
 

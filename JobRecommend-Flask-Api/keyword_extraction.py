@@ -1,6 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def extract_keywords(text, top_n=15):
+def extract_keywords(text, top_n=35):
     vectorizer = TfidfVectorizer(max_df=1, min_df=.95, stop_words='english')
     tfidf_matrix = vectorizer.fit_transform([text])
     feature_names = vectorizer.get_feature_names_out()
