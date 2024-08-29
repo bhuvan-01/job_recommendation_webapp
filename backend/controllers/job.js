@@ -147,7 +147,7 @@ exports.getJobs = async (req, res) => {
   if (jobType) mongoQuery.jobType = { $in: jobType };
   if (experience) mongoQuery.experience = { $in: experience };
   if (locationType) mongoQuery.locationType = { $in: locationType };
-  const perPage = req.query.perPage || 10;
+  const perPage = req.query.perPage || 12;
   const page = req.query.page || 1;
   const skip = (page - 1) * perPage;
 
