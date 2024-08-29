@@ -19,12 +19,8 @@ const Home = () => {
       <Features />
       <Quotes/>
       <HiringSectors/>
-      {/* <ApplicationProcess/> */}
       <ApplicationProcess/>
-      <FeaturedJobs/>
-      {/* <AnimatedCanvas/> */}
-      {/* <Working /> */}
-  
+      <FeaturedJobs/>  
       <FooterWithSocialLinks />
     </>
   );

@@ -20,7 +20,8 @@ exports.applyToJob = async (req, res) => {
         experience,
         visaStatus,
         relocation,
-        mastersDegree,
+        skills,
+        qualification,
       } = req.body;
       const userId = req.user._id;
 
@@ -53,7 +54,13 @@ exports.applyToJob = async (req, res) => {
         experience,
         visaStatus,
         relocation,
-        mastersDegree,
+        skills: skills || [],
+        qualification: {
+          degreeName: qualification.degreeName,
+          majorSubject: qualification.majorSubject,
+          startDate: qualification.startDate,
+          endDate: qualification.endDate || null,
+        },
       });
 
       await application.save();

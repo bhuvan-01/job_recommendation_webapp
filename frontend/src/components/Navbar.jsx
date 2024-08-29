@@ -13,20 +13,19 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, User } from 'lucide-react';
 import { IMG_URL } from '@/utils/constants';
 import ContactImage from '../assets/images/contactIcon.png';
-
+import { DashboardIcon, DashIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth);
-  const location = useLocation(); // Get the current route
+  const location = useLocation(); 
 
   const handleLogout = () => {
-    // Logout functionality here
+    // Handle logout functionality here
   };
 
   const fallbackName =
     user?.firstName[0].toString() + user?.lastName[0].toString();
 
-  // Determine if the current page is the login or signup page
   const isLoginPage = location.pathname === '/login';
   const isSignupPage = location.pathname === '/signup';
 
@@ -36,6 +35,25 @@ const Navbar = () => {
         <Logo />
 
         <div className='flex gap-2 items-center'>
+          <Link
+            to='/'
+            className=' font-medium text-sm p-2 px-4  text-white'
+          >
+            Home
+          </Link>
+          <Link
+            to='/jobs'
+            className=' font-medium text-sm p-2 px-4  text-white'
+          >
+            Find Jobs
+          </Link>
+          <Link
+            to='/community'
+            className=' font-medium text-sm p-2 px-4  text-white'
+          >
+            Community
+          </Link>
+
           {token ? (
             <>
               <DropdownMenu>
@@ -70,6 +88,17 @@ const Navbar = () => {
                       Profile
                     </Link>
                   </DropdownMenuItem>
+                  {user?.role === "employer" && (
+                <DropdownMenuItem>
+                  <Link to="/dashboard/employer" className="flex items-center">
+                    <DashboardIcon
+                      size={16}
+                      className="text-gray-800 dark:text-gray-300 mr-2"
+                    />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
                   <DropdownMenuItem
                     className='cursor-pointer'
                     onClick={handleLogout}
@@ -85,26 +114,6 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link
-                to='/'
-                className=' font-medium text-sm p-2 px-4  text-white'
-              >
-                Home
-              </Link>
-              <Link
-                to='/jobs'
-                className=' font-medium text-sm p-2 px-4  text-white'
-              >
-                Find Jobs
-              </Link>
-              
-              <Link
-                to='/community'
-                className=' font-medium text-sm p-2 px-4  text-white'
-              >
-                Community
-              </Link>
-
               {!isLoginPage && (
                 <Link
                   to='/login'
@@ -119,7 +128,7 @@ const Navbar = () => {
                   to='/signup'
                   className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-blue-600 text-white'
                 >
-                   Sign Up
+                  Sign Up
                 </Link>
               )}
             </>
