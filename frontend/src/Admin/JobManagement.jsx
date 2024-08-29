@@ -17,30 +17,26 @@ const JobList = () => {
     const handleDelete = async (jobId) => {
         try {
             await apiClient.delete(`/admin/jobs/${jobId}`);
-            setJobs(jobs.filter(job => job._id !== jobId)); // Optimistic update
+            setJobs(jobs.filter(job => job._id !== jobId)); 
         } catch (error) {
             console.error("Failed to delete job:", error);
         }
     };
 
-    const handleApprove = async (jobId) => {
-        // Implement job approval logic
-    };
-
-    const handleReject = async (jobId) => {
-        // Implement job rejection logic
-    };
-
-    const handleView = async (jobId) => {
-        // Implement job view logic
-    };
+    // const handleView = async (jobId) => {
+    //     // Implement job view logic
+    // };
+    const handleJobDetails = (jobId) => {
+        incrementViewCount(jobId);
+        navigate(`/jobs/${jobId}`);
+      };
 
     const filteredJobs = jobs.filter(job =>
         job.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto">
             <div className="mb-4">
                 <input
                     type="text"
@@ -60,12 +56,7 @@ const JobList = () => {
                         <button onClick={() => handleView(job._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             View
                         </button>
-                        <button onClick={() => handleApprove(job._id)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                            Approve
-                        </button>
-                        <button onClick={() => handleReject(job._id)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                            Reject
-                        </button>
+                      
                         <button onClick={() => handleDelete(job._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             Delete
                         </button>

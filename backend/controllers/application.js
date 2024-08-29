@@ -4,6 +4,9 @@ const Notification = require("../models/Notification");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const upload = require("../middlewares/upload");
+const User = require("../models/User");
+const Company = require("../models/Company");
+const io = require("socket.io")
 
 exports.applyToJob = async (req, res) => {
   upload.single("resume")(req, res, async (err) => {
@@ -67,6 +70,39 @@ exports.applyToJob = async (req, res) => {
 
       job.applications.push({ application: application._id, user: userId });
       await job.save();
+      
+   //message
+   try{
+   const companyId = job.company;
+   console.log(companyId)
+   const employer = await User.findOne({ company: companyId});
+
+   if (employer) {
+     const notificationMessage = `A new application has been submitted for your job: ${job.title}.`;
+
+     const notification = new Notification({
+       recipient: employer._id,
+       message: notificationMessage,
+       type: 'info',
+     });
+
+     await notification.save();
+
+     // Emit the notification via Socket.IO
+     const io = req.app.get('io'); // Get the io instance from the app
+     io.to(employer._id.toString()).emit('notification', notification);
+
+     console.log(`Notification sent to employer: ${employer._id}`);
+   } else {
+     console.log('Employer not found for the job.');
+   }
+  }catch(notificationError) {
+      console.error('Error sending notification:', notificationError);
+    }
+  
+
+      
+///message
 
       res.status(201).json({
         message: "Application submitted successfully",

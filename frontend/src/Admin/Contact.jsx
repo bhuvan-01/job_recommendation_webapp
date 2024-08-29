@@ -37,7 +37,7 @@ const AdminContacts = () => {
     }
 
     return (
-        <div className="container mx-auto mt-8">
+        <div className="container mx-auto">
             <h2 className="text-xl font-bold mb-4">Contact Requests</h2>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white">

@@ -28,6 +28,11 @@ const io = socketIo(server, {
   },
 });
 const port = process.env.PORT || 5000;
+app.set('io', io);
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 // middlewares
 app.use(express.json());

@@ -55,6 +55,7 @@ const router = createBrowserRouter([
         path: "signup",
         element: <Signup />,
       },
+
       {
         path: "forgot-password",
         element: <ForgotPassword />,
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
           {
             path: "applications/success",
             element: <SuccessPage />,
+          },
+          {
+            path: "jobs/applications/:id",
+            element: <EmployerApplicationDetails />,
           },
 
           {

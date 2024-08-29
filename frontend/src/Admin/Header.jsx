@@ -13,7 +13,10 @@ import { useDispatch } from 'react-redux';
 import { logout } from '@/app/auth/authSlice';
 import { clearToken } from '@/services/apiClient';
 import useUser from '@/hooks/useUser';
-import { LogOut } from 'lucide-react';
+import { LogOut ,Bell} from 'lucide-react';
+import Notifications from "../components/Notifications";
+
+
 
 const AdminHeader = () => {
   const dispatch = useDispatch();
@@ -33,6 +36,23 @@ const AdminHeader = () => {
       
 
         <div className="flex gap-2 items-center">
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="transparent"
+                to="/notifications"
+                className="flex font-semibold gap-2 items-center hover:text-blue-600 p-4 px-2"
+              >
+                <Bell size={18} />
+                <span className="hidden md:visible">Notifications</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[400px] mr-80">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Notifications />
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button variant="transparent">

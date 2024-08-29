@@ -1,20 +1,21 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDropzone } from "react-dropzone";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { jobApplied } from "@/app/jobs/jobSlice";
 import apiClient from "@/services/apiClient";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { jobApplied } from "@/app/jobs/jobSlice";
 
 const ApplyNowPage = () => {
   const { jobId } = useParams();
-  console.log("Job ID:", jobId);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [submitError, setSubmitError] = useState("");
+  const [skill, setSkill] = useState("");
+  const [skillsList, setSkillsList] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
     formik.setFieldValue("resume", acceptedFiles[0]);
@@ -30,27 +31,32 @@ const ApplyNowPage = () => {
       experience: "",
       visaStatus: "",
       relocation: "",
-      mastersDegree: "",
       coverLetter: "",
+      skills: [],
+      qualification: {
+        degreeName: "",
+        majorSubject: "",
+        startDate: "",
+        endDate: "",
+      },
       terms: false,
     },
     validationSchema: Yup.object({
       resume: Yup.mixed().required("A resume is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
+      email: Yup.string().email("Invalid email address").required("Email is required"),
       phoneNumber: Yup.string().required("Phone number is required"),
-      experience: Yup.number()
-        .min(0, "Experience must be a positive number")
-        .required("Experience is required"),
+      experience: Yup.number().min(0, "Experience must be a positive number").required("Experience is required"),
       visaStatus: Yup.string().required("Please select an option"),
       relocation: Yup.string().required("Please select an option"),
-      mastersDegree: Yup.string().required("Please select an option"),
       coverLetter: Yup.string().required("A cover letter is required"),
-      terms: Yup.boolean().oneOf(
-        [true],
-        "You must accept the terms and conditions"
-      ),
+      skills: Yup.array().of(Yup.string()).min(1, "At least one skill is required"),
+      qualification: Yup.object({
+        degreeName: Yup.string().required("Degree name is required"),
+        majorSubject: Yup.string().required("Major subject is required"),
+        startDate: Yup.date().required("Start date is required"),
+        endDate: Yup.date().nullable(),
+      }).required("Qualification details are required"),
+      terms: Yup.boolean().oneOf([true], "You must accept the terms and conditions"),
     }),
     onSubmit: async (values) => {
       try {
@@ -61,17 +67,21 @@ const ApplyNowPage = () => {
         formData.append("experience", values.experience);
         formData.append("visaStatus", values.visaStatus);
         formData.append("relocation", values.relocation);
-        formData.append("mastersDegree", values.mastersDegree);
         formData.append("coverLetter", values.coverLetter);
+        formData.append("skills", skillsList.join(", "));// Send skills as a JSON string
+        formData.append("qualification.degreeName", values.qualification.degreeName);
+        formData.append("qualification.majorSubject", values.qualification.majorSubject);
+        formData.append("qualification.startDate", values.qualification.startDate);
+        formData.append("qualification.endDate", values.qualification.endDate);
         formData.append("terms", values.terms);
         formData.append("jobId", jobId);
 
-        console.log(...formData.entries());
-
         const response = await apiClient.post(`/applications/apply`, formData);
+        console.log("API Response:", response);
 
         if (response.status === 201) {
           const resData = response.data;
+          console.log("Application Success Data:", resData);
 
           dispatch(
             jobApplied({
@@ -86,25 +96,39 @@ const ApplyNowPage = () => {
           setSubmitError(response.data.message || "An error occurred.");
         }
       } catch (error) {
+        console.error("API Error:", error);
         setSubmitError(error.message || "An error occurred.");
       }
     },
   });
 
+  // Update Formik's skills value when the skillsList changes
+  useEffect(() => {
+    formik.setFieldValue("skills", skillsList);
+  }, [skillsList]);
+
+  const handleAddSkill = () => {
+    if (skill.trim() && !skillsList.includes(skill.trim())) {
+      setSkillsList([...skillsList, skill.trim()]);
+      setSkill("");
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setSkillsList(skillsList.filter((s) => s !== skillToRemove));
+  };
+
   return (
     <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg border border-gray-300 shadow-lg">
       <h1 className="text-3xl font-bold text-center mb-8">Apply Now</h1>
       <form onSubmit={formik.handleSubmit}>
+        {/* Resume Upload */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Resume:
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Resume:</label>
           <div
             {...getRootProps()}
             className={`mt-1 p-6 border-2 border-dashed rounded-lg cursor-pointer ${
-              isDragActive
-                ? "border-indigo-500 bg-indigo-50"
-                : "border-gray-300"
+              isDragActive ? "border-indigo-500 bg-indigo-50" : "border-gray-300"
             }`}
           >
             <input {...getInputProps()} />
@@ -115,28 +139,22 @@ const ApplyNowPage = () => {
             )}
           </div>
           <div className="mt-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Or upload your resume:
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Or upload your resume:</label>
             <input
               type="file"
               name="resume"
-              onChange={(event) =>
-                formik.setFieldValue("resume", event.currentTarget.files[0])
-              }
+              onChange={(event) => formik.setFieldValue("resume", event.currentTarget.files[0])}
               className="mt-1 block w-full text-sm text-gray-500"
             />
           </div>
           {formik.touched.resume && formik.errors.resume ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.resume}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.resume}</div>
           ) : null}
         </div>
+
+        {/* Email */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Email:
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Email:</label>
           <input
             type="email"
             name="email"
@@ -146,15 +164,13 @@ const ApplyNowPage = () => {
             className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
           />
           {formik.touched.email && formik.errors.email ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.email}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
           ) : null}
         </div>
+
+        {/* Phone Number */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Phone Number:
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Phone Number:</label>
           <PhoneInput
             country={"us"}
             value={formik.values.phoneNumber}
@@ -168,15 +184,13 @@ const ApplyNowPage = () => {
             inputClass="w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
           />
           {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.phoneNumber}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.phoneNumber}</div>
           ) : null}
         </div>
+
+        {/* Experience */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            How many years of work experience do you have?
-          </label>
+          <label className="block text-sm font-medium text-gray-700">How many years of work experience do you have?</label>
           <input
             type="number"
             name="experience"
@@ -186,16 +200,13 @@ const ApplyNowPage = () => {
             className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
           />
           {formik.touched.experience && formik.errors.experience ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.experience}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.experience}</div>
           ) : null}
         </div>
+
+        {/* Visa Status */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Will you now or in the future require sponsorship for employment
-            visa status?
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Will you now or in the future require sponsorship for employment visa status?</label>
           <select
             name="visaStatus"
             onChange={formik.handleChange}
@@ -208,15 +219,13 @@ const ApplyNowPage = () => {
             <option value="No">No</option>
           </select>
           {formik.touched.visaStatus && formik.errors.visaStatus ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.visaStatus}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.visaStatus}</div>
           ) : null}
         </div>
+
+        {/* Relocation */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Are you willing to relocate?
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Are you willing to relocate?</label>
           <select
             name="relocation"
             onChange={formik.handleChange}
@@ -229,107 +238,158 @@ const ApplyNowPage = () => {
             <option value="No">No</option>
           </select>
           {formik.touched.relocation && formik.errors.relocation ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.relocation}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.relocation}</div>
           ) : null}
         </div>
+
+        {/* Cover Letter */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Have you completed the following level of education: Master's
-            Degree?
-          </label>
-          <div className="flex items-center mt-2">
-            <input
-              type="radio"
-              name="mastersDegree"
-              value="Yes"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              checked={formik.values.mastersDegree === "Yes"}
-              className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-            />
-            <label className="ml-3 block text-sm font-medium text-gray-700">
-              Yes
-            </label>
-          </div>
-          <div className="flex items-center mt-2">
-            <input
-              type="radio"
-              name="mastersDegree"
-              value="No"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              checked={formik.values.mastersDegree === "No"}
-              className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-            />
-            <label className="ml-3 block text-sm font-medium text-gray-700">
-              No
-            </label>
-          </div>
-          {formik.touched.mastersDegree && formik.errors.mastersDegree ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.mastersDegree}
-            </div>
-          ) : null}
-        </div>
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Cover Letter
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Cover Letter:</label>
           <textarea
             name="coverLetter"
-            rows="4"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.coverLetter}
             className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-          />
+            rows="4"
+          ></textarea>
           {formik.touched.coverLetter && formik.errors.coverLetter ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.coverLetter}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.coverLetter}</div>
           ) : null}
         </div>
+
+        {/* Skills */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">
-            Terms and Conditions
-          </label>
-          <div className="flex items-start">
+          <label className="block text-sm font-medium text-gray-700">Skills:</label>
+          <div className="flex items-center">
             <input
-              type="checkbox"
-              name="terms"
+              type="text"
+              value={skill}
+              onChange={(e) => setSkill(e.target.value)}
+              className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <button
+              type="button"
+              onClick={handleAddSkill}
+              className="ml-2 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+            >
+              Add
+            </button>
+          </div>
+          <ul className="mt-2">
+            {skillsList.map((s, index) => (
+              <li key={index} className="flex items-center justify-between border-b py-2">
+                <span>{s}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSkill(s)}
+                  className="text-red-600 hover:underline"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+          {formik.touched.skills && formik.errors.skills ? (
+            <div className="text-red-500 text-sm mt-1">{formik.errors.skills}</div>
+          ) : null}
+        </div>
+
+        {/* Qualification */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold">Qualification Details:</h2>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Degree Name:</label>
+            <input
+              type="text"
+              name="qualification.degreeName"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.terms}
-              className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              value={formik.values.qualification.degreeName}
+              className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
-            <div className="ml-3 text-sm">
-              <label className="font-medium text-gray-700">
-                I agree to the{" "}
-                <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                  terms and conditions
-                </a>
-                .
-              </label>
-            </div>
+            {formik.touched.qualification?.degreeName && formik.errors.qualification?.degreeName ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.degreeName}</div>
+            ) : null}
           </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Major Subject:</label>
+            <input
+              type="text"
+              name="qualification.majorSubject"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.qualification.majorSubject}
+              className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            {formik.touched.qualification?.majorSubject && formik.errors.qualification?.majorSubject ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.majorSubject}</div>
+            ) : null}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Start Date:</label>
+            <input
+              type="date"
+              name="qualification.startDate"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.qualification.startDate}
+              className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            {formik.touched.qualification?.startDate && formik.errors.qualification?.startDate ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.startDate}</div>
+            ) : null}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">End Date:</label>
+            <input
+              type="date"
+              name="qualification.endDate"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.qualification.endDate}
+              className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            {formik.touched.qualification?.endDate && formik.errors.qualification?.endDate ? (
+              <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.endDate}</div>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Terms and Conditions */}
+        <div className="mb-6 flex items-center">
+          <input
+            type="checkbox"
+            name="terms"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            checked={formik.values.terms}
+            className="form-checkbox text-indigo-600"
+          />
+          <label htmlFor="terms" className="ml-2 text-sm text-gray-700">I agree to the <a href="/terms" className="text-indigo-600 underline">terms and conditions</a></label>
           {formik.touched.terms && formik.errors.terms ? (
-            <div className="text-red-500 text-sm mt-1">
-              {formik.errors.terms}
-            </div>
+            <div className="text-red-500 text-sm mt-1">{formik.errors.terms}</div>
           ) : null}
         </div>
-        <div className="flex justify-end">
+
+        {/* Submit Button */}
+        <div className="mb-6">
           <button
             type="submit"
-            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            Submit
+            Apply
           </button>
         </div>
+
+        {/* Submit Error */}
         {submitError && (
-          <div className="text-red-500 text-sm mt-4">{submitError}</div>
+          <div className="text-red-500 text-sm mt-4">
+            {submitError}
+          </div>
         )}
       </form>
     </div>

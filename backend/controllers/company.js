@@ -45,6 +45,3 @@ exports.updateCompany = async (req, res) => {
     });
   }
 };
-
-
-

@@ -59,7 +59,7 @@ const Header = () => {
                 <span className="hidden md:visible">Notifications</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[400px] mr-24">
+            <DropdownMenuContent className="w-[400px] mr-80">
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Notifications />

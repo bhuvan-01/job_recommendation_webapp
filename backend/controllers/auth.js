@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const Notification = require("../models/Notification");
 
 const login = async (req, res) => {
   try {
@@ -104,6 +105,27 @@ const signup = async (req, res) => {
         expiresIn: "7d",
       }
     );
+
+     // real time notification
+     try {
+      const admins = await User.find({ role: "admin" });
+      const notificationMessage = `A new ${role} has signed up: ${firstName} ${lastName} (${email})`;
+
+      for (const admin of admins) {
+        const notification = new Notification({
+          recipient: admin._id,
+          message: notificationMessage,
+          type: "info",
+        });
+        await notification.save();
+
+        // Emit the notification via Socket.IO if needed
+        const io = req.app.get("io"); 
+        io.to(admin._id.toString()).emit("notification", notification);
+      }
+    } catch (notificationError) {
+      console.error("Error sending notifications to admins:", notificationError);
+    }
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

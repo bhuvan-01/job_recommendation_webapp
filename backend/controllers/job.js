@@ -4,12 +4,55 @@ const Job = require("../models/Job");
 const User = require("../models/User");
 const axios = require("axios");
 const Application = require("../models/Application");
+const Notification = require("../models/Notification");
+const io = require("socket.io");
+
+const sendNotification = async (userId, message, io) => {
+  try {
+    const notification = new Notification({
+      recipient: userId,
+      message,
+      type: "info",
+    });
+    await notification.save();
+
+    // Send the notification via Socket.IO
+    io.to(userId).emit("notification", {
+      message: message,
+    });
+    console.log("Notification sent and saved to database:", message);
+  } catch (error) {
+    console.error("Error sending notification:", error);
+  }
+};
 
 // create job
 exports.createJob = async (req, res) => {
   try {
     const job = new Job(req.body);
     await job.save();
+
+    const jobSeekers = await User.find({ role: "user" });
+    const message = `A new job has been posted: ${job.title}`;
+
+    jobSeekers.forEach(async (jobSeeker) => {
+      try {
+        await sendNotification(jobSeeker._id, message, req.io);
+      } catch (error) {
+        console.error(
+          `Error sending notification to user ${jobSeeker._id}:`,
+          error
+        );
+      }
+    });
+
+    try {
+      const flaskEndpoint = `http://127.0.0.1:8080/extract-job-keywords/${job._id}`;
+      await axios.post(flaskEndpoint);
+    } catch (error) {
+      console.error("Failed to extract keywords:", error.message);
+    }
+
     res.status(201).json({ job, message: "Job posted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -302,7 +345,6 @@ exports.getEmployerDashboardStats = async (req, res) => {
     );
     const totalPeopleHired = uniqueHires.size;
 
-    // Return the consolidated data
     res.status(200).json({
       totalJobsPosted,
       totalApplications,
@@ -414,30 +456,61 @@ exports.getEmployerStatsByMonth = async (req, res) => {
   }
 };
 
-exports.getRecommended = async (req, res) => {
+// exports.getRecommended = async (req, res) => {
+//   const userId = req.user._id;
+
+//   try {
+//     const response = await fetch(
+//       process.env.FLASK_API + `/recommendedjob/${userId}`
+//     );
+
+//     return res.json(await response.json());
+//   } catch (error) {
+//     console.error("Error calling Flask API:", error);
+//     return res.status(500).json({ error: "Failed to fetch recommended jobs" });
+//   }
+// };
+
+exports.getUserRecommendations = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    const response = await fetch(
-      process.env.FLASK_API + `/recommendedjob/${userId}`
+    const savedJobs = await Job.find({ savedBy: userId }).select("_id");
+    const appliedJobs = await Job.find({ "applications.user": userId }).select(
+      "_id"
     );
 
-    return res.json(await response.json());
+    const savedJobIds = savedJobs.map((job) => job._id);
+    const appliedJobIds = appliedJobs.map((job) => job._id);
+    console.log(appliedJobIds);
+
+    const flaskApiUrl = `http://127.0.0.1:8080/user-recommendations`;
+
+    const response = await axios.post(flaskApiUrl, {
+      user_id: userId,
+      saved_jobs: savedJobIds,
+      applied_jobs: appliedJobIds,
+    });
+
+    return res.json(response.data);
   } catch (error) {
-    console.error("Error calling Flask API:", error);
-    return res.status(500).json({ error: "Failed to fetch recommended jobs" });
+    console.error("Error calling Flask API:", error.message);
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch user recommendations" });
   }
 };
+
+// count the views on Jobs
 
 exports.incrementJobViewCount = async (req, res) => {
   try {
     const jobId = req.params.jobId;
 
-    // Increment the view count by 1
     const job = await Job.findByIdAndUpdate(
       jobId,
       { $inc: { viewCount: 1 } },
-      { new: true } // return the updated job document
+      { new: true }
     );
 
     if (!job) {

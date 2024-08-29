@@ -76,9 +76,9 @@ const JobsApplied = () => {
                         </p>
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <Button variant='ghost'>View application</Button>
-                    </div>
+                    </div> */}
                   </div>
                 ))}
               </div>

@@ -20,10 +20,13 @@ const notificationsSlice = createSlice({
         return notification;
       });
     },
+    removeReadNotification: (state, action) => {
+      state.notifications = state.notifications.filter(notification => notification.id !== action.payload.id);
+    },
   },
 });
 
-export const { addNotification, storeNotifications, markNotificationAsRead } =
+export const { addNotification, storeNotifications, markNotificationAsRead,removeReadNotification } =
   notificationsSlice.actions;
 
 export default notificationsSlice.reducer;
