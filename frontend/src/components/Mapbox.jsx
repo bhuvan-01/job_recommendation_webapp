@@ -4,6 +4,7 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'; 
 import apiClient from '@/services/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ';
 
@@ -12,7 +13,7 @@ const MapboxMap = ({ apiUrl, jobs }) => {
     const [userLocation, setUserLocation] = useState(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const directionsRef = useRef(null);
-
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -79,7 +80,16 @@ const MapboxMap = ({ apiUrl, jobs }) => {
         jobs.forEach((job) => {
             if (typeof job.latitude === 'number' && typeof job.longitude === 'number') {
                 const popupContent = document.createElement('div');
-                popupContent.innerHTML = `<strong>${job.title}</strong><p>${job.description}</p>`;
+                popupContent.innerHTML = `
+                    <strong class="job-title" style="cursor:pointer; color:blue;">${job.title}</strong>
+                    <p>Location:${job.location} Salary:${job.salary}</p>
+                `;
+
+                // Add event listener to navigate to job detail when job title is clicked
+                popupContent.querySelector('.job-title').addEventListener('click', () => {
+                    navigate(`/jobs/${job._id}`);
+                });
+
                 const popup = new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent);
                 new mapboxgl.Marker()
                     .setLngLat([job.longitude, job.latitude])
@@ -95,8 +105,7 @@ const MapboxMap = ({ apiUrl, jobs }) => {
             map.remove();
             console.log('Map removed');
         };
-    }, [userLocation, jobs]);
-
+    }, [userLocation, jobs, navigate]); 
     return <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} />;
 };
 

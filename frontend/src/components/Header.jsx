@@ -106,6 +106,17 @@ const Header = () => {
                   </Link>
                 </DropdownMenuItem>
               )}
+              {user?.role === "employer" && (
+                <DropdownMenuItem>
+                  <Link to="/jobs" className="flex items-center">
+                    <DashboardIcon
+                      size={16}
+                      className="text-gray-800 dark:text-gray-300 mr-2"
+                    />
+                    Other Posted Jobs
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               {user?.role === "employer" && (
                 <DropdownMenuItem>

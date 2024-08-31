@@ -11,9 +11,12 @@ import Languages from '@/components/user/Languages';
 import Contact from '@/components/user/Contact';
 import Intro from '@/components/user/Intro';
 import { useSelector } from 'react-redux';
+import EmailToggle from '@/components/EmailToggle';
+
 
 const UserProfile = () => {
   const isLoading = useSelector((state) => state.auth.isLoading);
+  const userId = useSelector((state) => state.auth.userId); 
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -37,6 +40,7 @@ const UserProfile = () => {
             <Resume />
             <Languages />
             <Contact />
+            <EmailToggle userId={userId}/>
           </div>
         </div>
       </div>

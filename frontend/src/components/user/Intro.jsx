@@ -11,7 +11,7 @@ import {
 } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Github, Linkedin, Pencil, Twitter } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -28,28 +28,27 @@ const Intro = () => {
   const isLoading = useSelector((state) => state.auth.isLoading);
   const [uploading, setUploading] = useState(false);
 
-  const validationSchema = Yup.object({
-    fullName: Yup.string().required('Full Name is required'),
-    bio: Yup.string(),
-    links: Yup.object({
-      linkedin: Yup.string().url('Invalid URL'),
-      github: Yup.string().url('Invalid URL'),
-      twitter: Yup.string().url('Invalid URL'),
-    }),
-  });
-
+  // Initialize formik with empty values
   const formik = useFormik({
     initialValues: {
-      fullName: user?.fullName || '',
-      bio: user?.bio || '',
+      fullName: '',
+      bio: '',
       links: {
-        linkedin: user?.links?.linkedin || '',
-        github: user?.links?.github || '',
-        twitter: user?.links?.twitter || '',
+        linkedin: '',
+        github: '',
+        twitter: '',
       },
       picture: '',
     },
-    validationSchema: validationSchema,
+    validationSchema: Yup.object({
+      fullName: Yup.string().required('Full Name is required'),
+      bio: Yup.string(),
+      links: Yup.object({
+        linkedin: Yup.string().url('Invalid URL'),
+        github: Yup.string().url('Invalid URL'),
+        twitter: Yup.string().url('Invalid URL'),
+      }),
+    }),
     onSubmit: (values) => {
       const [firstName, lastName] = values.fullName.split(' ');
       updateUser({
@@ -62,6 +61,22 @@ const Intro = () => {
     },
     enableReinitialize: true,
   });
+
+  // Update formik values when user data is available
+  useEffect(() => {
+    if (user) {
+      formik.setValues({
+        fullName: user.fullName || '',
+        bio: user.bio || '',
+        links: {
+          linkedin: user.links?.linkedin || '',
+          github: user.links?.github || '',
+          twitter: user.links?.twitter || '',
+        },
+        picture: '',
+      });
+    }
+  }, [user]); // Only run when `user` changes
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -93,17 +108,18 @@ const Intro = () => {
     return <p>Loading...</p>;
   }
 
-  const { fullName, bio, links: { linkedin, github, twitter } = {} } = user;
+  if (!user) {
+    return <p>No user data available</p>;
+  }
 
-  const userPhotoUrl = user?.photo
-    ? `${BASE_URL}/${user.photo}`
-    : ContactImage;
+  const { fullName, bio, links: { linkedin, github, twitter } = {}, photo } = user;
+  const userPhotoUrl = photo ? `${BASE_URL}/${photo}` : ContactImage;
 
   return (
     <section className='border p-4  md:p-8 rounded-md'>
       <div className='md:flex gap-4 items-center'>
         <img
-          src={user?.photo ? userPhotoUrl : ContactImage}
+          src={userPhotoUrl}
           className='w-20 md:w-32 aspect-square object-cover rounded-full shadow-lg'
           alt='User'
           loading='lazy'

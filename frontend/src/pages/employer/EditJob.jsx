@@ -24,6 +24,7 @@ const validationSchema = Yup.object({
   jobType: Yup.string().required('Job type is required'),
   locationType: Yup.string().required('Location type is required'),
   industry: Yup.string().required('Industry is required'),
+  externalLink: Yup.string().url('Must be a valid URL').nullable(), // External link validation
 });
 
 const EditJob = () => {
@@ -42,6 +43,7 @@ const EditJob = () => {
     jobType: '',
     locationType: '',
     industry: '',
+    externalLink: '', // Include externalLink in live preview
   });
   const [requirement, setRequirement] = useState('');
 
@@ -60,6 +62,7 @@ const EditJob = () => {
           jobType: res.data.job.jobType,
           locationType: res.data.job.locationType,
           industry: res.data.job.industry,
+          externalLink: res.data.job.externalLink || '', // Set externalLink if present
         });
         setLivePreview({
           title: res.data.job.title,
@@ -71,6 +74,7 @@ const EditJob = () => {
           jobType: res.data.job.jobType,
           locationType: res.data.job.locationType,
           industry: res.data.job.industry,
+          externalLink: res.data.job.externalLink || '', // Include externalLink in live preview
         });
       } catch (error) {
         console.error('Error fetching job:', error);
@@ -91,6 +95,7 @@ const EditJob = () => {
       jobType: '',
       locationType: '',
       industry: '',
+      externalLink: '', // Added externalLink to initial values
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -105,6 +110,7 @@ const EditJob = () => {
         locationType: values.locationType,
         industry: values.industry,
         company: user.company,
+        externalLink: values.externalLink || null, // Include externalLink if present
       };
 
       try {
@@ -136,7 +142,8 @@ const EditJob = () => {
     Boolean(formik.values.experience) ||
     Boolean(formik.values.jobType) ||
     Boolean(formik.values.locationType) ||
-    Boolean(formik.values.industry);
+    Boolean(formik.values.industry) ||
+    Boolean(formik.values.externalLink); // Show live preview if externalLink is present
 
   const handleInputChange = (e) => {
     formik.handleChange(e);
@@ -376,6 +383,23 @@ const EditJob = () => {
             ) : null}
           </div>
 
+          <div>
+            <Label className='mb-2 font-semibold'>External Application Link (Optional)</Label>
+            <Input
+              name='externalLink'
+              value={formik.values.externalLink}
+              onChange={handleInputChange}
+              onBlur={formik.handleBlur}
+              placeholder='External Application Link'
+              className='p-2 border rounded'
+            />
+            {formik.touched.externalLink && formik.errors.externalLink ? (
+              <div className='text-red-500 text-xs'>
+                {formik.errors.externalLink}
+              </div>
+            ) : null}
+          </div>
+
           <Button
             type='submit'
             className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded'
@@ -429,6 +453,14 @@ const EditJob = () => {
                   <span className='font-semibold'>Industry:</span>{' '}
                   {livePreview.industry}
                 </p>
+                {livePreview.externalLink && (
+                  <p className='mb-1'>
+                    <span className='font-semibold'>External Link:</span>{' '}
+                    <a href={livePreview.externalLink} target='_blank' rel='noopener noreferrer'>
+                      {livePreview.externalLink}
+                    </a>
+                  </p>
+                )}
               </div>
             )}
           </Card>

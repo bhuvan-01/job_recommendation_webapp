@@ -15,7 +15,7 @@ import {
   jobSaved,
   removeJobSaved,
   storeJobs,
-  incrementJobViewCount
+  incrementJobViewCount,
 } from "@/app/jobs/jobSlice";
 import MapboxMap from "@/components/Mapbox";
 import useUser from "@/hooks/useUser";
@@ -220,8 +220,6 @@ const UserDashboardContent = () => {
           },
         });
 
-        console.log(res);
-
         if (res.status === 200) {
           dispatch(searchResultsReceived(res.data.jobs));
           dispatch(storeJobs(res.data));
@@ -257,15 +255,11 @@ const UserDashboardContent = () => {
       try {
         const response = await axios.get(
           "http://api.positionstack.com/v1/forward",
-
           {
             params: {
               access_key: "ed488739b1580aa82d782b7fa032981c",
-
               query: query,
-
               limit: 5,
-
               output: "json",
             },
           }
@@ -276,7 +270,6 @@ const UserDashboardContent = () => {
         }
       } catch (error) {
         console.error("Error fetching location suggestions:", error);
-
         setLocationSuggestions([]);
       }
     } else {
@@ -286,39 +279,17 @@ const UserDashboardContent = () => {
 
   const handleLocationSelect = (location) => {
     dispatch(locationQueryChanged(location.label));
-
     setLocationSuggestions([]);
   };
 
-  // const handleJobApply = async (id) => {
-  //   try {
-  //     const res = await apiClient.post(`/applications/apply`, {
-  //       jobId: id,
-  //       coverLetter: 'Hire me! 🥺👍',
-  //     });
-
-  //     console.log(res);
-
-  //     if (res.status === 201) {
-  //       toast.success('Applied successfully');
-
-  //       dispatch(
-  //         jobApplied({
-  //           application: res.data.application._id,
-  //           user: user._id,
-  //           jobId: id,
-  //         })
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-
-  //     toast.error(error.response.data.message);
-  //   }
-  // };
-
   const handleJobApply = (jobId) => {
+    
     navigate(`/apply/${jobId}`);
+  };
+
+  const handleJobDetails = (jobId) => {
+    
+    navigate(`/jobs/${jobId}`);
   };
 
   const handleJobSave = async (jobId) => {
@@ -331,7 +302,6 @@ const UserDashboardContent = () => {
       }
     } catch (error) {
       toast.error("Failed to save");
-
       console.log(error.response);
     }
   };
@@ -346,7 +316,6 @@ const UserDashboardContent = () => {
       }
     } catch (error) {
       toast.error("Failed to save");
-
       console.log(error.response);
     }
   };
@@ -359,14 +328,6 @@ const UserDashboardContent = () => {
       console.error("Failed to increment view count", error);
     }
   };
-
-  const handleJobDetails = (jobId) => {
-    incrementViewCount(jobId);
-    navigate(`/jobs/${jobId}`);
-  };
-
-
-
 
   return (
     <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 my-4">
@@ -511,7 +472,10 @@ const UserDashboardContent = () => {
 
                   <div className="mt-auto flex gap-2 items-center">
                     <Button
-                      onClick={() => handleJobApply(job._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJobApply(job._id);
+                      }}
                       className="w-full p-2"
                       disabled={job.applications.some(
                         (app) => app.user === user?._id
@@ -522,7 +486,10 @@ const UserDashboardContent = () => {
                         : "Apply"}
                     </Button>
                     <Button
-                     onClick={() => handleJobDetails(job._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJobDetails(job._id);
+                      }}
                       className="w-full p-2"
                       variant="outline"
                     >
@@ -530,7 +497,10 @@ const UserDashboardContent = () => {
                     </Button>
                     {job?.savedBy?.includes(user?._id) ? (
                       <Button
-                        onClick={() => handleJobUnsave(job._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJobUnsave(job._id);
+                        }}
                         variant="primary"
                         className="p-2"
                       >
@@ -538,7 +508,10 @@ const UserDashboardContent = () => {
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => handleJobSave(job._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJobSave(job._id);
+                        }}
                         variant="primary"
                         className="p-2"
                       >
@@ -549,7 +522,7 @@ const UserDashboardContent = () => {
                 </div>
               ))}
             </div>
-            {jobs.length != 0 &&  <Pagination page={page} setPage={setPage} />}
+            {jobs.length !== 0 && <Pagination page={page} setPage={setPage} />}
           </div>
         </section>
       </div>

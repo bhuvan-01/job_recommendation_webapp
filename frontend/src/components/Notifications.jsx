@@ -4,12 +4,14 @@ import { DropdownMenuItem } from './ui/dropdown-menu';
 import useSocket from '@/hooks/useSocket';
 import apiClient from '@/services/apiClient';
 import { storeNotifications, addNotification, markNotificationAsRead, removeReadNotification } from '@/app/notifications/notificationSlice';
+import { useNavigate } from 'react-router-dom';  
 
 const Notifications = () => {
   const [loading, setLoading] = useState(true);
   const notifications = useSelector((state) => state.notifications.notifications);
   const dispatch = useDispatch();
   const socket = useSocket();
+  const navigate = useNavigate();  
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -44,8 +46,13 @@ const Notifications = () => {
 
   const handleNotificationClick = (notification) => {
     console.log('Notification clicked:', notification);
-    dispatch(markNotificationAsRead(notification));  // Mark notification as read
-    dispatch(removeReadNotification(notification));  // Remove notification from list
+    dispatch(markNotificationAsRead(notification));  
+    dispatch(removeReadNotification(notification));  
+
+    // Navigate to job detail page if jobId is present
+    if (notification.jobId) {
+      navigate(`/jobs/${notification.jobId}`);
+    }
   };
 
   return (
@@ -56,7 +63,7 @@ const Notifications = () => {
         // Sort notifications when rendering
         notifications.map((notification, index) => (
           <DropdownMenuItem
-            key={notification.id}
+            key={notification._id}  // Use _id instead of id
             className="bg-gray-200 p-2 rounded-lg shadow-md mb-2 cursor-pointer hover:bg-gray-300"
             onClick={() => handleNotificationClick(notification)}
           >

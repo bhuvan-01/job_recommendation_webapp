@@ -37,6 +37,10 @@ const JobsApplied = () => {
     getAppliedJobs();
   }, []);
 
+  const handleJobClick = (jobId) => {
+    window.location.href = `/jobs/${jobId}`; 
+  };
+
   return (
     <div className='container px-0 max-w-[1400px] mx-auto w-[95%] my-4'>
       <div className='flex gap-4'>
@@ -50,8 +54,9 @@ const JobsApplied = () => {
               <div className='grid'>
                 {appliedJobs.map((application) => (
                   <div
-                    className='p-4 my-2 rounded-md shadow-md border flex items-center justify-between'
+                    className='p-4 my-2 rounded-md shadow-md border flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors'
                     key={application._id}
+                    onClick={() => handleJobClick(application.job ? application.job._id : '#')}
                   >
                     <div>
                       <div className='flex gap-2 items-center'>

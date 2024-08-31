@@ -37,6 +37,8 @@ import SuccessPage from "@/pages/user/SuccessPage";
 import AllAdminApplication from "@/Admin/Application";
 import AdminNewsLetter from "@/Admin/NewsletterManagement";
 import CallbackContact from "@/Admin/Contact";
+import JobView from "@/pages/employer/JobView";
+import JobDetail from "@/Admin/JobDetail"
 
 const router = createBrowserRouter([
   {
@@ -92,6 +94,15 @@ const router = createBrowserRouter([
           {
             path: "adminapplications",
             element: <AllAdminApplication />,
+          },
+          {
+            path:"detail/:id",
+            element:<JobDetail/>
+
+          },
+          {
+            path: "view/:id",
+            element: <JobView />,
           },
           {
             path: "newsletter",
@@ -197,6 +208,10 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <JobDetailed />,
+          },
+          {
+            path: "view/:id",
+            element: <JobView />,
           },
           {
             path: "recommended",

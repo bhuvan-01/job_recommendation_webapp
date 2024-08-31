@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {
@@ -40,6 +40,7 @@ import Pagination from "../components/Pagination";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+
 
 const experienceLevels = [
   { id: "Internship", label: "Internship" },
@@ -276,16 +277,6 @@ const JobList = () => {
     setLocationSuggestions([]);
   };
 
-  const handleJobApply = (jobId) => {
-    if (!user) {
-      navigate("/login");
-    } else if (user && user.role === "employer") {
-      setShowEmployerPopup(true);
-    } else {
-      navigate(`/apply/${jobId}`);
-    }
-  };
-
   const handleJobSave = async (jobId) => {
     try {
       const res = await apiClient.post(`/jobs/save/${jobId}`);
@@ -325,40 +316,13 @@ const JobList = () => {
 
   const handleJobDetails = (jobId) => {
     incrementViewCount(jobId);
-    navigate(`/jobs/${jobId}`);
+    navigate(`/jobs/view/${jobId}`);
   };
 
   return (
     <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 my-4">
       <div className="hidden md:block basis-3/12 md:space-y-4">
-        {/* Profile Section - Show only for job seekers */}
-        {user && user.role !== "employer" && (
-          <div className="hidden md:block border p-4 rounded-md text-center">
-            <img
-              src={user?.photo ? IMG_URL + "/" + user.photo : ContactImage}
-              className="w-24 h-24 mx-auto rounded-full"
-              alt="User Avatar"
-            />
-            <h1 className="font-semibold my-2 capitalize text-xl">
-              {user?.fullName}
-            </h1>
-            <p className="pb-3 border-b">{user?.bio}</p>
-            <div className="flex flex-wrap justify-between items-center px-4">
-              <Link
-                to="/jobs/applied"
-                className="flex font-medium gap-2 justify-center items-center pt-3"
-              >
-                <span>Applied jobs</span> <SquareArrowOutUpRight size={16} />
-              </Link>
-              <Link
-                to="/jobs/saved"
-                className="flex font-medium gap-2 justify-center items-center pt=3"
-              >
-                <span>Saved jobs</span> <SquareArrowOutUpRight size={16} />
-              </Link>
-            </div>
-          </div>
-        )}
+        
 
         <Filters />
         <MapboxMap />
@@ -422,98 +386,61 @@ const JobList = () => {
           </div>
 
           <div id="job-list">
-            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+            <div className="w-full flex flex-col gap-4 my-4">
               {jobs.map((job, index) => (
                 <div
                   key={index}
-                  className="aspect-square w-full border rounded-md p-4 flex flex-col"
+                  className="w-full border rounded-md p-4 flex flex-col md:flex-row items-center gap-4"
                   onClick={() => handleJobDetails(job._id)}
                 >
-                  <div className="w-full items-center flex gap-4">
-                    <div className="w-16 h-16 aspect-square rounded-md bg-gray-200 flex justify-center items-center">
-                      <Building2 size={24} />
-                    </div>
-                    <div className="basis-8/12">
-                      <h2 className="text-lg font-semibold leading-normal">
-                        {job.title}
-                      </h2>
-                      <p className="text-gray-600 text-sm font-medium">
-                        {job.company ? job.company.name : "Unknown Company"}{" "}
-                        {"•"} {job.location}
-                      </p>
-                    </div>
+                  <div className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center">
+                    <Building2 size={24} />
                   </div>
-
-                  <div className="my-4 flex flex-wrap gap-2">
-                    {job.requirements
-                      .toString()
-                      .split(",")
-                      .map((requirement, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-gray-100 rounded-md text-xs font-medium text-gray-800"
-                        >
-                          {requirement}
-                        </span>
-                      ))}
-                  </div>
-
-                  <p className="text-gray-600 text-sm font-medium">
-                    {job?.description.length > 100
-                      ? job?.description.slice(0, 100)
-                      : job?.description}
-                  </p>
-
-                  <div className="flex">
-                    <span className="bg-gray-50 text-xs p-1 px-2 rounded-md border my-3">
+                  <div className="flex-1">
+                    <h2 className="text-lg font-semibold leading-normal">
+                      {job.title}
+                    </h2>
+                    <p className="text-gray-600 text-sm font-medium">
+                      {job.company ? job.company.name : "Unknown Company"}{" "}
+                      {"•"} {job.location}
+                    </p>
+                    <div className="my-4 flex flex-wrap gap-2">
+                      {job.requirements
+                        .toString()
+                        .split(",")
+                        .map((requirement, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-gray-100 rounded-md text-xs font-medium text-gray-800"
+                          >
+                            {requirement}
+                          </span>
+                        ))}
+                    </div>
+                    <p className="text-gray-600 text-sm font-medium">
+                      {job?.description.length > 100
+                        ? job?.description.slice(0, 100)
+                        : job?.description}
+                    </p>
+                    <span className="bg-gray-50 text-xs p-1 px-2 rounded-md border my-3 inline-block">
                       {job?.experience}
                     </span>
                   </div>
-
-                  <div className="mt-auto flex gap-2 items-center">
-                    {/* Only show the apply button for non-employers */}
-                    {user && user.role !== "employer" && (
-                      <Button
-                        onClick={() => handleJobApply(job._id)}
-                        className="w-full p-2"
-                        disabled={job.applications.some(
-                          (app) => app.user === user?._id
-                        )}
-                      >
-                        {job.applications.some((app) => app.user === user?._id)
-                          ? "Applied"
-                          : "Apply"}
-                      </Button>
-                    )}
+                  <div className="flex flex-col gap-2">
                     <Button
                       onClick={() => handleJobDetails(job._id)}
-                      className="w-full p-2"
+                      className="p-2"
                       variant="outline"
                     >
                       View details
                     </Button>
-                    {job?.savedBy?.includes(user?._id) ? (
-                      <Button
-                        onClick={() => handleJobUnsave(job._id)}
-                        variant="primary"
-                        className="p-2"
-                      >
-                        <Bookmark size={24} fill="currentColor" />
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => handleJobSave(job._id)}
-                        variant="primary"
-                        className="p-2"
-                      >
-                        <Bookmark size={24} />
-                      </Button>
-                    )}
+                   
+                  
                   </div>
                 </div>
               ))}
             </div>
-            <Pagination page={page} setPage={setPage} />
+            {jobs.length !== 0 && <Pagination page={page} setPage={setPage} />}
           </div>
         </section>
       </div>

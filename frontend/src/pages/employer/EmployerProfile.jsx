@@ -1,11 +1,11 @@
 import { setUser } from '@/app/auth/authSlice';
 import Header from '@/components/Header';
 import apiClient from '@/services/apiClient';
-import { Building2, Linkedin, Plus, User, Edit3 } from 'lucide-react';
+import { Building2, Edit3 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Intro from '@/components/user/Intro';
 
 const EmployerProfile = () => {
   const dispatch = useDispatch();
@@ -25,8 +25,6 @@ const EmployerProfile = () => {
     const fetchEmployerJobs = async () => {
       try {
         const res = await apiClient.get(`/jobs/employer/${user._id}`);
-        console.log('rezz: ', res);
-
         if (res.status === 200) {
           setJobsCreated(res.data.jobs);
         }
@@ -51,27 +49,27 @@ const EmployerProfile = () => {
     e.preventDefault();
     try {
       if (user?.company && isEditing) {
-        // Update existing company details
         const companyRes = await apiClient.put(`/company/${user.company._id}`, companyDetails);
 
         if (companyRes.status === 200) {
           toast.success('Company details updated');
-          dispatch(setUser({ ...user, company: companyRes.data.company }));
+          dispatch(setUser({ user: { ...user, company: companyRes.data.company } }));
           setIsEditing(false);
+          setCompanyDetails(companyRes.data.company);
         }
       } else {
-        // Create new company
         const companyRes = await apiClient.post('/company', companyDetails);
 
         if (companyRes.status === 201) {
-          const userUpdateRes = await apiClient.put('/users/' + user._id, {
+          const userUpdateRes = await apiClient.put(`/users/${user._id}`, {
             company: companyRes.data.company._id,
           });
 
           if (userUpdateRes.status === 200) {
             toast.success('Added company details');
-            dispatch(setUser(userUpdateRes.data.user));
+            dispatch(setUser({ user: userUpdateRes.data.user }));
             setIsAddingDetails(false);
+            setCompanyDetails(companyRes.data.company);
           }
         }
       }
@@ -87,39 +85,7 @@ const EmployerProfile = () => {
       <div className='container mx-auto my-4 md:my-8 max-w-[1400px] w-[95%]'>
         <div className='flex gap-4'>
           <div className='basis-9/12'>
-            <section className='border p-8 rounded-md'>
-              <div className='flex gap-8 items-center'>
-                <div className='bg-gray-100 rounded-full w-24 h-24 flex justify-center items-center'>
-                  <User />
-                </div>
-                <div className='py-2'>
-                  <h1 className='text-3xl font-semibold mb-2'>
-                    {user?.fullName}
-                  </h1>
-                  <p className='text-gray-600 my-2'>{user?.bio || 'No bio'}</p>
-                  <div className='flex gap-6 mt-4'>
-                    <a
-                      href='https://www.linkedin.com'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      <Linkedin
-                        size={24}
-                        className='text-gray-600 hover:text-blue-600'
-                      />
-                    </a>
-                  </div>
-                </div>
-                <div className='ml-auto'>
-                  <Link
-                    to='/dashboard/employer/jobs/add'
-                    className='p-2 px-4 rounded-md bg-blue-600 text-white hover:bg-blue-800 flex justify-center items-center gap-2'
-                  >
-                    Post a job <Plus />
-                  </Link>
-                </div>
-              </div>
-            </section>
+            <Intro />
 
             {user?.company ? (
               <section className='my-4 border p-8 rounded-md'>
@@ -130,22 +96,22 @@ const EmployerProfile = () => {
                   </div>
                   <div>
                     <h2 className='text-xl font-semibold'>
-                      {user.company.name}
+                      {companyDetails.name}
                     </h2>
                     <p className='text-gray-600 my-2'>
-                      Industry: {user.company.industry}
+                      Industry: {companyDetails.industry}
                     </p>
                     <p className='text-gray-600 my-2'>
-                      Location: {user.company.location}
+                      Location: {companyDetails.location}
                     </p>
                     <p className='text-gray-600 my-2'>
                       Website:{' '}
                       <a
-                        href={user.company.website}
+                        href={companyDetails.website}
                         target='_blank'
                         className='text-blue-600 hover:underline'
                       >
-                        {user.company.website}
+                        {companyDetails.website}
                       </a>
                     </p>
                   </div>
@@ -154,7 +120,7 @@ const EmployerProfile = () => {
                   <h2 className='text-lg font-semibold mb-2'>
                     Company Overview
                   </h2>
-                  <p className='text-gray-700'>{user.company.overview}</p>
+                  <p className='text-gray-700'>{companyDetails.overview}</p>
                   <button
                     onClick={() => setIsEditing(true)}
                     className='border border-gray-300 bg-blue-700 p-2 px-4 rounded-md text-xs font-semibold text-white hover:bg-blue-800 mt-4 flex items-center gap-2'

@@ -1,0 +1,99 @@
+// // job format stored in database
+
+
+// {
+//     "_id": {
+//         "$oid": "66bcbed61a7ccb1d1d21bfa9"
+//     },
+//     "title": "Network Engineer",
+//     "description": "The Business Analyst is expected to the analysis of large datasets, ensuring product innovation and maintaining best practices. The ideal candidate will bring a background in data analysis and a passion for system reliability. The ideal candidate will have experience with Linux and AWS and a strong understanding of data visualization techniques. You will be working in a collaborative environment, where attention to detail is essential. The successful candidate will demonstrate integrity and a commitment to customer focus. You will collaborate with IT to build successful products and help drive market success. The Network Engineer is expected to managing the product lifecycle, ensuring project success and maintaining high quality. The ideal candidate will have experience with Docker, Kubernetes, AWS and a strong understanding of user experience design principles. The Data Analyst is expected to designing user-friendly interfaces, ensuring system reliability and maintaining industry benchmarks. You will collaborate with IT to extract valuable insights and help drive market success.",
+//     "requirements": ["Python", "Django", "and REST APIs"],
+//     "experience": "Internship",
+//     "jobType": "Contract",
+//     "locationType": "Remote",
+//     "industry": "Retail",
+//     "location": "Los Angeles",
+//     "salary": "60000",
+//     "company": {
+//         "$oid": "66bcbecfa76e50048803bbc1"
+//     },
+//     "latitude": {
+//         "$numberDouble": "67.0892"
+//     },
+//     "longitude": {
+//         "$numberDouble": "42.703"
+//     },
+//     "applications": [{
+//         "application": {
+//             "$oid": "66ca6d3f16129968b44fc8c0"
+//         },
+//         "user": {
+//             "$oid": "66a3cf7035f4c7e0febd1b56"
+//         },
+//         "_id": {
+//             "$oid": "66ca6d3f16129968b44fc8c2"
+//         }
+//     }],
+//     "savedBy": [{
+//         "$oid": "66a3cf7035f4c7e0febd1b56"
+//     }, {
+//         "$oid": "669a660ca30b8bd4d894f1c2"
+//     }],
+//     "__v": {
+//         "$numberInt": "3"
+//     },
+//     "updatedAt": {
+//         "$date": {
+//             "$numberLong": "1725060513030"
+//         }
+//     },
+//     "viewCount": {
+//         "$numberInt": "58"
+//     }
+// }
+
+
+// // user profile format stored in database
+// {
+//     "_id": {
+//         "$oid": "669a6468a30b8bd4d894f1ad"
+//     },
+//     "firstName": "Bhuvan",
+//     "lastName": "Rajpoot",
+//     "email": "bhuvan.rajpoot2000@gmail.com",
+//     "password": "$2b$10$K6Ck1gmStRLmtCzFUTtlL.cHFAkdLmiP0DDKgFNEVU0pSWZDxKK4G",
+//     "bio": "software developer",
+//     "role": "admin",
+//     "profile": {
+//         "skills": ["HTML", "CSS", "JavaScript", "MongoDB", "Express", "Node", "Redux", "React", "JavaScript"],
+//         "projects": [],
+//         "experience": [],
+//         "education": [],
+//         "resume": "uploads\\resumes\\resume-1721476240748.pdf",
+//         "certifications": [],
+//         "achievements": [],
+//         "languages": [],
+//         "_id": {
+//             "$oid": "669a6468a30b8bd4d894f1ac"
+//         }
+//     },
+//     "createdAt": {
+//         "$date": {
+//             "$numberLong": "1721394280270"
+//         }
+//     },
+//     "updatedAt": {
+//         "$date": {
+//             "$numberLong": "1723586135066"
+//         }
+//     },
+//     "__v": {
+//         "$numberInt": "4"
+//     },
+//     "photo": "uploads\\photos\\photo-1723431741067.jpg",
+//     "links": {
+//         "linkedin": "https://www.linkedin.com/in/bhuvan-rajpoot/",
+//         "github": "https://github.com/bhuvan-01",
+//         "twitter": ""
+//     }
+// }

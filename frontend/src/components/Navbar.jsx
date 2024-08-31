@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import { useSelector } from 'react-redux';
 import {
@@ -13,11 +13,12 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, User } from 'lucide-react';
 import { IMG_URL } from '@/utils/constants';
 import ContactImage from '../assets/images/contactIcon.png';
-import { DashboardIcon, DashIcon } from "@radix-ui/react-icons";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
   const { token, user } = useSelector((state) => state.auth);
-  const location = useLocation(); 
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     // Handle logout functionality here
@@ -29,6 +30,17 @@ const Navbar = () => {
   const isLoginPage = location.pathname === '/login';
   const isSignupPage = location.pathname === '/signup';
 
+  const handleFindJobsClick = (e) => {
+    e.preventDefault();
+    if (!token) {
+      navigate('/login');
+    } else if (user?.role === 'user') {
+      navigate('/dashboard/user');
+    } else {
+      navigate('/jobs');
+    }
+  };
+
   return (
     <div className='py-4  border-b-gray-100/75  sticky top-0'>
       <div className='container max-w-[1400px] p-0 mx-auto w-[95%] flex justify-between items-center'>
@@ -37,19 +49,20 @@ const Navbar = () => {
         <div className='flex gap-2 items-center'>
           <Link
             to='/'
-            className=' font-medium text-sm p-2 px-4  text-white'
+            className='font-medium text-sm p-2 px-4 text-white'
           >
             Home
           </Link>
-          <Link
-            to='/jobs'
-            className=' font-medium text-sm p-2 px-4  text-white'
+          <a
+            href='/jobs'
+            onClick={handleFindJobsClick}
+            className='font-medium text-sm p-2 px-4 text-white'
           >
             Find Jobs
-          </Link>
+          </a>
           <Link
             to='/community'
-            className=' font-medium text-sm p-2 px-4  text-white'
+            className='font-medium text-sm p-2 px-4 text-white'
           >
             Community
           </Link>
@@ -89,16 +102,16 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   {user?.role === "employer" && (
-                <DropdownMenuItem>
-                  <Link to="/dashboard/employer" className="flex items-center">
-                    <DashboardIcon
-                      size={16}
-                      className="text-gray-800 dark:text-gray-300 mr-2"
-                    />
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
-              )}
+                    <DropdownMenuItem>
+                      <Link to="/dashboard/employer" className="flex items-center">
+                        <DashboardIcon
+                          size={16}
+                          className="text-gray-800 dark:text-gray-300 mr-2"
+                        />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     className='cursor-pointer'
                     onClick={handleLogout}
