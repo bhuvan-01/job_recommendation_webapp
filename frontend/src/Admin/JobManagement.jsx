@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import apiClient from '../services/apiClient'; // Ensure this is the correct path to your API client
+import apiClient from '../services/apiClient'; 
+import { useNavigate } from "react-router-dom";
+
 
 const JobList = () => {
     const [jobs, setJobs] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         fetchJobs();
@@ -27,8 +31,8 @@ const JobList = () => {
     //     // Implement job view logic
     // };
     const handleJobDetails = (jobId) => {
-        incrementViewCount(jobId);
-        navigate(`/jobs/${jobId}`);
+       
+        navigate(`/jobs/view/${jobId}`);
       };
 
     const filteredJobs = jobs.filter(job =>
@@ -53,7 +57,7 @@ const JobList = () => {
                         <p>Type: {job.jobType} | Location: {job.location} | Company: {job.company.name}</p>
                     </div>
                     <div className="flex gap-2">
-                        <button onClick={() => handleView(job._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        <button onClick={() => handleJobDetails(job._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             View
                         </button>
                       

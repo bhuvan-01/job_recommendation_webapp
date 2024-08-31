@@ -11,7 +11,7 @@ exports.subscribe = async (req, res) => {
         res.send('Subscribed successfully');
     } catch (error) {
         console.error('Error subscribing email:', error.message);
-        if (error.code === 11000) { // Handle duplicate key error
+        if (error.code === 11000) { 
             return res.status(409).send('This email is already subscribed.');
         }
         res.status(500).send('Failed to subscribe');

@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import Intro from '@/components/user/Intro';
+import Contact from '@/components/user/Contact'; // Import Contact component
+import EmailToggle from '@/components/EmailToggle'; // Import EmailToggle component
 
 const EmployerProfile = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,8 @@ const EmployerProfile = () => {
 
   useEffect(() => {
     const fetchEmployerJobs = async () => {
+      if (!user?._id) return; // Check if user exists before making the API call
+
       try {
         const res = await apiClient.get(`/jobs/employer/${user._id}`);
         if (res.status === 200) {
@@ -33,10 +37,12 @@ const EmployerProfile = () => {
       }
     };
 
-    if (user) fetchEmployerJobs();
+    if (user) {
+      fetchEmployerJobs();
 
-    if (user?.company) {
-      setCompanyDetails(user.company);
+      if (user.company) {
+        setCompanyDetails(user.company);
+      }
     }
   }, [user]);
 
@@ -47,8 +53,11 @@ const EmployerProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user?._id) return; // Check if user exists before making the API call
+
     try {
-      if (user?.company && isEditing) {
+      if (user.company && isEditing) {
         const companyRes = await apiClient.put(`/company/${user.company._id}`, companyDetails);
 
         if (companyRes.status === 200) {
@@ -79,6 +88,11 @@ const EmployerProfile = () => {
     }
   };
 
+  if (!user) {
+    // Optional: Add a loading state or a message here
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <Header />
@@ -87,7 +101,7 @@ const EmployerProfile = () => {
           <div className='basis-9/12'>
             <Intro />
 
-            {user?.company ? (
+            {user.company ? (
               <section className='my-4 border p-8 rounded-md'>
                 <h1 className='text-2xl font-semibold mb-4'>Company Details</h1>
                 <div className='flex gap-4 items-center'>
@@ -276,7 +290,14 @@ const EmployerProfile = () => {
               </section>
             )}
           </div>
-          
+
+          {/* Sidebar */}
+          <div className='basis-3/12'>
+            <div className='sticky top-4'>
+              <Contact /> 
+              <EmailToggle userId={user?._id} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

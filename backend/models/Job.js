@@ -32,6 +32,7 @@ const JobSchema = new Schema(
       enum: ["IT", "Healthcare", "Finance", "Education", "Retail"],
       required: true,
     },
+    externalLink: { type: String, default: null },
     location: { type: String, required: true },
     salary: { type: String, required: true },
     company: { type: Schema.Types.ObjectId, ref: "Company", required: true },

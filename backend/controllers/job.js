@@ -7,18 +7,20 @@ const Application = require("../models/Application");
 const Notification = require("../models/Notification");
 const io = require("socket.io");
 
-const sendNotification = async (userId, message, io) => {
+const sendNotification = async (userId, message, io,jobId = null) => {
   try {
     const notification = new Notification({
       recipient: userId,
       message,
       type: "info",
+      jobId,
     });
     await notification.save();
 
     // Send the notification via Socket.IO
     io.to(userId).emit("notification", {
       message: message,
+      jobId: jobId,
     });
     console.log("Notification sent and saved to database:", message);
   } catch (error) {
@@ -37,7 +39,7 @@ exports.createJob = async (req, res) => {
 
     jobSeekers.forEach(async (jobSeeker) => {
       try {
-        await sendNotification(jobSeeker._id, message, req.io);
+        await sendNotification(jobSeeker._id, message, req.io, job._id);
       } catch (error) {
         console.error(
           `Error sending notification to user ${jobSeeker._id}:`,
@@ -45,13 +47,6 @@ exports.createJob = async (req, res) => {
         );
       }
     });
-
-    try {
-      const flaskEndpoint = `http://127.0.0.1:8080/extract-job-keywords/${job._id}`;
-      await axios.post(flaskEndpoint);
-    } catch (error) {
-      console.error("Failed to extract keywords:", error.message);
-    }
 
     res.status(201).json({ job, message: "Job posted successfully" });
   } catch (error) {
@@ -156,7 +151,6 @@ exports.getJobs = async (req, res) => {
       .populate("company")
       .skip(skip)
       .limit(perPage);
-    // total pages
     const count = await Job.countDocuments(mongoQuery);
     const totalPages = Math.ceil(count / perPage);
     return res.status(200).json({ jobs, totalPages, count, currentPage: page });
@@ -184,7 +178,6 @@ exports.getUserAppliedJobs = async (req, res) => {
 exports.getUserSavedJobs = async (req, res) => {
   try {
     const userId = req.user._id;
-    // console.log('user: ', userId);
     const jobs = await Job.find({ savedBy: userId }).populate("company");
     res.status(200).json(jobs);
   } catch (error) {
@@ -308,6 +301,8 @@ exports.removeSavedJob = async (req, res) => {
   }
 };
 
+// Stats for the employer
+
 exports.getEmployerDashboardStats = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -315,26 +310,21 @@ exports.getEmployerDashboardStats = async (req, res) => {
       return res.status(404).json({ message: "Employer not found" });
     }
 
-    // Fetch all jobs posted by the employer
     const jobs = await Job.find({ company: user.company });
     const jobIds = jobs.map((job) => job._id);
 
-    // Count total jobs posted
     const totalJobsPosted = jobs.length;
 
-    // Count total applications
     const totalApplications = jobs.reduce(
       (sum, job) => sum + (job.applications ? job.applications.length : 0),
       0
     );
 
-    // Count total jobs saved
     const totalJobsSaved = jobs.reduce(
       (sum, job) => sum + (job.savedBy ? job.savedBy.length : 0),
       0
     );
 
-    // Count total people hired
     const hiredApplications = await Application.find({
       job: { $in: jobIds },
       status: "Hired",
@@ -356,6 +346,7 @@ exports.getEmployerDashboardStats = async (req, res) => {
   }
 };
 
+// Monthly Stats for the employer
 exports.getEmployerStatsByMonth = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -367,7 +358,6 @@ exports.getEmployerStatsByMonth = async (req, res) => {
       $match: { company: new mongoose.Types.ObjectId(user.company) },
     };
 
-    // Monthly Job Posts
     const monthlyJobsPosted = await Job.aggregate([
       matchByCompany,
       {
@@ -384,7 +374,6 @@ exports.getEmployerStatsByMonth = async (req, res) => {
       },
     ]);
 
-    // Monthly Applications
     const monthlyApplications = await Job.aggregate([
       matchByCompany,
       { $unwind: "$applications" },
@@ -402,7 +391,6 @@ exports.getEmployerStatsByMonth = async (req, res) => {
       },
     ]);
 
-    // Monthly Jobs Saved
     const monthlyJobsSaved = await Job.aggregate([
       matchByCompany,
       { $unwind: "$savedBy" },
@@ -420,7 +408,6 @@ exports.getEmployerStatsByMonth = async (req, res) => {
       },
     ]);
 
-    // Monthly People Hired
     const monthlyPeopleHired = await Application.aggregate([
       {
         $match: {
@@ -471,7 +458,6 @@ exports.getUserRecommendations = async (req, res) => {
   }
 };
 
-// count the views on Jobs
 
 exports.incrementJobViewCount = async (req, res) => {
   try {

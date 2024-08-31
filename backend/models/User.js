@@ -171,6 +171,10 @@ const UserSchema = new Schema(
     phone: {
       type: String,
     },
+    emailNotifications: { 
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

@@ -4,17 +4,12 @@ import { Banknote, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { jobApplied } from "@/app/jobs/jobSlice";
-import useUser from "@/hooks/useUser";
 
 const JobDetailed = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { user } = useUser();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -33,24 +28,11 @@ const JobDetailed = () => {
     if (id) fetchJob();
   }, [id]);
 
-  const hasApplied = job?.applications.some(app => app.user === user?._id);
-
-  const handleJobApply = async (job) => {
+  const handleJobApply = (job) => {
     if (job.externalLink) {
       window.location.href = job.externalLink;
     } else {
-      try {
-        const res = await apiClient.post(`/jobs/apply/${job._id}`);
-        if (res.status === 200) {
-          dispatch(jobApplied({ userId: user._id, jobId: job._id }));
-          setJob(prevJob => ({
-            ...prevJob,
-            applications: [...prevJob.applications, { user: user._id }]
-          }));
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      navigate(`/apply/${job._id}`);
     }
   };
 
@@ -61,6 +43,7 @@ const JobDetailed = () => {
   return (
     <div className="container mx-auto w-full max-w-[1400px] bg-white p-6 mt-6">
       <div className="w-full">
+        {/* Left Column */}
         <div className="space-y-4">
           <section className="bg-blue-500 shadow-md text-white p-8 rounded-md">
             <h1 className="text-2xl font-bold mb-1">{job.title}</h1>
@@ -106,12 +89,12 @@ const JobDetailed = () => {
                 <Button
                   onClick={() => handleJobApply(job)}
                   className="px-8 basis-1/2 md:basis-auto"
-                  disabled={hasApplied}
                 >
-                  {hasApplied ? "Applied" : "Apply"}
+                  Apply
                 </Button>
               </div>
             </div>
+            {/* right col */}
             <div className="my-4 md:m-0 md:p-4 basis-4/12 bg-gray-50">
               <h2 className="text-xl font-medium">{job.company.name}</h2>
               <p>{job.company.location}</p>

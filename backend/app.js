@@ -16,7 +16,8 @@ const chalk = require('chalk');
 const adminRoutes = require('./routes/admin');
 const adminJobRoutes = require('./routes/adminJobRoutes'); 
 const newsletterRoutes = require('./routes/newsLetter');
-const contactRoutes = require('./routes/contact')
+const contactRoutes = require('./routes/contact');
+const notificationRoutes = require('./routes/emailNotification');
 
 
 
@@ -59,6 +60,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin/jobs', adminJobRoutes);
 app.use('/api', newsletterRoutes);
 app.use('/api', contactRoutes);
+app.use('/api/users', notificationRoutes);
 
 
 //chalk configs
