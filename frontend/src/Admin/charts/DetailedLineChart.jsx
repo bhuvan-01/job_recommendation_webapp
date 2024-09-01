@@ -146,7 +146,7 @@ const AdminStatsLineChart = () => {
   }
 
   return (
-    <Box sx={{ padding: 3, backgroundColor: "white", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+    <Box sx={{ padding: 3, backgroundColor: "white", borderRadius: "8px" }}>
       <Typography variant="h6" gutterBottom>
         Monthly Admin Stats
       </Typography>

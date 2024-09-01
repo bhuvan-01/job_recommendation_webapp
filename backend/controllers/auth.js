@@ -34,6 +34,8 @@ const login = async (req, res) => {
       }
     );
 
+
+    if (existingUser.emailNotifications) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -58,6 +60,7 @@ const login = async (req, res) => {
         console.log("Email sent:", info.response);
       }
     });
+  }
 
     return res.status(200).json({
       token,
@@ -169,7 +172,7 @@ const storedOTPs = {};
 // 6-digit OTP
 
 const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+  return Math.floor(100000 + Math.random() * 900000).toString(); 
 };
 
 const forgotPassword = async (req, res) => {
@@ -205,7 +208,7 @@ const forgotPassword = async (req, res) => {
     const mailOptions = {
       from: process.env.APP_EMAIL,
       to: email,
-      subject: "Reset password | Chatty 💬",
+      subject: "Reset password | JobWipe💬",
       text: `Your OTP to reset your password is ${otp}`,
     };
 

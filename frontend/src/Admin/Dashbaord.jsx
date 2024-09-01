@@ -77,7 +77,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Line Chart for Job Stats */}
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4 ">Job Stats Overview</h2>
         <JobStatsLineChart stats={stats} />
@@ -85,16 +84,16 @@ const AdminDashboard = () => {
 
       {/* Pie Chart and Bar Chart on the Same Line */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white p-4 rounded-lg ">
           <PieChartComponent stats={stats} />
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white p-4 rounded-lg ">
           <AdminStatsBarChart />
         </div>
       </div>
 
       {/* Detailed Line Chart Below */}
-      <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
+      <div className="mt-8 bg-white p-4 rounded-lg">
         <AdminStatsLineChart />
       </div>
     </div>

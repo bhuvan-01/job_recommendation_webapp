@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTable } from "react-table";
 import { fetchUsers, deleteUser } from "../app/userSlice";
 import UserFormModal from "./UserFormModal";
+import { jsPDF } from "jspdf"; // Import jsPDF for generating PDF files
 
 const UserTable = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,6 @@ const UserTable = () => {
             user.email.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-  // Define columns using useMemo to prevent unnecessary re-renders
   const columns = useMemo(
     () => [
       {
@@ -78,6 +78,20 @@ const UserTable = () => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data: filteredUsers });
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = ["Name", "Email", "Role"];
+    const tableRows = filteredUsers.map(user => [
+      `${user.firstName} ${user.lastName}`,
+      user.email,
+      user.role
+    ]);
+
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    doc.text("User List", 14, 15);
+    doc.save("user_list.pdf");
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -96,6 +110,12 @@ const UserTable = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-gray-300 p-2 rounded w-full sm:w-auto"
         />
+        <button
+          onClick={handleDownloadPDF}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto mt-2 sm:mt-0"
+        >
+          Download PDF
+        </button>
       </div>
       <div className="overflow-x-auto">
         <table {...getTableProps()} className="min-w-full leading-normal">

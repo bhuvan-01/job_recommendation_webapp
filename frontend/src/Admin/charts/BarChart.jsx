@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Chart from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
-import axios from 'axios';
 import apiClient from '@/services/apiClient';
 
 const MonthlyStatsChart = () => {
@@ -45,7 +43,6 @@ const MonthlyStatsChart = () => {
           applicationData[item._id.month - 1] = item.totalApplications;
         });
 
-        
         setChartData({
           labels: months,
           datasets: [
@@ -95,17 +92,20 @@ const MonthlyStatsChart = () => {
   }, []);
 
   return (
-    <div style={{ width: '80%', margin: '0 auto' }}>
+    <div className="w-full max-w-6x1.5 mx-auto p-4 bg-white rounded-lg ">
       {chartData ? (
         <Bar
           data={chartData}
           options={{
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true,
               },
             },
           }}
+          height={400} // Adjust the height of the chart
         />
       ) : (
         <p>Loading data...</p>

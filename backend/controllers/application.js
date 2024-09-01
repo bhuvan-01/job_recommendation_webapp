@@ -93,6 +93,32 @@ exports.applyToJob = async (req, res) => {
      io.to(employer._id.toString()).emit('notification', notification);
 
      console.log(`Notification sent to employer: ${employer._id}`);
+
+     // Check if the employer has email notifications enabled
+     if (employer.emailNotifications) {
+       const transporter = nodemailer.createTransport({
+         service: "gmail",
+         auth: {
+           user: process.env.APP_EMAIL,
+           pass: process.env.APP_PASSWORD,
+         },
+       });
+
+       const mailOptions = {
+         from: process.env.APP_EMAIL,
+         to: employer.email,
+         subject: "New Job Application Received",
+         text: notificationMessage,
+       };
+
+       transporter.sendMail(mailOptions, (error, info) => {
+         if (error) {
+           console.error("Error sending email:", error);
+         } else {
+           console.log("Email sent:", info.response);
+         }
+       });
+     }
    } else {
      console.log('Employer not found for the job.');
    }
@@ -218,7 +244,7 @@ exports.updateApplicationStatus = async (req, res) => {
       status,
     });
 
-    if (status === "Hired") {
+    if (status === "Hired" && application.applicant.emailNotifications) { 
       const emailSubject = `You have been hired for ${application.job.title}`;
       const emailText = `Dear ${application.applicant.firstName},\n\nCongratulations! You have been hired for the position of ${application.job.title}. We are excited to welcome you to the team.\n\nBest regards,\nThe HR Team`;
 
