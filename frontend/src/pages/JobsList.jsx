@@ -41,7 +41,6 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
-
 const experienceLevels = [
   { id: "Internship", label: "Internship" },
   { id: "Entry Level", label: "Entry Level" },
@@ -72,7 +71,13 @@ const industries = [
   { id: "Retail", label: "Retail" },
 ];
 
-const FilterAccordion = ({ title, options, index, selectedOptions, onChange }) => {
+const FilterAccordion = ({
+  title,
+  options,
+  index,
+  selectedOptions,
+  onChange,
+}) => {
   const [isActive, setIsActive] = useState(() => index === 0);
 
   const handleCheckboxChange = (id) => {
@@ -320,10 +325,8 @@ const JobList = () => {
   };
 
   return (
-    <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 my-4">
+    <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 pt-8">
       <div className="hidden md:block basis-3/12 md:space-y-4">
-        
-
         <Filters />
         <MapboxMap />
       </div>
@@ -401,8 +404,8 @@ const JobList = () => {
                       {job.title}
                     </h2>
                     <p className="text-gray-600 text-sm font-medium">
-                      {job.company ? job.company.name : "Unknown Company"}{" "}
-                      {"•"} {job.location}
+                      {job.company ? job.company.name : "Unknown Company"} {"•"}{" "}
+                      {job.location}
                     </p>
                     <div className="my-4 flex flex-wrap gap-2">
                       {job.requirements
@@ -434,8 +437,6 @@ const JobList = () => {
                     >
                       View details
                     </Button>
-                   
-                  
                   </div>
                 </div>
               ))}

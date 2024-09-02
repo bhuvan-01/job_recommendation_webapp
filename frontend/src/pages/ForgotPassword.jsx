@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { sendPasswordResetEmail, verifyOtp, resetPassword } from "@/app/actions/AuthAction";
+import {
+  sendPasswordResetEmail,
+  verifyOtp,
+  resetPassword,
+} from "@/app/actions/AuthAction";
 import Navbar from "@/components/Navbar";
 
 const ForgotPassword = () => {
@@ -28,9 +32,7 @@ const ForgotPassword = () => {
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     dispatch(resetPassword({ email, password }))
-      .then(() => {
-        // Redirect to login page or show success message
-      })
+      .then(() => {})
       .catch((error) => {
         console.error("Error during password reset:", error);
       });

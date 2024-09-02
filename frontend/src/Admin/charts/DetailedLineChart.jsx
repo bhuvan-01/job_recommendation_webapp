@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 import apiClient from "@/services/apiClient";
 
-// Register the components
 ChartJS.register(
   CategoryScale,
   LinearScale,

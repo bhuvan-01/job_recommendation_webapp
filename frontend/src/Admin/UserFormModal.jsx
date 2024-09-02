@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { createUser, updateUser } from '../app/userSlice'
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { createUser, updateUser } from "../app/userSlice";
 
 const UserFormModal = ({ user, closeModal, fetchUsers }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    role: '',
-    password: ''  
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "",
+    password: "",
   });
 
   useEffect(() => {
     // Set form data with existing user details if user exists, without password
     if (user) {
-      const { password, ...rest } = user; // Destructure to omit password
+      const { password, ...rest } = user;
       setFormData(rest);
     } else {
-      // Reset form (for creating a new user)
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        role: '',
-        password: ''
+        firstName: "",
+        lastName: "",
+        email: "",
+        role: "",
+        password: "",
       });
     }
   }, [user]);
@@ -69,7 +68,7 @@ const UserFormModal = ({ user, closeModal, fetchUsers }) => {
             placeholder="Email"
             className="block w-full p-2 border border-gray-300 rounded"
           />
-          { !user && ( // Only show password field when creating a new user
+          {!user && (
             <input
               name="password"
               value={formData.password}

@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const jobSlice = createSlice({
-  name: 'job',
+  name: "job",
   initialState: {
     jobs: [],
     totalCount: 0,

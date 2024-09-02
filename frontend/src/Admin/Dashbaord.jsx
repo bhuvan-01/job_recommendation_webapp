@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaUsers, FaBuilding, FaBriefcase, FaUserCheck } from "react-icons/fa";
 import apiClient from "../services/apiClient";
-import JobStatsLineChart from "./charts/LineChart"; // Import the Line Chart Component
+import JobStatsLineChart from "./charts/LineChart";
 import PieChartComponent from "./charts/PieCharts";
 import AdminStatsLineChart from "./charts/DetailedLineChart";
 import AdminStatsBarChart from "./charts/BarChart";
@@ -82,7 +82,6 @@ const AdminDashboard = () => {
         <JobStatsLineChart stats={stats} />
       </div>
 
-      {/* Pie Chart and Bar Chart on the Same Line */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
         <div className="bg-white p-4 rounded-lg ">
           <PieChartComponent stats={stats} />
@@ -91,8 +90,6 @@ const AdminDashboard = () => {
           <AdminStatsBarChart />
         </div>
       </div>
-
-      {/* Detailed Line Chart Below */}
       <div className="mt-8 bg-white p-4 rounded-lg">
         <AdminStatsLineChart />
       </div>

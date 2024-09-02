@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useLocation } from 'react-router-dom';
-import apiClient from './services/apiClient';
-import { setUser, startLoader, stopLoader } from './app/auth/authSlice';
-import socket from './socket';
-import useSocket from './hooks/useSocket';
-import useUser from './hooks/useUser';
+import { useEffect, useLayoutEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useLocation } from "react-router-dom";
+import apiClient from "./services/apiClient";
+import { setUser, startLoader, stopLoader } from "./app/auth/authSlice";
+import socket from "./socket";
+import useSocket from "./hooks/useSocket";
+import useUser from "./hooks/useUser";
 
 function App() {
   const location = useLocation();
@@ -20,7 +20,7 @@ function App() {
     const getUser = async () => {
       try {
         dispatch(startLoader());
-        const res = await apiClient.get('/auth/user');
+        const res = await apiClient.get("/auth/user");
 
         if (res.status === 200) {
           dispatch(setUser({ user: res.data.user }));
@@ -42,7 +42,7 @@ function App() {
 
   return (
     <>
-      <Toaster position='bottom-center' />
+      <Toaster position="bottom-center" />
       <Outlet />
     </>
   );

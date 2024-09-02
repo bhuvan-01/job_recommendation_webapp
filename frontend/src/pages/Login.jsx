@@ -1,15 +1,15 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import apiClient from '@/services/apiClient';
-import { Link, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '@/app/auth/authSlice';
-import { useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import loginImage from '../assets/images/loginImage3.png'
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import apiClient from "@/services/apiClient";
+import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/app/auth/authSlice";
+import { useEffect } from "react";
+import Navbar from "@/components/Navbar";
+import loginImage from "../assets/images/loginImage3.png";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -17,22 +17,22 @@ const Login = () => {
   const { user } = useSelector((state) => state.auth);
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().min(6).required('Required'),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().min(6).required("Required"),
     }),
     onSubmit: async (values) => {
       try {
-        const res = await apiClient.post('/auth/login', values);
+        const res = await apiClient.post("/auth/login", values);
 
         console.log(res);
 
         if (res.status === 200) {
           dispatch(login({ token: res.data.token }));
-          localStorage.setItem('token', JSON.stringify(res.data.token));
+          localStorage.setItem("token", JSON.stringify(res.data.token));
         }
       } catch (error) {
         console.log(error.response);
@@ -44,17 +44,17 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       switch (user.role) {
-        case 'user':
-          navigate('/dashboard/user');
+        case "user":
+          navigate("/dashboard/user");
           break;
-        case 'employer':
-          navigate('/dashboard/employer');
+        case "employer":
+          navigate("/dashboard/employer");
           break;
-        case 'admin':
-          navigate('/admin/dashboard');
+        case "admin":
+          navigate("/admin/dashboard");
           break;
         default:
-          navigate('/dashboard/user');
+          navigate("/dashboard/user");
       }
     }
   }, [user]);

@@ -8,7 +8,6 @@ const LINKS = [
     items: [
       { name: "About us", path: "/aboutus" },
       { name: "Features", path: "/features" },
-    
     ],
   },
   {
@@ -46,7 +45,7 @@ export default function FooterWithSocialLinks() {
                 <li key={item.name}>
                   <Link to={item.path}>
                     <Typography
-                      as="span" // Using span inside Link
+                      as="span"
                       color="gray"
                       className="py-1.5 block hover:text-blue-500 transition-colors"
                     >
@@ -66,7 +65,6 @@ export default function FooterWithSocialLinks() {
             &copy; {currentYear} JobWipe. All Rights Reserved.
           </Typography>
           <div className="flex gap-4 mt-4 md:mt-0">
-
             {/* WhatsApp */}
             <a
               href="https://chat.whatsapp.com/BknCVf4cmxNLl2XMBvwujV"

@@ -1,12 +1,12 @@
-import { Pencil, Check, X } from 'lucide-react';
-import { Button } from '../ui/button';
-import useUser from '@/hooks/useUser';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Pencil, Check, X } from "lucide-react";
+import { Button } from "../ui/button";
+import useUser from "@/hooks/useUser";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const Achievements = () => {
   const { user, updateUser } = useUser();
@@ -21,13 +21,13 @@ const Achievements = () => {
     initialValues: {
       achievements: initialAchievements,
       newAchievement: {
-        title: '',
-        description: '',
+        title: "",
+        description: "",
       },
     },
     validationSchema: Yup.object().shape({
       newAchievement: Yup.object().shape({
-        title: Yup.string().required('Title is required'),
+        title: Yup.string().required("Title is required"),
         description: Yup.string(),
       }),
     }),
@@ -40,7 +40,7 @@ const Achievements = () => {
             return index === editingIndex ? values.newAchievement : achievement;
           }
         );
-        formik.setFieldValue('achievements', updatedAchievements);
+        formik.setFieldValue("achievements", updatedAchievements);
 
         updateUser({
           profile: {
@@ -54,7 +54,7 @@ const Achievements = () => {
           ...formik.values.achievements,
           values.newAchievement,
         ];
-        formik.setFieldValue('achievements', updatedAchievements);
+        formik.setFieldValue("achievements", updatedAchievements);
 
         updateUser({
           profile: {
@@ -64,9 +64,9 @@ const Achievements = () => {
         });
       }
 
-      formik.setFieldValue('newAchievement', {
-        title: '',
-        description: '',
+      formik.setFieldValue("newAchievement", {
+        title: "",
+        description: "",
       });
       setEditingIndex(null);
       setIsEditing(false);
@@ -76,16 +76,16 @@ const Achievements = () => {
 
   const handleAddClick = () => {
     setEditingIndex(null);
-    formik.setFieldValue('newAchievement', {
-      title: '',
-      description: '',
+    formik.setFieldValue("newAchievement", {
+      title: "",
+      description: "",
     });
     setIsEditing(true);
   };
 
   const handleEditClick = (index) => {
     setEditingIndex(index);
-    formik.setFieldValue('newAchievement', formik.values.achievements[index]);
+    formik.setFieldValue("newAchievement", formik.values.achievements[index]);
     setIsEditing(true);
   };
 
@@ -93,7 +93,7 @@ const Achievements = () => {
     const updatedAchievements = formik.values.achievements.filter(
       (_, i) => i !== index
     );
-    formik.setFieldValue('achievements', updatedAchievements);
+    formik.setFieldValue("achievements", updatedAchievements);
 
     updateUser({
       profile: {
@@ -105,83 +105,87 @@ const Achievements = () => {
 
   const handleCancel = () => {
     setEditingIndex(null);
-    formik.setFieldValue('newAchievement', {
-      title: '',
-      description: '',
+    formik.setFieldValue("newAchievement", {
+      title: "",
+      description: "",
     });
     setIsEditing(false);
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (
-    <section className='mt-4 border p-4 md:p-8 rounded-md'>
-      <div className='mb-4 flex items-center justify-between'>
-        <h1 className='text-2xl flex gap-2 items-center'>Achievements</h1>
+    <section className="mt-4 border p-4 md:p-8 rounded-md">
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl flex gap-2 items-center">Achievements</h1>
         {isEditing ? null : (
-          <Button onClick={handleAddClick} variant='ghost'>
+          <Button onClick={handleAddClick} variant="ghost">
             Add
           </Button>
         )}
       </div>
       {isEditing ? (
         <form
-          id='achievementForm'
-          className='flex flex-col'
+          id="achievementForm"
+          className="flex flex-col"
           onSubmit={formik.handleSubmit}
         >
-          <div className='mb-4'>
-            <Label htmlFor='title' className='mb-2 font-semibold'>
+          <div className="mb-4">
+            <Label htmlFor="title" className="mb-2 font-semibold">
               Title
             </Label>
             <Input
-              name='newAchievement.title'
+              name="newAchievement.title"
               value={formik.values.newAchievement.title}
               onChange={formik.handleChange}
-              placeholder='Title'
-              className='p-2 border rounded'
+              placeholder="Title"
+              className="p-2 border rounded"
             />
             {formik.touched.newAchievement?.title &&
               formik.errors.newAchievement?.title && (
-                <div className='text-red-500 text-xs'>
+                <div className="text-red-500 text-xs">
                   {formik.errors.newAchievement.title}
                 </div>
               )}
           </div>
 
-          <div className='mb-4'>
-            <Label htmlFor='description' className='mb-2 font-semibold'>
+          <div className="mb-4">
+            <Label htmlFor="description" className="mb-2 font-semibold">
               Description
             </Label>
             <Input
-              name='newAchievement.description'
+              name="newAchievement.description"
               value={formik.values.newAchievement.description}
               onChange={formik.handleChange}
-              placeholder='Description'
-              className='p-2 border rounded'
+              placeholder="Description"
+              className="p-2 border rounded"
             />
             {formik.touched.newAchievement?.description &&
               formik.errors.newAchievement?.description && (
-                <div className='text-red-500 text-xs'>
+                <div className="text-red-500 text-xs">
                   {formik.errors.newAchievement.description}
                 </div>
               )}
           </div>
 
-          <div className='flex items-center gap-2'>
+          <div className="flex items-center gap-2">
             <Button
-              type='button'
-              variant='destructive'
+              type="button"
+              variant="destructive"
               onClick={handleCancel}
-              className='flex items-center gap-2'
+              className="flex items-center gap-2"
             >
               Cancel <X size={16} />
             </Button>
 
-            <Button type='submit' className='w-fit flex items-center gap-2'>
-              {editingIndex !== null ? 'Update' : 'Save'} <Check size={16} />
+            <Button type="submit" className="w-fit flex items-center gap-2">
+              {editingIndex !== null ? "Update" : "Save"} <Check size={16} />
             </Button>
           </div>
         </form>
@@ -189,29 +193,29 @@ const Achievements = () => {
         <div>
           {initialAchievements.length > 0 ? (
             initialAchievements.map((achievement, index) => (
-              <div key={index} className='border p-4 rounded-md mb-4'>
-                <div className='flex items-center justify-between'>
-                  <h2 className='text-xl font-semibold mb-2'>
+              <div key={index} className="border p-4 rounded-md mb-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold mb-2">
                     {achievement.title}
                   </h2>
-                  <div className='flex items-center gap-4'>
+                  <div className="flex items-center gap-4">
                     <Button
-                      variant='ghost'
-                      size='icon'
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleEditClick(index)}
                     >
                       <Pencil size={16} />
                     </Button>
                     <Button
-                      variant='ghost'
-                      size='icon'
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleRemoveAchievement(index)}
                     >
                       <X size={16} />
                     </Button>
                   </div>
                 </div>
-                <p className='text-gray-600'>{achievement.description}</p>
+                <p className="text-gray-600">{achievement.description}</p>
               </div>
             ))
           ) : (

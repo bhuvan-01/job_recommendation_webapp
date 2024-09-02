@@ -88,7 +88,7 @@ const CreateJobs = () => {
       jobType: "",
       locationType: "",
       industry: "",
-      externalLink: "", // Added externalLink to initial values
+      externalLink: "",
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -133,7 +133,7 @@ const CreateJobs = () => {
             jobType: "",
             locationType: "",
             industry: "",
-            externalLink: "", 
+            externalLink: "",
           });
           toast.success("Job created");
           navigate("/dashboard/employer");
@@ -155,7 +155,7 @@ const CreateJobs = () => {
     Boolean(formik.values.jobType) ||
     Boolean(formik.values.locationType) ||
     Boolean(formik.values.industry) ||
-    Boolean(formik.values.externalLink); 
+    Boolean(formik.values.externalLink);
 
   const handleInputChange = (e) => {
     formik.handleChange(e);

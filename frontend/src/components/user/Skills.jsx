@@ -1,11 +1,11 @@
-import { Pencil, Check, X } from 'lucide-react';
-import { Button } from '../ui/button';
-import useUser from '@/hooks/useUser';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import { useFormik } from 'formik';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Pencil, Check, X } from "lucide-react";
+import { Button } from "../ui/button";
+import useUser from "@/hooks/useUser";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useFormik } from "formik";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const Skills = () => {
   const { user, updateUser } = useUser();
@@ -15,31 +15,89 @@ const Skills = () => {
     profile: { skills: initialSkills = [] },
   } = user;
   const [isEditing, setIsEditing] = useState(false);
-  const [suggestions, setSuggestions] = useState([]); // State for suggestions
+  const [suggestions, setSuggestions] = useState([]);
 
   // Hardcoded skill suggestions
   const hardcodedSkills = [
-    
-    "Customer Service", "Communication", "Event Planning", "Food Safety", "Housekeeping", "Hospitality Management", "Culinary Skills", "Conflict Resolution", "Bartending", "Front Desk Operations",
-    
-    
-    "JavaScript", "React", "Node.js", "Python", "Java", "C#", "SQL", "MongoDB", "AWS", "Azure", "Docker", "Kubernetes", "Cybersecurity", "DevOps", "Linux", "Cloud Computing", "Networking", "HTML", "CSS",
-    
-    
-    "Sales", "Merchandising", "Inventory Management", "Point of Sale (POS)", "Loss Prevention", "Visual Merchandising", "Product Knowledge", "Cash Handling", "Time Management",
-    
-    
-    "Patient Care", "Medical Terminology", "EMR (Electronic Medical Records)", "Phlebotomy", "First Aid", "CPR", "Nursing", "Healthcare Management", "Surgical Assistance", "Medication Administration",
-    
-    "Financial Analysis", "Accounting", "Budgeting", "Investment Management", "Risk Management", "Financial Reporting", "Taxation", "Audit", "Compliance", "Data Analysis",
-    
-    "Curriculum Development", "Classroom Management", "Lesson Planning", "Special Education", "Tutoring", "Educational Technology", "Child Development", "Instructional Design", "Teaching", "Assessment"
+    "Customer Service",
+    "Communication",
+    "Event Planning",
+    "Food Safety",
+    "Housekeeping",
+    "Hospitality Management",
+    "Culinary Skills",
+    "Conflict Resolution",
+    "Bartending",
+    "Front Desk Operations",
+
+    "JavaScript",
+    "React",
+    "Node.js",
+    "Python",
+    "Java",
+    "C#",
+    "SQL",
+    "MongoDB",
+    "AWS",
+    "Azure",
+    "Docker",
+    "Kubernetes",
+    "Cybersecurity",
+    "DevOps",
+    "Linux",
+    "Cloud Computing",
+    "Networking",
+    "HTML",
+    "CSS",
+
+    "Sales",
+    "Merchandising",
+    "Inventory Management",
+    "Point of Sale (POS)",
+    "Loss Prevention",
+    "Visual Merchandising",
+    "Product Knowledge",
+    "Cash Handling",
+    "Time Management",
+
+    "Patient Care",
+    "Medical Terminology",
+    "EMR (Electronic Medical Records)",
+    "Phlebotomy",
+    "First Aid",
+    "CPR",
+    "Nursing",
+    "Healthcare Management",
+    "Surgical Assistance",
+    "Medication Administration",
+
+    "Financial Analysis",
+    "Accounting",
+    "Budgeting",
+    "Investment Management",
+    "Risk Management",
+    "Financial Reporting",
+    "Taxation",
+    "Audit",
+    "Compliance",
+    "Data Analysis",
+
+    "Curriculum Development",
+    "Classroom Management",
+    "Lesson Planning",
+    "Special Education",
+    "Tutoring",
+    "Educational Technology",
+    "Child Development",
+    "Instructional Design",
+    "Teaching",
+    "Assessment",
   ];
 
   const formik = useFormik({
     initialValues: {
       skills: initialSkills,
-      newSkill: '',
+      newSkill: "",
     },
     onSubmit: (values) => {
       updateUser({
@@ -62,27 +120,27 @@ const Skills = () => {
     const newSkill = formik.values.newSkill.trim();
 
     if (newSkill) {
-      formik.setFieldValue('skills', [...formik.values.skills, newSkill]);
-      formik.setFieldValue('newSkill', '');
-      setSuggestions([]); // Clear suggestions after adding
+      formik.setFieldValue("skills", [...formik.values.skills, newSkill]);
+      formik.setFieldValue("newSkill", "");
+      setSuggestions([]);
     }
   };
 
   const handleRemoveSkill = (index) => {
     const updatedSkills = formik.values.skills.filter((_, i) => i !== index);
-    formik.setFieldValue('skills', updatedSkills);
+    formik.setFieldValue("skills", updatedSkills);
   };
 
   const handleSuggestionClick = (suggestion) => {
-    formik.setFieldValue('skills', [...formik.values.skills, suggestion]);
-    formik.setFieldValue('newSkill', '');
-    setSuggestions([]); // Clear suggestions after selection
+    formik.setFieldValue("skills", [...formik.values.skills, suggestion]);
+    formik.setFieldValue("newSkill", "");
+    setSuggestions([]);
   };
 
   // Filter hardcoded skills based on the query
   const fetchSuggestions = (query) => {
     if (query) {
-      const filteredSkills = hardcodedSkills.filter(skill =>
+      const filteredSkills = hardcodedSkills.filter((skill) =>
         skill.toLowerCase().includes(query.toLowerCase())
       );
       setSuggestions(filteredSkills);
@@ -133,7 +191,9 @@ const Skills = () => {
               </Button>
             </div>
             {formik.touched.newSkill && formik.errors.newSkill ? (
-              <div className="text-red-500 text-xs">{formik.errors.newSkill}</div>
+              <div className="text-red-500 text-xs">
+                {formik.errors.newSkill}
+              </div>
             ) : null}
             {suggestions.length > 0 && (
               <div className="bg-white shadow-md rounded-md p-2 mt-2">
@@ -182,7 +242,7 @@ const Skills = () => {
                   <span>{skill}</span>
                 </div>
               ))
-            : 'No skills found'}
+            : "No skills found"}
         </div>
       )}
     </section>

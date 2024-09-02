@@ -44,28 +44,37 @@ const ApplyNowPage = () => {
     },
     validationSchema: Yup.object({
       resume: Yup.mixed().required("A resume is required"),
-      email: Yup.string().email("Invalid email address").required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       phoneNumber: Yup.string().required("Phone number is required"),
-      experience: Yup.number().min(0, "Experience must be a positive number").required("Experience is required"),
+      experience: Yup.number()
+        .min(0, "Experience must be a positive number")
+        .required("Experience is required"),
       visaStatus: Yup.string().required("Please select an option"),
       relocation: Yup.string().required("Please select an option"),
       coverLetter: Yup.string().required("A cover letter is required"),
-      skills: Yup.array().of(Yup.string()).min(1, "At least one skill is required"),
+      skills: Yup.array()
+        .of(Yup.string())
+        .min(1, "At least one skill is required"),
       qualification: Yup.object({
         degreeName: Yup.string().required("Degree name is required"),
         majorSubject: Yup.string().required("Major subject is required"),
         startDate: Yup.date().required("Start date is required"),
         endDate: Yup.date().nullable(),
       }).required("Qualification details are required"),
-      terms: Yup.boolean().oneOf([true], "You must accept the terms and conditions"),
+      terms: Yup.boolean().oneOf(
+        [true],
+        "You must accept the terms and conditions"
+      ),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("jobId", jobId); // Ensure jobId is correctly appended
-      Object.keys(values).forEach(key => {
-        if (key === 'skills' || key === 'qualification') {
-          formData.append(key, JSON.stringify(values[key])); // Handle nested objects appropriately
-        } else if (key === 'resume' && values.resume) {
+      formData.append("jobId", jobId);
+      Object.keys(values).forEach((key) => {
+        if (key === "skills" || key === "qualification") {
+          formData.append(key, JSON.stringify(values[key]));
+        } else if (key === "resume" && values.resume) {
           formData.append("resume", values.resume, values.resume.name);
         } else {
           formData.append(key, values[key]);
@@ -75,15 +84,17 @@ const ApplyNowPage = () => {
       try {
         const response = await apiClient.post(`/applications/apply`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
         if (response.status === 201) {
-          dispatch(jobApplied({
-            application: response.data.application._id,
-            user: response.data.application.applicant,
-            jobId,
-          }));
+          dispatch(
+            jobApplied({
+              application: response.data.application._id,
+              user: response.data.application.applicant,
+              jobId,
+            })
+          );
           navigate("/applications/success");
         } else {
           setSubmitError(response.data.message || "An error occurred.");
@@ -112,13 +123,22 @@ const ApplyNowPage = () => {
 
   return (
     <div>
-      <Header/>
+      <Header />
       <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg border border-gray-300 shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-8">Apply Now</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Resume:</label>
-            <div {...getRootProps()} className={`mt-1 p-6 border-2 border-dashed rounded-lg cursor-pointer ${isDragActive ? "border-indigo-500 bg-indigo-50" : "border-gray-300"}`}>
+            <label className="block text-sm font-medium text-gray-700">
+              Resume:
+            </label>
+            <div
+              {...getRootProps()}
+              className={`mt-1 p-6 border-2 border-dashed rounded-lg cursor-pointer ${
+                isDragActive
+                  ? "border-indigo-500 bg-indigo-50"
+                  : "border-gray-300"
+              }`}
+            >
               <input {...getInputProps()} />
               {formik.values.resume ? (
                 <p>{formik.values.resume.name}</p>
@@ -127,21 +147,29 @@ const ApplyNowPage = () => {
               )}
             </div>
             <div className="mt-2">
-              <label className="block text-sm font-medium text-gray-700">Or upload your resume:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Or upload your resume:
+              </label>
               <input
                 type="file"
                 name="resume"
-                onChange={(event) => formik.setFieldValue("resume", event.currentTarget.files[0])}
+                onChange={(event) =>
+                  formik.setFieldValue("resume", event.currentTarget.files[0])
+                }
                 className="mt-1 block w-full text-sm text-gray-500"
               />
             </div>
             {formik.touched.resume && formik.errors.resume ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.resume}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.resume}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email:
+            </label>
             <input
               type="email"
               name="email"
@@ -151,12 +179,16 @@ const ApplyNowPage = () => {
               className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
             {formik.touched.email && formik.errors.email ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.email}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Phone Number:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number:
+            </label>
             <PhoneInput
               country={"us"}
               value={formik.values.phoneNumber}
@@ -170,12 +202,16 @@ const ApplyNowPage = () => {
               inputClass="w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
             {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.phoneNumber}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.phoneNumber}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">How many years of work experience do you have?</label>
+            <label className="block text-sm font-medium text-gray-700">
+              How many years of work experience do you have?
+            </label>
             <input
               type="number"
               name="experience"
@@ -185,12 +221,17 @@ const ApplyNowPage = () => {
               className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
             {formik.touched.experience && formik.errors.experience ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.experience}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.experience}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Will you now or in the future require sponsorship for employment visa status?</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Will you now or in the future require sponsorship for employment
+              visa status?
+            </label>
             <select
               name="visaStatus"
               onChange={formik.handleChange}
@@ -203,12 +244,16 @@ const ApplyNowPage = () => {
               <option value="No">No</option>
             </select>
             {formik.touched.visaStatus && formik.errors.visaStatus ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.visaStatus}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.visaStatus}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Are you willing to relocate?</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Are you willing to relocate?
+            </label>
             <select
               name="relocation"
               onChange={formik.handleChange}
@@ -221,12 +266,16 @@ const ApplyNowPage = () => {
               <option value="No">No</option>
             </select>
             {formik.touched.relocation && formik.errors.relocation ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.relocation}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.relocation}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Cover Letter:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Cover Letter:
+            </label>
             <textarea
               name="coverLetter"
               onChange={formik.handleChange}
@@ -236,12 +285,16 @@ const ApplyNowPage = () => {
               rows="4"
             ></textarea>
             {formik.touched.coverLetter && formik.errors.coverLetter ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.coverLetter}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.coverLetter}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">Skills:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Skills:
+            </label>
             <div className="flex items-center">
               <input
                 type="text"
@@ -259,7 +312,10 @@ const ApplyNowPage = () => {
             </div>
             <ul className="mt-2">
               {skillsList.map((s, index) => (
-                <li key={index} className="flex items-center justify-between border-b py-2">
+                <li
+                  key={index}
+                  className="flex items-center justify-between border-b py-2"
+                >
                   <span>{s}</span>
                   <button
                     type="button"
@@ -272,14 +328,18 @@ const ApplyNowPage = () => {
               ))}
             </ul>
             {formik.touched.skills && formik.errors.skills ? (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.skills}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.skills}
+              </div>
             ) : null}
           </div>
 
           <div className="mb-6">
             <h2 className="text-lg font-semibold">Qualification Details:</h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Degree Name:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Degree Name:
+              </label>
               <input
                 type="text"
                 name="qualification.degreeName"
@@ -288,13 +348,18 @@ const ApplyNowPage = () => {
                 value={formik.values.qualification.degreeName}
                 className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               />
-              {formik.touched.qualification?.degreeName && formik.errors.qualification?.degreeName ? (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.degreeName}</div>
+              {formik.touched.qualification?.degreeName &&
+              formik.errors.qualification?.degreeName ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.qualification.degreeName}
+                </div>
               ) : null}
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Major Subject:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Major Subject:
+              </label>
               <input
                 type="text"
                 name="qualification.majorSubject"
@@ -303,13 +368,18 @@ const ApplyNowPage = () => {
                 value={formik.values.qualification.majorSubject}
                 className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               />
-              {formik.touched.qualification?.majorSubject && formik.errors.qualification?.majorSubject ? (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.majorSubject}</div>
+              {formik.touched.qualification?.majorSubject &&
+              formik.errors.qualification?.majorSubject ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.qualification.majorSubject}
+                </div>
               ) : null}
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Start Date:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Start Date:
+              </label>
               <input
                 type="date"
                 name="qualification.startDate"
@@ -318,13 +388,18 @@ const ApplyNowPage = () => {
                 value={formik.values.qualification.startDate}
                 className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               />
-              {formik.touched.qualification?.startDate && formik.errors.qualification?.startDate ? (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.startDate}</div>
+              {formik.touched.qualification?.startDate &&
+              formik.errors.qualification?.startDate ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.qualification.startDate}
+                </div>
               ) : null}
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">End Date:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                End Date:
+              </label>
               <input
                 type="date"
                 name="qualification.endDate"
@@ -333,8 +408,11 @@ const ApplyNowPage = () => {
                 value={formik.values.qualification.endDate}
                 className="mt-1 block w-full p-3 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               />
-              {formik.touched.qualification?.endDate && formik.errors.qualification?.endDate ? (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.qualification.endDate}</div>
+              {formik.touched.qualification?.endDate &&
+              formik.errors.qualification?.endDate ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.qualification.endDate}
+                </div>
               ) : null}
             </div>
           </div>
@@ -348,10 +426,17 @@ const ApplyNowPage = () => {
               checked={formik.values.terms}
               className="form-checkbox text-indigo-600"
             />
-            <label htmlFor="terms" className="ml-2 text-sm text-gray-700">I agree to the <a href="/terms" className="text-indigo-600 underline">terms and conditions</a></label>
-              {formik.touched.terms && formik.errors.terms ? (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.terms}</div>
-              ) : null}
+            <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+              I agree to the{" "}
+              <a href="/terms" className="text-indigo-600 underline">
+                terms and conditions
+              </a>
+            </label>
+            {formik.touched.terms && formik.errors.terms ? (
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.terms}
+              </div>
+            ) : null}
           </div>
 
           <div className="mb-6">
@@ -364,9 +449,7 @@ const ApplyNowPage = () => {
           </div>
 
           {submitError && (
-            <div className="text-red-500 text-sm mt-4">
-              {submitError}
-            </div>
+            <div className="text-red-500 text-sm mt-4">{submitError}</div>
           )}
         </form>
       </div>

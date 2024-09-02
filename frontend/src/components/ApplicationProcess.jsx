@@ -1,11 +1,22 @@
-// src/ApplicationProcess.js
-import React from 'react';
+import React from "react";
 
 const steps = [
   { id: 1, title: "Create an Account", description: "Register on our website" },
-  { id: 2, title: "Complete Your Profile", description: "Fill out your personal details" },
-  { id: 3, title: "Search for Jobs", description: "Find the perfect job for you" },
-  { id: 4, title: "Apply & Get Hired", description: "Submit your application and get hired" },
+  {
+    id: 2,
+    title: "Complete Your Profile",
+    description: "Fill out your personal details",
+  },
+  {
+    id: 3,
+    title: "Search for Jobs",
+    description: "Find the perfect job for you",
+  },
+  {
+    id: 4,
+    title: "Apply & Get Hired",
+    description: "Submit your application and get hired",
+  },
 ];
 
 const ApplicationProcess = () => {
@@ -25,8 +36,19 @@ const ApplicationProcess = () => {
             <p className="text-center">{step.description}</p>
             {index < steps.length - 1 && (
               <div className="absolute inset-y-1/2 right-0 transform translate-x-full w-16 h-16 flex items-center justify-center">
-                <svg className="w-8 h-8 text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-8 h-8 text-white animate-bounce"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </div>
             )}

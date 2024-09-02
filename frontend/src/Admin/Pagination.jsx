@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Pagination = ({
   canPreviousPage,
@@ -10,7 +10,7 @@ const Pagination = ({
   previousPage,
   setPageSize,
   pageIndex,
-  pageSize
+  pageSize,
 }) => {
   return (
     <div className="pagination flex justify-between items-center mt-4">

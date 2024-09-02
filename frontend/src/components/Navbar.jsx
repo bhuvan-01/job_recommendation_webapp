@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Logo from './Logo';
-import { useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Logo from "./Logo";
+import { useSelector } from "react-redux";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { LogOut, User } from 'lucide-react';
-import { IMG_URL } from '@/utils/constants';
-import ContactImage from '../assets/images/contactIcon.png';
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { LogOut, User } from "lucide-react";
+import { IMG_URL } from "@/utils/constants";
+import ContactImage from "../assets/images/contactIcon.png";
 import { DashboardIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
@@ -21,48 +21,45 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Handle logout functionality here
+    // Handle logout
   };
 
   const fallbackName =
     user?.firstName[0].toString() + user?.lastName[0].toString();
 
-  const isLoginPage = location.pathname === '/login';
-  const isSignupPage = location.pathname === '/signup';
+  const isLoginPage = location.pathname === "/login";
+  const isSignupPage = location.pathname === "/signup";
 
   const handleFindJobsClick = (e) => {
     e.preventDefault();
     if (!token) {
-      navigate('/login');
-    } else if (user?.role === 'user') {
-      navigate('/dashboard/user');
+      navigate("/login");
+    } else if (user?.role === "user") {
+      navigate("/dashboard/user");
     } else {
-      navigate('/jobs');
+      navigate("/jobs");
     }
   };
 
   return (
-    <div className='py-4  border-b-gray-100/75  sticky top-0'>
-      <div className='container max-w-[1400px] p-0 mx-auto w-[95%] flex justify-between items-center'>
+    <div className="py-4  border-b-gray-100/75  sticky top-0">
+      <div className="container max-w-[1400px] p-0 mx-auto w-[95%] flex justify-between items-center">
         <Logo />
 
-        <div className='flex gap-2 items-center'>
-          <Link
-            to='/'
-            className='font-medium text-sm p-2 px-4 text-white'
-          >
+        <div className="flex gap-2 items-center">
+          <Link to="/" className="font-medium text-sm p-2 px-4 text-white">
             Home
           </Link>
           <a
-            href='/jobs'
+            href="/jobs"
             onClick={handleFindJobsClick}
-            className='font-medium text-sm p-2 px-4 text-white'
+            className="font-medium text-sm p-2 px-4 text-white"
           >
             Find Jobs
           </a>
           <Link
-            to='/community'
-            className='font-medium text-sm p-2 px-4 text-white'
+            to="/community"
+            className="font-medium text-sm p-2 px-4 text-white"
           >
             Community
           </Link>
@@ -74,9 +71,7 @@ const Navbar = () => {
                   <Avatar>
                     <AvatarImage
                       src={
-                        user?.photo
-                          ? IMG_URL + '/' + user.photo
-                          : ContactImage
+                        user?.photo ? IMG_URL + "/" + user.photo : ContactImage
                       }
                     />
                     {user && <AvatarFallback>{fallbackName}</AvatarFallback>}
@@ -88,22 +83,25 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link
                       to={
-                        user?.role === 'employer'
-                          ? '/profile/employer'
-                          : '/profile/user'
+                        user?.role === "employer"
+                          ? "/profile/employer"
+                          : "/profile/user"
                       }
-                      className='flex items-center'
+                      className="flex items-center"
                     >
                       <User
                         size={16}
-                        className='text-gray-800 dark:text-gray-300 mr-2'
+                        className="text-gray-800 dark:text-gray-300 mr-2"
                       />
                       Profile
                     </Link>
                   </DropdownMenuItem>
                   {user?.role === "employer" && (
                     <DropdownMenuItem>
-                      <Link to="/dashboard/employer" className="flex items-center">
+                      <Link
+                        to="/dashboard/employer"
+                        className="flex items-center"
+                      >
                         <DashboardIcon
                           size={16}
                           className="text-gray-800 dark:text-gray-300 mr-2"
@@ -113,12 +111,12 @@ const Navbar = () => {
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem
-                    className='cursor-pointer'
+                    className="cursor-pointer"
                     onClick={handleLogout}
                   >
                     <LogOut
                       size={16}
-                      className='text-gray-800 dark:text-gray-300 mr-2'
+                      className="text-gray-800 dark:text-gray-300 mr-2"
                     />
                     Logout
                   </DropdownMenuItem>
@@ -129,8 +127,8 @@ const Navbar = () => {
             <>
               {!isLoginPage && (
                 <Link
-                  to='/login'
-                  className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-white text-blue-600'
+                  to="/login"
+                  className="border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-white text-blue-600"
                 >
                   Login
                 </Link>
@@ -138,8 +136,8 @@ const Navbar = () => {
 
               {!isSignupPage && (
                 <Link
-                  to='/signup'
-                  className='border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-blue-600 text-white'
+                  to="/signup"
+                  className="border font-medium text-sm border-blue-600 p-2 px-4 rounded-md bg-blue-600 text-white"
                 >
                   Sign Up
                 </Link>

@@ -1,17 +1,17 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import logoImage from '../assets/images/logo.png';
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import logoImage from "../assets/images/logo.png";
 
 const Logo = () => {
   const user = useSelector((state) => state.auth.user);
-  const isAdmin = user?.role === 'admin';
-  const isEmployer = user?.role === 'employer';
+  const isAdmin = user?.role === "admin";
+  const isEmployer = user?.role === "employer";
   const navigate = useNavigate();
 
   const handleLogoClick = (e) => {
     if (isEmployer) {
-      e.preventDefault(); 
-      navigate('/dashboard/employer'); 
+      e.preventDefault();
+      navigate("/dashboard/employer");
     }
   };
 

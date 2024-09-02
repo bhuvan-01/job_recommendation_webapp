@@ -10,7 +10,7 @@ function EmailNotificationToggle({ userId }) {
       .get(`/users/${userId}`)
       .then((response) => {
         console.log("Initial fetch response:", response.data);
-        // Ensure that emailNotifications is always either true or false
+
         setEmailNotifications(!!response.data.user.emailNotifications);
       })
       .catch((error) => console.error("Error fetching user data:", error));
@@ -19,7 +19,6 @@ function EmailNotificationToggle({ userId }) {
   const handleToggle = () => {
     const newEmailNotifications = !emailNotifications;
 
-    // Optimistically update the UI
     setEmailNotifications(newEmailNotifications);
 
     apiClient
@@ -28,12 +27,11 @@ function EmailNotificationToggle({ userId }) {
       })
       .then((response) => {
         console.log("PUT request response:", response.data);
-        // Force update by setting the state again even if the value is the same
+
         setEmailNotifications(response.data.user.emailNotifications);
         console.log("Email notifications updated successfully!");
       })
       .catch((error) => {
-        // If there's an error, revert to the previous state
         setEmailNotifications(!newEmailNotifications);
         console.error("Error updating email notifications:", error);
       });

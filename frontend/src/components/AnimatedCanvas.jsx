@@ -1,20 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import bgimage from '../assets/images/bgimage.jpg'
+import React, { useEffect, useRef } from "react";
+import bgimage from "../assets/images/bgimage.jpg";
 
 const AnimatedCanvas = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext("2d");
 
     let w = (canvas.width = window.innerWidth);
     let h = (canvas.height = window.innerHeight);
 
     let particles = [];
     let properties = {
-      bgColor: '#0000ff',  // Blue background color
-      particleColor: '#ffffff', // White particles
+      bgColor: "#0000ff",
+      particleColor: "#ffffff",
       particleRadius: 3,
       particleCount: 60,
       particleMaxVelocity: 0.5,
@@ -26,7 +26,6 @@ const AnimatedCanvas = () => {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     };
-    
 
     class Particle {
       constructor() {
@@ -59,13 +58,7 @@ const AnimatedCanvas = () => {
 
       reDraw() {
         context.beginPath();
-        context.arc(
-          this.x,
-          this.y,
-          properties.particleRadius,
-          0,
-          Math.PI * 2
-        );
+        context.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2);
         context.closePath();
         context.fillStyle = properties.particleColor;
         context.fill();
@@ -107,7 +100,7 @@ const AnimatedCanvas = () => {
           length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
           if (length < properties.lineLength) {
             opacity = 1 - length / properties.lineLength;
-            context.lineWidth = '0.5';
+            context.lineWidth = "0.5";
             context.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
             context.beginPath();
             context.moveTo(x1, y1);

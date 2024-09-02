@@ -12,7 +12,7 @@ import Navbar from "@/components/Navbar";
 import signUpImage from "../assets/images/loginImage2.jpg";
 
 const Signup = () => {
-  const [isEmployer, setIsEmployer] = useState(false); // Add state for user type
+  const [isEmployer, setIsEmployer] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
@@ -76,10 +76,7 @@ const Signup = () => {
   }, [user]);
 
   return (
-    <section
-      className="relative bg-cover bg-center bg-fixed min-h-screen bg-black"
-     
-    >
+    <section className="relative bg-cover bg-center bg-fixed min-h-screen bg-black">
       <img
         alt=""
         loading="lazy"

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import apiClient from '@/services/apiClient';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import apiClient from "@/services/apiClient";
 
 const RecommendedJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -11,7 +11,7 @@ const RecommendedJobs = () => {
   useEffect(() => {
     const fetchRecommendedJobs = async () => {
       try {
-        const response = await apiClient.get('/jobs/recommended');
+        const response = await apiClient.get("/jobs/recommended");
         setJobs(response.data);
       } catch (err) {
         setError(err.message);
@@ -51,9 +51,15 @@ const RecommendedJobs = () => {
             >
               {job.title}
             </h3>
-            <p className="text-gray-700 mb-1"><strong>Type:</strong> {job.jobType}</p>
-            <p className="text-gray-700 mb-1"><strong>Location:</strong> {job.location}</p>
-            <p className="text-gray-700"><strong>Salary:</strong> ${job.salary}</p>
+            <p className="text-gray-700 mb-1">
+              <strong>Type:</strong> {job.jobType}
+            </p>
+            <p className="text-gray-700 mb-1">
+              <strong>Location:</strong> {job.location}
+            </p>
+            <p className="text-gray-700">
+              <strong>Salary:</strong> ${job.salary}
+            </p>
           </div>
         ))}
       </div>

@@ -38,7 +38,7 @@ import AllAdminApplication from "@/Admin/Application";
 import AdminNewsLetter from "@/Admin/NewsletterManagement";
 import CallbackContact from "@/Admin/Contact";
 import JobView from "@/pages/employer/JobView";
-import JobDetail from "@/Admin/JobDetail"
+import JobDetail from "@/Admin/JobDetail";
 
 const router = createBrowserRouter([
   {
@@ -96,9 +96,8 @@ const router = createBrowserRouter([
             element: <AllAdminApplication />,
           },
           {
-            path:"detail/:id",
-            element:<JobDetail/>
-
+            path: "detail/:id",
+            element: <JobDetail />,
           },
           {
             path: "view/:id",

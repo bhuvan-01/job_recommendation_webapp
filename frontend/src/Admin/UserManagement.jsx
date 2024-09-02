@@ -4,7 +4,7 @@ import { useTable, usePagination } from "react-table";
 import { fetchUsers, deleteUser } from "../app/userSlice";
 import UserFormModal from "./UserFormModal";
 import { jsPDF } from "jspdf";
-import Pagination from "./Pagination"; // Import the Pagination component
+import Pagination from "./Pagination";
 
 const UserTable = () => {
   const dispatch = useDispatch();
@@ -104,10 +104,10 @@ const UserTable = () => {
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     const tableColumn = ["Name", "Email", "Role"];
-    const tableRows = filteredUsers.map(user => [
+    const tableRows = filteredUsers.map((user) => [
       `${user.firstName} ${user.lastName}`,
       user.email,
-      user.role
+      user.role,
     ]);
 
     doc.autoTable(tableColumn, tableRows, { startY: 20 });

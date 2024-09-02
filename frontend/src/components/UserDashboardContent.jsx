@@ -283,12 +283,10 @@ const UserDashboardContent = () => {
   };
 
   const handleJobApply = (jobId) => {
-    
     navigate(`/apply/${jobId}`);
   };
 
   const handleJobDetails = (jobId) => {
-    
     navigate(`/jobs/${jobId}`);
   };
 
@@ -330,7 +328,7 @@ const UserDashboardContent = () => {
   };
 
   return (
-    <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 my-4">
+    <div className="container bg-gray-100 px-0 max-w-[1400px] mx-auto w-[95%] md:flex gap-4 pt-8">
       <div className="hidden md:block basis-3/12 md:space-y-4">
         <div className="hidden md:block border p-4 rounded-md text-center">
           <img

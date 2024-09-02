@@ -1,10 +1,10 @@
-import { deleteJob, storeJobs } from '@/app/jobs/jobSlice';
-import apiClient from '@/services/apiClient';
-import { Building2, Pencil, Trash } from 'lucide-react';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
+import { deleteJob, storeJobs } from "@/app/jobs/jobSlice";
+import apiClient from "@/services/apiClient";
+import { Building2, Pencil, Trash } from "lucide-react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,8 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import toast from 'react-hot-toast';
+} from "@/components/ui/alert-dialog";
+import toast from "react-hot-toast";
 
 const EmployerDashboardContent = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const EmployerDashboardContent = () => {
           dispatch(storeJobs(res.data));
         }
       } catch (error) {
-        console.error('Error fetching jobs:', error);
+        console.error("Error fetching jobs:", error);
       }
     };
 
@@ -48,7 +48,7 @@ const EmployerDashboardContent = () => {
 
       if (res.status === 200) {
         dispatch(deleteJob(id));
-        toast.success('Job deleted');
+        toast.success("Job deleted");
       }
     } catch (error) {
       console.log(error.response);
@@ -57,49 +57,49 @@ const EmployerDashboardContent = () => {
 
   return (
     <div>
-      <div className='container max-w-[1400px] mx-auto w-[95%] flex flex-col gap-4 my-4'>
-        <div className='flex justify-between items-center'>
-          <h1 className='text-2xl mb-4'>Jobs Created</h1>
+      <div className="container max-w-[1400px] mx-auto w-[95%] flex flex-col gap-4 my-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl mb-4">Jobs Created</h1>
           <Link
-            to='/dashboard/employer/jobs/add'
-            className='bg-blue-600 p-2 px-4 rounded-md text-white'
+            to="/dashboard/employer/jobs/add"
+            className="bg-blue-600 p-2 px-4 rounded-md text-white"
           >
             Create job
           </Link>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {jobs.length !== 0 &&
             jobs.map((job) => (
               <div
                 key={job?._id}
-                className='border p-4 rounded-md flex flex-col'
+                className="border p-4 rounded-md flex flex-col"
               >
-                <div className='flex mb-4 gap-4 items-center'>
-                  <div className='w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center'>
+                <div className="flex mb-4 gap-4 items-center">
+                  <div className="w-16 h-16 rounded-md bg-gray-200 flex justify-center items-center">
                     <Building2 size={24} />
                   </div>
-                  <div className=''>
-                    <h2 className='font-medium text-lg'>{job?.title}</h2>
-                    <div className='flex gap-2 text-sm items-center'>
-                      <p>{job?.company?.name}</p> {'•'}
-                      <p className='text-gray-600'>{job?.location}</p>
+                  <div className="">
+                    <h2 className="font-medium text-lg">{job?.title}</h2>
+                    <div className="flex gap-2 text-sm items-center">
+                      <p>{job?.company?.name}</p> {"•"}
+                      <p className="text-gray-600">{job?.location}</p>
                     </div>
                   </div>
-                  <div className='flex ml-auto gap-2 items-center'>
+                  <div className="flex ml-auto gap-2 items-center">
                     <Button
                       onClick={() =>
-                        navigate('/dashboard/employer/jobs/edit/' + job._id)
+                        navigate("/dashboard/employer/jobs/edit/" + job._id)
                       }
-                      title='Edit'
-                      variant='ghost'
-                      className='p-3'
+                      title="Edit"
+                      variant="ghost"
+                      className="p-3"
                     >
                       <Pencil size={16} />
                     </Button>
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button title='Delete' variant='ghost' className='p-3'>
+                        <Button title="Delete" variant="ghost" className="p-3">
                           <Trash size={16} />
                         </Button>
                       </AlertDialogTrigger>
@@ -122,35 +122,35 @@ const EmployerDashboardContent = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
-                </div>{' '}
-                <p className='text-gray-600 mb-2'>
+                </div>{" "}
+                <p className="text-gray-600 mb-2">
                   {job?.description?.length > 100
-                    ? job?.description?.slice(0, 100) + '...'
+                    ? job?.description?.slice(0, 100) + "..."
                     : job?.description}
                 </p>
-                <ul className=''>
-                  <div className='my-4 flex flex-wrap gap-2'>
+                <ul className="">
+                  <div className="my-4 flex flex-wrap gap-2">
                     {job?.requirements
                       ?.toString()
-                      ?.split(',')
+                      ?.split(",")
                       ?.map((requirement, idx) => (
                         <span
                           key={idx}
-                          className='px-3 py-1 font-medium bg-gray-200 rounded-md text-blue-600 text-xs'
+                          className="px-3 py-1 font-medium bg-gray-200 rounded-md text-blue-600 text-xs"
                         >
                           {requirement}
                         </span>
                       ))}
                   </div>
                 </ul>
-                <div className='flex items-center justify-between mt-auto'>
-                  <p className='text-gray-600'>
+                <div className="flex items-center justify-between mt-auto">
+                  <p className="text-gray-600">
                     <strong>Salary:</strong> ${job?.salary}
                   </p>
                   <p>Views:{job?.viewCount || 0} views</p>
                   <Link
                     to={`/dashboard/employer/jobs/${job._id}`}
-                    className='bg-blue-600 p-2 px-4 font-medium rounded-md text-sm text-white'
+                    className="bg-blue-600 p-2 px-4 font-medium rounded-md text-sm text-white"
                   >
                     View details
                   </Link>

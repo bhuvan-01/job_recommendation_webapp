@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import apiClient from "@/services/apiClient"; // Adjust the path as necessary
+import apiClient from "@/services/apiClient";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 

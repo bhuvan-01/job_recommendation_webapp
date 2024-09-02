@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "@/services/apiClient";
 
-const  JobView = () => {
+const JobView = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,11 @@ const  JobView = () => {
   }, [id]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (

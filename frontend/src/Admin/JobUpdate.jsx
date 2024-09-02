@@ -58,7 +58,7 @@ const JobUpdatePopup = ({ job, onClose, onUpdate }) => {
         progress: undefined,
       });
       setTimeout(() => {
-        onClose(); // Close the popup after showing the toast
+        onClose();
       }, 3000);
     } catch (error) {
       console.error("Failed to update job:", error);

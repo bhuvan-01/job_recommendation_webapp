@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import apiClient from "@/services/apiClient";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "./Pagination"; // Import the Pagination component
+import Pagination from "./Pagination"; 
 
-const EmployerAllApplications = () => {
+const Applications = () => {
   const [applications, setApplications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0); // Pagination: Current page index (0-based)
-  const [pageSize, setPageSize] = useState(5); // Pagination: Items per page
+  const [currentPage, setCurrentPage] = useState(0); 
+  const [pageSize, setPageSize] = useState(5); 
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -112,4 +112,4 @@ const EmployerAllApplications = () => {
   );
 };
 
-export default EmployerAllApplications;
+export default Applications;

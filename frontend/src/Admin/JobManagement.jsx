@@ -5,9 +5,9 @@ import JobUpdatePopup from "./JobUpdate";
 import JobCreatePopup from "./JobCreate";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Pagination from "./Pagination"; // Import the Pagination component
+import Pagination from "./Pagination"; 
 
-const JobList = () => {
+const JobManagement = () => {
   const [jobs, setJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
@@ -15,8 +15,8 @@ const JobList = () => {
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0); // Pagination: Current page index (0-based)
-  const [pageSize, setPageSize] = useState(5); // Pagination: Items per page
+  const [currentPage, setCurrentPage] = useState(0); 
+  const [pageSize, setPageSize] = useState(5); 
 
   useEffect(() => {
     fetchJobs();
@@ -200,4 +200,4 @@ const JobList = () => {
   );
 };
 
-export default JobList;
+export default JobManagement;
