@@ -146,7 +146,7 @@ const Intro = () => {
               <DialogTrigger asChild>
                 <Button
                   onClick={() => setIsEditFormOpen(true)}
-                  className="flex justify-center gap-2 items-center"
+                  className="flex justify-center gap-2 items-center bg-blue-500"
                 >
                   Edit <Pencil size={14} />
                 </Button>

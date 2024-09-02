@@ -6,6 +6,7 @@ import {
   resetPassword,
 } from "@/app/actions/AuthAction";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const ForgotPassword = () => {
   const [password, setNewPassword] = useState("");
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const ForgotPassword = () => {
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     dispatch(resetPassword({ email, password }))
-      .then(() => {})
+      .then(() => {navigate("/login");})
       .catch((error) => {
         console.error("Error during password reset:", error);
       });

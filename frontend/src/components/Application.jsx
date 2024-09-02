@@ -4,7 +4,7 @@ import application from "../assets/images/hiring.png";
 const ApplicationProcess = () => {
   return (
     <div className="bg-blue-500 p-6 rounded-lg text-white">
-      <h1 className="text-2xl font-bold  text-center">Application Process</h1>
+      <h1 className="text-4xl font-bold  text-center">Application Process</h1>
       <div className="flex justify-center">
         <img
           src={application}
