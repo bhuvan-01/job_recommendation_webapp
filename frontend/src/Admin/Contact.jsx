@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '@/services/apiClient';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import Pagination from './Pagination'; // Import the Pagination component
 
 const AdminContacts = () => {
     const [contacts, setContacts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContact, setSelectedContact] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0); // Pagination: Current page index (0-based)
+    const [pageSize, setPageSize] = useState(10); // Pagination: Items per page
 
     // Fetch all contacts
     useEffect(() => {
@@ -56,12 +59,23 @@ const AdminContacts = () => {
         contact.message.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Pagination logic
+    const pageCount = Math.ceil(filteredContacts.length / pageSize);
+    const currentContacts = filteredContacts.slice(
+        currentPage * pageSize,
+        (currentPage + 1) * pageSize
+    );
+
     if (loading) {
-        return <div>Loading contacts...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+            </div>
+        );
     }
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
             <div className="flex flex-row justify-between mb-4">
                 <input
                     type="text"
@@ -78,7 +92,7 @@ const AdminContacts = () => {
                 </button>
             </div>
         
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto flex-grow">
                 <table className="min-w-full bg-white">
                     <thead className="bg-gray-100">
                         <tr>
@@ -91,9 +105,9 @@ const AdminContacts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredContacts.map((contact, index) => (
+                        {currentContacts.map((contact, index) => (
                             <tr key={contact._id}>
-                                <td className="text-left py-3 px-4">{index + 1}</td>
+                                <td className="text-left py-3 px-4">{currentPage * pageSize + index + 1}</td>
                                 <td className="text-left py-3 px-4">{contact.name}</td>
                                 <td className="text-left py-3 px-4">{contact.email}</td>
                                 <td className="text-left py-3 px-4">{contact.phone}</td>
@@ -121,6 +135,23 @@ const AdminContacts = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination Controls */}
+            <div className="mt-auto">
+                <Pagination
+                    canPreviousPage={currentPage > 0}
+                    canNextPage={currentPage < pageCount - 1}
+                    pageOptions={Array.from({ length: pageCount }, (_, i) => i + 1)}
+                    pageCount={pageCount}
+                    gotoPage={setCurrentPage}
+                    nextPage={() => setCurrentPage(currentPage + 1)}
+                    previousPage={() => setCurrentPage(currentPage - 1)}
+                    pageIndex={currentPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                />
+            </div>
+
             {selectedContact && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
                     <div className="relative mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">

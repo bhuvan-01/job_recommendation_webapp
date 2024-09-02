@@ -49,7 +49,7 @@ const login = async (req, res) => {
       from: process.env.APP_EMAIL,
       to: email,
       subject: "Successful Login Notification",
-      text: `Dear ${existingUser.firstName},\n\nYou have successfully logged in to your account.\n\nBest regards,\n JobHunt`,
+      text: `Dear ${existingUser.firstName},\n\nYou have successfully logged in to your account.\n\nBest regards,\n JobWipe`,
     };
 
     // Send the email
@@ -142,8 +142,8 @@ const signup = async (req, res) => {
     const mailOptions = {
       from: process.env.APP_EMAIL,
       to: email,
-      subject: "Welcome to JobHunt!",
-      text: `Hello ${firstName} ${lastName},\n\nThank you for signing up! Your account has been created successfully.\n\nBest regards,\nJobHunt`,
+      subject: "Welcome to JobWipe!",
+      text: `Hello ${firstName} ${lastName},\n\nThank you for signing up! Your account has been created successfully.\n\nBest regards,\nJobWipe`,
     };
 
     // Send the email

@@ -18,7 +18,7 @@ import useUser from "@/hooks/useUser";
 import { IMG_URL } from "@/utils/constants";
 import Notifications from "./Notifications";
 import ContactImage from "../assets/images/contactIcon.png";
-import { DashboardIcon, DashIcon } from "@radix-ui/react-icons";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -35,31 +35,31 @@ const Header = () => {
     user?.firstName[0].toString() + user?.lastName[0].toString();
 
   return (
-    <div className="py-2 border-b border-b-gray-100/75 bg-white/50 backdrop-blur-md sticky top-0">
+    <div className="py-2 border-b border-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 backdrop-blur-md shadow-lg sticky top-0 z-50">
       <div className="container px-0 w-[95%] mx-auto max-w-[1400px] flex justify-between items-center">
         <Logo />
 
-        <div className="flex gap-2 items-center">
-          <Link
+        <div className="flex gap-4 items-center text-white">
+          {/* <Link
             to="/messages"
-            className="flex font-semibold gap-2 items-center hover:text-blue-600 p-4 px-2"
+            className="flex font-semibold gap-2 items-center hover:text-white hover:scale-105 transition-all duration-300 p-4 px-2"
           >
             <MessageSquareText size={18} />
-            <span className="hidden md:visible">Messages</span>
-          </Link>
+            <span className="hidden md:inline">Messages</span>
+          </Link> */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="transparent"
                 to="/notifications"
-                className="flex font-semibold gap-2 items-center hover:text-blue-600 p-4 px-2"
+                className="flex font-semibold gap-2 items-center hover:text-white hover:scale-105 transition-all duration-300 p-4 px-2"
               >
                 <Bell size={18} />
-                <span className="hidden md:visible">Notifications</span>
+                <span className="hidden md:inline">Notifications</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[400px] mr-80">
+            <DropdownMenuContent className="w-[400px] mr-80 bg-white text-black shadow-xl rounded-lg">
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Notifications />
@@ -75,7 +75,7 @@ const Header = () => {
                 {user && <AvatarFallback>{fallbackName}</AvatarFallback>}
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="bg-white text-black shadow-xl rounded-lg">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -133,7 +133,6 @@ const Header = () => {
                 </DropdownMenuItem>
               )}
 
-              {/* Conditionally render the Analytics link if the user is an employer */}
               {user?.role === "employer" && (
                 <DropdownMenuItem>
                   <Link
@@ -148,9 +147,32 @@ const Header = () => {
                   </Link>
                 </DropdownMenuItem>
               )}
+              {user?.role === "user" && (
+                <DropdownMenuItem>
+                  <Link to="/jobs/applied" className="flex items-center">
+                    <DashboardIcon
+                      size={16}
+                      className="text-gray-800 dark:text-gray-300 mr-2"
+                    />
+                    Applied Jobs
+                  </Link>
+                </DropdownMenuItem>
+              )}
+
+              {user?.role === "user" && (
+                <DropdownMenuItem>
+                  <Link to="/jobs/saved" className="flex items-center">
+                    <DashboardIcon
+                      size={16}
+                      className="text-gray-800 dark:text-gray-300 mr-2"
+                    />
+                    Saved Jobs
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-red-100 transition-all duration-300"
                 onClick={handleLogout}
               >
                 <LogOut

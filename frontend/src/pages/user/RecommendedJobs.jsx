@@ -1,117 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import apiClient from '@/services/apiClient';
 
-import apiClient from "@/services/apiClient";
-import {
-  Bookmark,
-  Building2,
-  ChevronDown,
-  ChevronUp,
-  Filter,
-  MapPin,
-  Search,
-  SquareArrowOutUpRight,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-// import Header from "@/components/Header";
-
-const JobRecommendations = () => {
+const RecommendedJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchRecommendedJobs = async () => {
       try {
-        const response = await apiClient.get("/jobs/recommended");
-        console.log("API Response:", response.data);
-        if (Array.isArray(response.data)) {
-          setJobs(response.data);
-        } else {
-          throw new Error("Unexpected response format");
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching job recommendations:", error);
-        setError("Error fetching job recommendations");
+        const response = await apiClient.get('/jobs/recommended');
+        setJobs(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchJobs();
+    fetchRecommendedJobs();
   }, []);
 
+  const handleTitleClick = (jobId) => {
+    navigate(`/jobs/${jobId}`);
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="container px-0 max-w-[1400px] mx-auto w-[95%] flex gap-4 my-4">
-      {/* <Header /> */}
-      <h1>Job Recommendations</h1>
-
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
-        {jobs.map((job, index) => (
+    <div className="max-w-3xl mx-auto p-4">
+      <div className="grid grid-cols-1 gap-6">
+        {jobs.map((job) => (
           <div
-            key={index}
-            className="aspect-square w-full border rounded-md p-4 flex flex-col"
+            key={job._id.$oid}
+            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
-            <div className="w-full items-center flex gap-4">
-              <div className="w-16 h-16 aspect-square rounded-md bg-gray-200 flex justify-center items-center">
-                <Building2 size={24} />
-              </div>
-              <div className="basis-8/12">
-                <h2 className="text-lg font-semibold leading-normal">
-                  {job.title}
-                </h2>
-                <p className="text-gray-600 text-sm font-medium">
-                  {job.company.name} {"•"} {job.location}
-                </p>
-              </div>
-            </div>
-
-            <div className="my-4 flex flex-wrap gap-2">
-              {job.requirements
-                .toString()
-                .split(",")
-                .map((requirement, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 bg-gray-100 rounded-md text-xs font-medium text-gray-800"
-                  >
-                    {requirement}
-                  </span>
-                ))}
-            </div>
-
-            <p className="text-gray-600 text-sm font-medium">
-              {job?.description.length > 100
-                ? job?.description.slice(0, 100)
-                : job?.description}
-            </p>
-
-            <div className="flex">
-              <span className="bg-gray-50 text-xs p-1 px-2 rounded-md border my-3">
-                {job?.experience}
-              </span>
-            </div>
-
-            <div className="mt-auto flex gap-2 items-center">
-              <Button
-                as={Link}
-                to={`/jobs/${job.id}/apply`}
-                className="w-full p-2"
-              >
-                Apply
-              </Button>
-              <Button variant="primary" className="p-2">
-                <Bookmark size={24} />
-              </Button>
-            </div>
+            <h3
+              className="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+              onClick={() => handleTitleClick(job._id.$oid)}
+            >
+              {job.title}
+            </h3>
+            <p className="text-gray-700 mb-1"><strong>Type:</strong> {job.jobType}</p>
+            <p className="text-gray-700 mb-1"><strong>Location:</strong> {job.location}</p>
+            <p className="text-gray-700"><strong>Salary:</strong> ${job.salary}</p>
           </div>
         ))}
       </div>
@@ -119,4 +61,4 @@ const JobRecommendations = () => {
   );
 };
 
-export default JobRecommendations;
+export default RecommendedJobs;

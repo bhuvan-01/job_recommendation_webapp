@@ -7,7 +7,7 @@ const Application = require("../models/Application");
 const Notification = require("../models/Notification");
 const io = require("socket.io");
 
-const sendNotification = async (userId, message, io,jobId = null) => {
+const sendNotification = async (userId, message, io, jobId = null) => {
   try {
     const notification = new Notification({
       recipient: userId,
@@ -124,24 +124,44 @@ exports.getJobs = async (req, res) => {
   } = req.query;
 
   let mongoQuery = {};
+
   if (keyword) {
-    const response = await axios.post(process.env.FLASK_API + "/parse-query", {
-      query: keyword,
-    });
-    const query = response.data;
-    mongoQuery = constructMongoQuery(query);
-  } else {
-    mongoQuery = {};
+    let checks = [
+      { regex: keyword },
+      { regex: new RegExp(`.*${keyword.replace(/ /g, ".*")}.*`, "i") },
+      { regex: new RegExp(keyword.split(" ").join("|"), "i") },
+      { regex: new RegExp(`${keyword.split("").join(".*")}`, "i") },
+    ];
+
+    let fields = ["title", "requirements", "description", "jobType"];
+
+    let count = 0;
+    for (let i = 0; i < checks.length; i++) {
+      for (let j = 0; j < fields.length; j++) {
+        mongoQuery = { [fields[j]]: checks[i].regex };
+        ({ mongoQuery, count } = await customSearchCount(
+          mongoQuery,
+          location,
+          industry,
+          minSalary,
+          jobType,
+          experience,
+          locationType
+        ));
+
+        console.log(
+          `${keyword} custom count for ${i} ${fields[j]} is ${count}`
+        );
+        if (count != 0) {
+          break;
+        }
+      }
+      if (count != 0) {
+        break;
+      }
+    }
   }
 
-  if (location) {
-    mongoQuery.location = { $regex: location.split(",")[0], $options: "i" };
-  }
-  if (industry) mongoQuery.industry = { $in: industry };
-  if (minSalary) mongoQuery.salary = { $gte: minSalary };
-  if (jobType) mongoQuery.jobType = { $in: jobType };
-  if (experience) mongoQuery.experience = { $in: experience };
-  if (locationType) mongoQuery.locationType = { $in: locationType };
   const perPage = req.query.perPage || 12;
   const page = req.query.page || 1;
   const skip = (page - 1) * perPage;
@@ -161,6 +181,27 @@ exports.getJobs = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+const customSearchCount = async (
+  mongoQuery,
+  location,
+  industry,
+  minSalary,
+  jobType,
+  experience,
+  locationType
+) => {
+  if (location)
+    mongoQuery.location = { $regex: location.split(",")[0], $options: "i" };
+  if (industry) mongoQuery.industry = { $in: industry };
+  if (minSalary) mongoQuery.salary = { $gte: minSalary };
+  if (jobType) mongoQuery.jobType = { $in: jobType };
+  if (experience) mongoQuery.experience = { $in: experience };
+  if (locationType) mongoQuery.locationType = { $in: locationType };
+
+  const count = await Job.countDocuments(mongoQuery);
+  return { mongoQuery, count };
 };
 
 // get user applied jobs
@@ -448,7 +489,7 @@ exports.getUserRecommendations = async (req, res) => {
 
   try {
     const response = await fetch(
-      process.env.FLASK_API + `/recommendations/${userId}`
+      process.env.FLASK_API + `/recommendedjob/${userId}`
     );
 
     return res.json(await response.json());
@@ -457,7 +498,6 @@ exports.getUserRecommendations = async (req, res) => {
     return res.status(500).json({ error: "Failed to fetch recommended jobs" });
   }
 };
-
 
 exports.incrementJobViewCount = async (req, res) => {
   try {

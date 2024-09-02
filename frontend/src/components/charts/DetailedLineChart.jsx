@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import apiClient from '@/services/apiClient'; // Ensure this path is correct
+import apiClient from '@/services/apiClient';
 
 // Register the components
 ChartJS.register(
@@ -47,7 +47,7 @@ const EmployerStatsLineChart = () => {
 
         // Fill the data arrays with actual values from the response
         data.monthlyJobsPosted.forEach((item) => {
-          const monthIndex = item._id.month - 1; // Month is 1-based in MongoDB, 0-based in JS
+          const monthIndex = item._id.month - 1; 
           jobsPostedData[monthIndex] = item.totalJobsPosted;
         });
 
@@ -107,7 +107,7 @@ const EmployerStatsLineChart = () => {
               tension: 0.4,
             },
           ],
-          maxValue, // Store the calculated max value for later use
+          maxValue, 
         });
       } catch (error) {
         console.error('Failed to fetch employer stats:', error);
@@ -142,7 +142,7 @@ const EmployerStatsLineChart = () => {
                 text: 'Month',
               },
               grid: {
-                display: false, // Removes the grid lines on the x-axis
+                display: false, 
               },
             },
             y: {
@@ -152,12 +152,12 @@ const EmployerStatsLineChart = () => {
               },
               beginAtZero: true,
               ticks: {
-                precision: 0, // Ensures the y-axis shows whole numbers
+                precision: 0, 
               },
               grid: {
-                display: false, // Removes the grid lines on the y-axis
+                display: false, 
               },
-              suggestedMax: chartData.maxValue + 5, // Adds a margin to the highest value to scale the graph better
+              suggestedMax: chartData.maxValue + 5, 
             },
           },
         }}

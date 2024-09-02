@@ -107,6 +107,7 @@ const EmployerApplicationDetails = () => {
     relocation,
     mastersDegree,
     resume,
+    skills,
   } = applicationDetails;
 
   return (
@@ -153,6 +154,9 @@ const EmployerApplicationDetails = () => {
         </p>
         <p className='text-gray-700'>
           <strong>Years of Experience:</strong> {experience} years
+        </p>
+        <p className='text-gray-700'>
+          <strong>Skills:</strong> {skills.join(', ')}
         </p>
         <p className='text-gray-700'>
           <strong>Visa Sponsorship Required:</strong> {visaStatus}

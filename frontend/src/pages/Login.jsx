@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/app/auth/authSlice';
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import loginImage from '../assets/images/loginImage2.jpg'
+import loginImage from '../assets/images/loginImage3.png'
 
 const Login = () => {
   const dispatch = useDispatch();

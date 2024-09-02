@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '@/services/apiClient';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'; // Ensure jsPDF-autotable is installed
+import Pagination from './Pagination'; // Import the Pagination component
 
 const SubscriberList = () => {
     const [subscribers, setSubscribers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(0); // Pagination: Current page index (0-based)
+    const [pageSize, setPageSize] = useState(10); // Pagination: Items per page
 
     // Fetch subscribers from the backend
     useEffect(() => {
@@ -50,12 +53,23 @@ const SubscriberList = () => {
         subscriber.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Pagination logic
+    const pageCount = Math.ceil(filteredSubscribers.length / pageSize);
+    const currentSubscribers = filteredSubscribers.slice(
+        currentPage * pageSize,
+        (currentPage + 1) * pageSize
+    );
+
     if (loading) {
-        return <div>Loading subscribers...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+            </div>
+        );
     }
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
             <div className="flex flex-col sm:flex-row justify-between mb-4 space-y-2 sm:space-y-0">
                 <input
                     type="text"
@@ -71,7 +85,7 @@ const SubscriberList = () => {
                     Download PDF
                 </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto flex-grow">
                 <table className="min-w-full bg-white">
                     <thead className="bg-gray-100">
                         <tr>
@@ -81,9 +95,9 @@ const SubscriberList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredSubscribers.map((subscriber, index) => (
+                        {currentSubscribers.map((subscriber, index) => (
                             <tr key={subscriber._id}>
-                                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{index + 1}</td>
+                                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{currentPage * pageSize + index + 1}</td>
                                 <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{subscriber.email}</td>
                                 <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <button
@@ -97,6 +111,22 @@ const SubscriberList = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="mt-auto">
+                <Pagination
+                    canPreviousPage={currentPage > 0}
+                    canNextPage={currentPage < pageCount - 1}
+                    pageOptions={Array.from({ length: pageCount }, (_, i) => i + 1)}
+                    pageCount={pageCount}
+                    gotoPage={setCurrentPage}
+                    nextPage={() => setCurrentPage(currentPage + 1)}
+                    previousPage={() => setCurrentPage(currentPage - 1)}
+                    pageIndex={currentPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                />
             </div>
         </div>
     );

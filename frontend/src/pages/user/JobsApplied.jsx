@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import apiClient from '@/services/apiClient';
 import { Banknote, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import RecommendedJob from '@/pages/user/RecommendedJobs'
 
 const JobsApplied = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -94,7 +95,8 @@ const JobsApplied = () => {
         </div>
         <div className='basis-4/12'>
           <h1 className='text-2xl font-medium'>Recommended Jobs</h1>
-          <p className='my-2'>No jobs found</p>
+          <RecommendedJob/>
+          
         </div>
       </div>
     </div>

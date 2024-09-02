@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useTable } from "react-table";
+import { useTable, usePagination } from "react-table";
 import { fetchUsers, deleteUser } from "../app/userSlice";
 import UserFormModal from "./UserFormModal";
-import { jsPDF } from "jspdf"; // Import jsPDF for generating PDF files
+import { jsPDF } from "jspdf";
+import Pagination from "./Pagination"; // Import the Pagination component
 
 const UserTable = () => {
   const dispatch = useDispatch();
@@ -75,8 +76,30 @@ const UserTable = () => {
     [dispatch]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: filteredUsers });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data: filteredUsers,
+      initialState: { pageIndex: 0, pageSize: 10 },
+    },
+    usePagination
+  );
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
@@ -95,7 +118,7 @@ const UserTable = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="container px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
       <div className="flex flex-col sm:flex-row justify-between mb-4 space-y-2 sm:space-y-0">
         <button
           onClick={() => handleOpenModal()}
@@ -117,7 +140,7 @@ const UserTable = () => {
           Download PDF
         </button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="flex-grow overflow-x-auto">
         <table {...getTableProps()} className="min-w-full leading-normal">
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -137,23 +160,48 @@ const UserTable = () => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()} className="bg-white border-b">
-                  {row.cells.map((cell) => (
-                    <td
-                      {...cell.getCellProps()}
-                      className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+            {page.length > 0 ? (
+              page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} className="bg-white border-b">
+                    {row.cells.map((cell) => (
+                      <td
+                        {...cell.getCellProps()}
+                        className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center"
+                >
+                  No users found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
+      </div>
+      <div>
+        <Pagination
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+        />
       </div>
       {modalOpen && (
         <UserFormModal

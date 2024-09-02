@@ -6,6 +6,7 @@ import { Banknote, Bookmark, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
+import RecommendedJob from '@/pages/user/RecommendedJobs'
 
 const JobsSaved = () => {
   const [savedJobs, setSavedJobs] = useState([]);
@@ -98,7 +99,7 @@ const JobsSaved = () => {
         </div>
         <div className='basis-4/12'>
           <h1 className='text-2xl font-medium'>Recommended Jobs</h1>
-          <p className='my-2'>No jobs found</p>
+          <RecommendedJob/>
         </div>
       </div>
     </div>

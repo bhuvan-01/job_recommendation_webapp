@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { Box, Typography } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +8,9 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-import apiClient from '@/services/apiClient'; 
+  Legend,
+} from "chart.js";
+import apiClient from "@/services/apiClient";
 
 ChartJS.register(
   CategoryScale,
@@ -27,12 +27,22 @@ const EmployerStatsBarChart = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await apiClient.get('/jobs/employer-stats/monthly');
+        const response = await apiClient.get("/jobs/employer-stats/monthly");
         const data = response.data;
 
         const months = [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
         ];
 
         const jobsPostedData = new Array(12).fill(0);
@@ -64,29 +74,29 @@ const EmployerStatsBarChart = () => {
           labels: months,
           datasets: [
             {
-              label: 'Jobs Posted',
+              label: "Jobs Posted",
               data: jobsPostedData,
-              backgroundColor: '#3f51b5',
+              backgroundColor: "#3f51b5",
             },
             {
-              label: 'Applications',
+              label: "Applications",
               data: applicationsData,
-              backgroundColor: '#f50057',
+              backgroundColor: "#f50057",
             },
             {
-              label: 'Jobs Saved',
+              label: "Jobs Saved",
               data: jobsSavedData,
-              backgroundColor: '#4caf50',
+              backgroundColor: "#4caf50",
             },
             {
-              label: 'People Hired',
+              label: "People Hired",
               data: peopleHiredData,
-              backgroundColor: '#ff9800',
+              backgroundColor: "#ff9800",
             },
           ],
         });
       } catch (error) {
-        console.error('Failed to fetch employer stats:', error);
+        console.error("Failed to fetch employer stats:", error);
       }
     };
 
@@ -98,7 +108,7 @@ const EmployerStatsBarChart = () => {
   }
 
   return (
-    <Box sx={{ padding: 3, backgroundColor: 'white' }}>
+    <Box sx={{ padding: 3, backgroundColor: "white" }}>
       <Typography variant="h6" gutterBottom>
         Monthly Stats Bar Chart
       </Typography>
@@ -108,30 +118,30 @@ const EmployerStatsBarChart = () => {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top',
+              position: "top",
             },
           },
           scales: {
             x: {
               title: {
                 display: true,
-                text: 'Month',
+                text: "Month",
               },
               grid: {
-                display: false, // Optionally remove grid lines
+                display: false,
               },
             },
             y: {
               title: {
                 display: true,
-                text: 'Count',
+                text: "Count",
               },
               beginAtZero: true,
               ticks: {
-                precision: 0, // Ensures the y-axis shows whole numbers
+                precision: 0,
               },
               grid: {
-                display: false, // Optionally remove grid lines
+                display: false,
               },
             },
           },

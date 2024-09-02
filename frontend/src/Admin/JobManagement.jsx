@@ -5,6 +5,7 @@ import JobUpdatePopup from './JobUpdate';
 import JobCreatePopup from './JobCreate';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Pagination from './Pagination'; // Import the Pagination component
 
 const JobList = () => {
     const [jobs, setJobs] = useState([]);
@@ -13,7 +14,9 @@ const JobList = () => {
     const [showDetailsPopup, setShowDetailsPopup] = useState(false);
     const [showUpdatePopup, setShowUpdatePopup] = useState(false);
     const [showCreatePopup, setShowCreatePopup] = useState(false);
-    const [loading, setLoading] = useState(false);  // Loading state
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0); // Pagination: Current page index (0-based)
+    const [pageSize, setPageSize] = useState(5); // Pagination: Items per page
 
     useEffect(() => {
         fetchJobs();
@@ -21,11 +24,14 @@ const JobList = () => {
 
     const fetchJobs = async () => {
         try {
+            setLoading(true);
             const response = await apiClient.get('/admin/jobs');
             setJobs(response.data.jobs);
         } catch (error) {
             console.error("Failed to fetch jobs:", error);
             toast.error("Failed to fetch jobs. Please try again later.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -83,8 +89,15 @@ const JobList = () => {
         job.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Pagination logic
+    const pageCount = Math.ceil(filteredJobs.length / pageSize);
+    const currentJobs = filteredJobs.slice(
+        currentPage * pageSize,
+        (currentPage + 1) * pageSize
+    );
+
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto min-h-screen flex flex-col">
             <div className="mb-4 flex justify-between">
                 <input
                     type="text"
@@ -97,13 +110,15 @@ const JobList = () => {
                     onClick={() => setShowCreatePopup(true)} 
                     className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
-                    CreateJob
+                    Create Job
                 </button>
             </div>
             {loading ? (
-                <div>Loading...</div>
+                <div className="flex justify-center items-center h-screen">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+                </div>
             ) : (
-                filteredJobs.map((job) => (
+                currentJobs.map((job) => (
                     <div key={job._id} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex justify-between items-center">
                         <div>
                             <h3 className="font-bold text-xl mb-2">{job.title}</h3>
@@ -123,6 +138,22 @@ const JobList = () => {
                     </div>
                 ))
             )}
+
+            {/* Pagination Controls */}
+            <div className="mt-auto">
+                <Pagination
+                    canPreviousPage={currentPage > 0}
+                    canNextPage={currentPage < pageCount - 1}
+                    pageOptions={Array.from({ length: pageCount }, (_, i) => i + 1)}
+                    pageCount={pageCount}
+                    gotoPage={setCurrentPage}
+                    nextPage={() => setCurrentPage(currentPage + 1)}
+                    previousPage={() => setCurrentPage(currentPage - 1)}
+                    pageIndex={currentPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                />
+            </div>
 
             {showDetailsPopup && selectedJob && (
                 <JobDetailsPopup 

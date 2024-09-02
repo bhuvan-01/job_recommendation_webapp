@@ -6,7 +6,7 @@ const fs = require("fs");
 const upload = require("../middlewares/upload");
 const User = require("../models/User");
 const Company = require("../models/Company");
-const io = require("socket.io")
+const io = require("socket.io");
 
 exports.applyToJob = async (req, res) => {
   upload.single("resume")(req, res, async (err) => {
@@ -15,7 +15,7 @@ exports.applyToJob = async (req, res) => {
     }
 
     try {
-      const {
+      let {
         jobId,
         coverLetter,
         email,
@@ -33,6 +33,9 @@ exports.applyToJob = async (req, res) => {
         return res.status(404).json({ message: "Job not found" });
       }
 
+      qualification = JSON.parse(qualification);
+      skills = JSON.parse(skills);
+      console.log(req.body);
       const existingApplication = await Application.findOne({
         job: jobId,
         applicant: userId,
@@ -70,65 +73,63 @@ exports.applyToJob = async (req, res) => {
 
       job.applications.push({ application: application._id, user: userId });
       await job.save();
-      
-   //message
-   try{
-   const companyId = job.company;
-   console.log(companyId)
-   const employer = await User.findOne({ company: companyId});
 
-   if (employer) {
-     const notificationMessage = `A new application has been submitted for your job: ${job.title}.`;
+      //message
+      try {
+        const companyId = job.company;
+        console.log(companyId);
+        const employer = await User.findOne({ company: companyId });
 
-     const notification = new Notification({
-       recipient: employer._id,
-       message: notificationMessage,
-       type: 'info',
-     });
+        if (employer) {
+          const notificationMessage = `A new application has been submitted for your job: ${job.title}.`;
 
-     await notification.save();
+          const notification = new Notification({
+            recipient: employer._id,
+            message: notificationMessage,
+            type: "info",
+          });
 
-     // Emit the notification via Socket.IO
-     const io = req.app.get('io'); // Get the io instance from the app
-     io.to(employer._id.toString()).emit('notification', notification);
+          await notification.save();
 
-     console.log(`Notification sent to employer: ${employer._id}`);
+          // Emit the notification via Socket.IO
+          const io = req.app.get("io");
+          io.to(employer._id.toString()).emit("notification", notification);
 
-     // Check if the employer has email notifications enabled
-     if (employer.emailNotifications) {
-       const transporter = nodemailer.createTransport({
-         service: "gmail",
-         auth: {
-           user: process.env.APP_EMAIL,
-           pass: process.env.APP_PASSWORD,
-         },
-       });
+          console.log(`Notification sent to employer: ${employer._id}`);
 
-       const mailOptions = {
-         from: process.env.APP_EMAIL,
-         to: employer.email,
-         subject: "New Job Application Received",
-         text: notificationMessage,
-       };
+          // Check if the employer has email notifications enabled
+          if (employer.emailNotifications) {
+            const transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: process.env.APP_EMAIL,
+                pass: process.env.APP_PASSWORD,
+              },
+            });
 
-       transporter.sendMail(mailOptions, (error, info) => {
-         if (error) {
-           console.error("Error sending email:", error);
-         } else {
-           console.log("Email sent:", info.response);
-         }
-       });
-     }
-   } else {
-     console.log('Employer not found for the job.');
-   }
-  }catch(notificationError) {
-      console.error('Error sending notification:', notificationError);
-    }
-  
+            const mailOptions = {
+              from: process.env.APP_EMAIL,
+              to: employer.email,
+              subject: "New Job Application Received",
+              text: notificationMessage,
+            };
 
-      
-///message
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error("Error sending email:", error);
+              } else {
+                console.log("Email sent:", info.response);
+              }
+            });
+          }
+        } else {
+          console.log("Employer not found for the job.");
+        }
+      } catch (notificationError) {
+        console.error("Error sending notification:", notificationError);
+      }
+
+      ///message
 
       res.status(201).json({
         message: "Application submitted successfully",
@@ -244,7 +245,7 @@ exports.updateApplicationStatus = async (req, res) => {
       status,
     });
 
-    if (status === "Hired" && application.applicant.emailNotifications) { 
+    if (status === "Hired" && application.applicant.emailNotifications) {
       const emailSubject = `You have been hired for ${application.job.title}`;
       const emailText = `Dear ${application.applicant.firstName},\n\nCongratulations! You have been hired for the position of ${application.job.title}. We are excited to welcome you to the team.\n\nBest regards,\nThe HR Team`;
 

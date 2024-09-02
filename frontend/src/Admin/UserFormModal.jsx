@@ -46,7 +46,7 @@ const UserFormModal = ({ user, closeModal, fetchUsers }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-      <div className="relative p-5 w-1/2 mx-auto bg-white rounded">
+      <div className="relative p-5 w-1/4 mx-auto bg-white rounded">
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             name="firstName"
