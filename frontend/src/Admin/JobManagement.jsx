@@ -73,7 +73,7 @@ const JobManagement = () => {
   const handleCreateJob = async (newJobData) => {
     setLoading(true);
     try {
-      await apiClient.post("/admin/jobs", newJobData);
+      await apiClient.post("/admin/jobs/create", newJobData);
       fetchJobs();
       toast.success("Job created successfully!");
       setShowCreatePopup(false);

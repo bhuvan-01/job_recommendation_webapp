@@ -175,7 +175,7 @@ exports.getJobs = async (req, res) => {
     if (orderBy) {
       switch (orderBy) { 
         case "createdAt":
-          query = query.sort({ createdAt: 1 });
+          query = query.sort({ createdAt: -1 });
           break;
       }
     }

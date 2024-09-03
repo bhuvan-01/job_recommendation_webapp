@@ -45,3 +45,17 @@ exports.updateCompany = async (req, res) => {
     });
   }
 };
+
+
+exports.allCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find({}).sort({ name: 1 });
+    return res.status(200).json({ companies: companies.map((c) => ({ id: c._id, name: c.name })) });
+  } catch (error) {
+    console.error("Error while fetching companies: ", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.toString(),
+    });
+  }
+}

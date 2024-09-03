@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import apiClient from "@/services/apiClient";
 
 const getCoordinates = async (address) => {
   try {
     const response = await axios.get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json`,
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        address
+      )}.json`,
       {
         params: {
-          access_token: "pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ",
+          access_token:
+            "pk.eyJ1IjoiYmh1dmFuMDEiLCJhIjoiY2x6aWEyZjNwMGFzZDJ2c2l2dG05N2RzayJ9.EfI-v2ifsPPbXrQW9p7gkQ",
           limit: 1,
         },
       }
@@ -45,6 +49,7 @@ const JobCreatePopup = ({ onClose, onCreate }) => {
     longitude: "",
     company: "",
   });
+  const [companies, setCompanies] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,6 +79,12 @@ const JobCreatePopup = ({ onClose, onCreate }) => {
     onCreate(formData);
   };
 
+  useEffect(() => {
+    apiClient.get("/company").then((response) => {
+      setCompanies(response.data.companies);
+    });
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg h-auto max-h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
@@ -101,7 +112,9 @@ const JobCreatePopup = ({ onClose, onCreate }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Requirements (comma separated)</label>
+            <label className="block text-gray-700">
+              Requirements (comma separated)
+            </label>
             <input
               type="text"
               name="requirements"
@@ -109,6 +122,31 @@ const JobCreatePopup = ({ onClose, onCreate }) => {
               onChange={handleRequirementsChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Salary</label>
+            <input
+              type="text"
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Company</label>
+            <select
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              required
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="">Select a company</option>
+              {companies.map((company) => (
+                <option key={company.id} value={company.id}>{company.name}</option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Experience Level</label>
@@ -172,7 +210,7 @@ const JobCreatePopup = ({ onClose, onCreate }) => {
               <option value="Retail">Retail</option>
             </select>
           </div>
-         <div className="mb-4">
+          <div className="mb-4">
             <label className="block text-gray-700">Location</label>
             <input
               type="text"
