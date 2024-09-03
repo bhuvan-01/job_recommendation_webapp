@@ -59,7 +59,7 @@ const JobManagement = () => {
     setLoading(true);
     try {
       await apiClient.put(`/admin/jobs/${jobId}`, updatedData);
-      fetchJobs(); // Refresh the job list
+      fetchJobs(); 
       toast.success("Job updated successfully!");
       setShowUpdatePopup(false);
     } catch (error) {
@@ -128,7 +128,7 @@ const JobManagement = () => {
             <div>
               <h3 className="font-bold text-xl mb-2">{job.title}</h3>
               <p>
-                Type: {job.jobType} | Location: {job.location} | Company:{" "}
+                Type: {job.jobType} | Location: {job.location} 
                 {job.company.name}
               </p>
             </div>

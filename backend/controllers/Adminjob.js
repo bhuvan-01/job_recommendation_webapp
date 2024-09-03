@@ -1,7 +1,6 @@
 const Job = require("../models/Job");
 const User = require("../models/User");
 
-
 exports.createJob = async (req, res) => {
   try {
     const {
@@ -34,7 +33,9 @@ exports.createJob = async (req, res) => {
       !longitude ||
       !company
     ) {
-      return res.status(400).json({ message: "All required fields must be provided." });
+      return res
+        .status(400)
+        .json({ message: "All required fields must be provided." });
     }
 
     // Create a new job document
@@ -97,6 +98,8 @@ exports.getAllJobs = async (req, res) => {
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     console.error("Error fetching jobs:", error);
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };

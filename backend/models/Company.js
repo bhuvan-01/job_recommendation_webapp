@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const companySchema = new Schema({
@@ -9,6 +9,6 @@ const companySchema = new Schema({
   overview: { type: String },
 });
 
-const Company = mongoose.model('Company', companySchema);
+const Company = mongoose.model("Company", companySchema);
 
 module.exports = Company;

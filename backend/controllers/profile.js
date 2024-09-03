@@ -1,9 +1,9 @@
-const User = require('../models/User');
-const multer = require('multer');
+const User = require("../models/User");
+const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -25,11 +25,11 @@ exports.updateProfile = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-exports.uploadResume = upload.single('resume');
+exports.uploadResume = upload.single("resume");
 
 exports.handleResumeUpload = async (req, res) => {
   try {
@@ -38,12 +38,12 @@ exports.handleResumeUpload = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { $set: { 'profile.resume': resumePath } },
+      { $set: { "profile.resume": resumePath } },
       { new: true }
     );
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };

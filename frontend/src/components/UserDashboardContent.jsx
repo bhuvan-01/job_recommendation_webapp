@@ -349,7 +349,7 @@ const UserDashboardContent = () => {
             </Link>
             <Link
               to="/jobs/saved"
-              className="flex font-medium gap-2 justify-center items-center pt=3"
+              className="flex font-medium gap-2 justify-center items-center pt-4"
             >
               <span>Saved jobs</span> <SquareArrowOutUpRight size={16} />
             </Link>

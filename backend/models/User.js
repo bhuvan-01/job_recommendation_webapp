@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const profileSchema = new Schema({
@@ -10,7 +10,7 @@ const profileSchema = new Schema({
     {
       title: {
         type: String,
-        default: '',
+        default: "",
       },
       description: {
         type: [String],
@@ -18,11 +18,11 @@ const profileSchema = new Schema({
       },
       url: {
         type: String,
-        default: '',
+        default: "",
       },
       github: {
         type: String,
-        default: '',
+        default: "",
       },
     },
   ],
@@ -46,7 +46,7 @@ const profileSchema = new Schema({
       },
       description: {
         type: String,
-        default: '',
+        default: "",
       },
     },
   ],
@@ -66,7 +66,7 @@ const profileSchema = new Schema({
       },
       description: {
         type: String,
-        default: '',
+        default: "",
       },
       startDate: {
         type: Date,
@@ -80,25 +80,25 @@ const profileSchema = new Schema({
   ],
   resume: {
     type: String,
-    default: '',
+    default: "",
   },
   certifications: [
     {
       title: {
         type: String,
-        default: '',
+        default: "",
       },
       issuer: {
         type: String,
-        default: '',
+        default: "",
       },
       description: {
         type: String,
-        default: '',
+        default: "",
       },
       url: {
         type: String,
-        default: '',
+        default: "",
       },
       date: {
         type: Date,
@@ -109,11 +109,11 @@ const profileSchema = new Schema({
     {
       title: {
         type: String,
-        default: '',
+        default: "",
       },
       description: {
         type: String,
-        default: '',
+        default: "",
       },
     },
   ],
@@ -144,17 +144,17 @@ const UserSchema = new Schema(
     },
     bio: {
       type: String,
-      default: '',
+      default: "",
     },
     role: {
       type: String,
-      enum: ['user', 'employer', 'admin'],
-      default: 'user',
+      enum: ["user", "employer", "admin"],
+      default: "user",
       required: true,
     },
     company: {
       type: Schema.Types.ObjectId,
-      ref: 'Company',
+      ref: "Company",
     },
     links: {
       linkedin: String,
@@ -171,7 +171,7 @@ const UserSchema = new Schema(
     phone: {
       type: String,
     },
-    emailNotifications: { 
+    emailNotifications: {
       type: Boolean,
       default: true,
     },
@@ -187,8 +187,8 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.virtual('fullName').get(function () {
+UserSchema.virtual("fullName").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

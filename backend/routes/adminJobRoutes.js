@@ -1,6 +1,6 @@
 const express = require("express");
-const { deleteJob, getJobs} = require("../controllers/job");
-const { createJob, updateJob, getAllJobs} = require("../controllers/Adminjob");
+const { deleteJob, getJobs } = require("../controllers/job");
+const { createJob, updateJob, getAllJobs } = require("../controllers/Adminjob");
 
 const isLoggedin = require("../middlewares/isLoggedin");
 const isAdmin = require("../middlewares/isAdmin");

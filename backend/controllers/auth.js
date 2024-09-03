@@ -34,33 +34,32 @@ const login = async (req, res) => {
       }
     );
 
-
     if (existingUser.emailNotifications) {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.APP_EMAIL,
-        pass: process.env.APP_PASSWORD,
-      },
-    });
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.APP_EMAIL,
+          pass: process.env.APP_PASSWORD,
+        },
+      });
 
-    // Define the email options
-    const mailOptions = {
-      from: process.env.APP_EMAIL,
-      to: email,
-      subject: "Successful Login Notification",
-      text: `Dear ${existingUser.firstName},\n\nYou have successfully logged in to your account.\n\nBest regards,\n JobWipe`,
-    };
+      // Define the email options
+      const mailOptions = {
+        from: process.env.APP_EMAIL,
+        to: email,
+        subject: "Successful Login Notification",
+        text: `Dear ${existingUser.firstName},\n\nYou have successfully logged in to your account.\n\nBest regards,\n JobWipe`,
+      };
 
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-      } else {
-        console.log("Email sent:", info.response);
-      }
-    });
-  }
+      // Send the email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    }
 
     return res.status(200).json({
       token,
@@ -109,8 +108,8 @@ const signup = async (req, res) => {
       }
     );
 
-     // real time notification
-     try {
+    // real time notification
+    try {
       const admins = await User.find({ role: "admin" });
       const notificationMessage = `A new ${role} has signed up: ${firstName} ${lastName} (${email})`;
 
@@ -123,11 +122,14 @@ const signup = async (req, res) => {
         await notification.save();
 
         // Emit the notification via Socket.IO if needed
-        const io = req.app.get("io"); 
+        const io = req.app.get("io");
         io.to(admin._id.toString()).emit("notification", notification);
       }
     } catch (notificationError) {
-      console.error("Error sending notifications to admins:", notificationError);
+      console.error(
+        "Error sending notifications to admins:",
+        notificationError
+      );
     }
 
     const transporter = nodemailer.createTransport({
@@ -172,7 +174,7 @@ const storedOTPs = {};
 // 6-digit OTP
 
 const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString(); 
+  return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 const forgotPassword = async (req, res) => {

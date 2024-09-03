@@ -124,7 +124,7 @@ exports.getAdminStatsByMonth = async (req, res) => {
     // Monthly Job Posts
     const monthlyJobs = await Job.aggregate([
       {
-        $match: { createdAt: { $exists: true } }
+        $match: { createdAt: { $exists: true } },
       },
       {
         $group: {
@@ -143,7 +143,7 @@ exports.getAdminStatsByMonth = async (req, res) => {
     // Monthly User Registrations (Job Seekers)
     const monthlyJobSeekers = await User.aggregate([
       {
-        $match: { role: "user", createdAt: { $exists: true } }
+        $match: { role: "user", createdAt: { $exists: true } },
       },
       {
         $group: {
@@ -162,7 +162,7 @@ exports.getAdminStatsByMonth = async (req, res) => {
     // Monthly Employer Registrations
     const monthlyEmployers = await User.aggregate([
       {
-        $match: { role: "employer", createdAt: { $exists: true } }
+        $match: { role: "employer", createdAt: { $exists: true } },
       },
       {
         $group: {
@@ -183,8 +183,8 @@ exports.getAdminStatsByMonth = async (req, res) => {
       {
         $match: {
           status: "Hired",
-          hiredAt: { $exists: true }
-        }
+          hiredAt: { $exists: true },
+        },
       },
       {
         $group: {
@@ -202,7 +202,7 @@ exports.getAdminStatsByMonth = async (req, res) => {
 
     const monthlyApplications = await Application.aggregate([
       {
-        $match: { createdAt: { $exists: true } }
+        $match: { createdAt: { $exists: true } },
       },
       {
         $group: {
@@ -223,7 +223,7 @@ exports.getAdminStatsByMonth = async (req, res) => {
       monthlyJobSeekers,
       monthlyEmployers,
       monthlyHired,
-      monthlyApplications
+      monthlyApplications,
     });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });

@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const NotificationSchema = new mongoose.Schema(
   {
     recipient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     message: {
@@ -13,17 +13,17 @@ const NotificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['info', 'warning', 'error'],
-      default: 'info',
+      enum: ["info", "warning", "error"],
+      default: "info",
     },
     status: {
       type: String,
-      enum: ['unread', 'read'],
-      default: 'unread',
+      enum: ["unread", "read"],
+      default: "unread",
     },
     jobId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Job', 
+      ref: "Job",
       required: false,
     },
   },
@@ -32,6 +32,6 @@ const NotificationSchema = new mongoose.Schema(
   }
 );
 
-const Notification = mongoose.model('Notification', NotificationSchema);
+const Notification = mongoose.model("Notification", NotificationSchema);
 
 module.exports = Notification;

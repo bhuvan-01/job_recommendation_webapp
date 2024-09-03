@@ -1,10 +1,10 @@
-const User = require('../models/User');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const User = require("../models/User");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const createUploadDirectories = () => {
-  const directories = ['uploads', 'uploads/photos', 'uploads/resumes'];
+  const directories = ["uploads", "uploads/photos", "uploads/resumes"];
   directories.forEach((dir) => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -17,12 +17,12 @@ createUploadDirectories();
 // Setup Multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (file.fieldname === 'photo') {
-      cb(null, 'uploads/photos/');
-    } else if (file.fieldname === 'resume') {
-      cb(null, 'uploads/resumes/');
+    if (file.fieldname === "photo") {
+      cb(null, "uploads/photos/");
+    } else if (file.fieldname === "resume") {
+      cb(null, "uploads/resumes/");
     } else {
-      cb(null, 'uploads/');
+      cb(null, "uploads/");
     }
   },
   filename: function (req, file, cb) {
@@ -54,22 +54,22 @@ function checkFileType(file, cb) {
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    return cb(new Error('Error: Images and PDF/DOC files only!'));
+    return cb(new Error("Error: Images and PDF/DOC files only!"));
   }
 }
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find().select("-password");
     return res.status(200).json({
-      message: 'Users fetched successfully!',
+      message: "Users fetched successfully!",
       users,
     });
   } catch (error) {
-    console.log('error while fetching users: ', error);
+    console.log("error while fetching users: ", error);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       error,
     });
   }
@@ -79,21 +79,21 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .select('-password')
-      .populate('company');
+      .select("-password")
+      .populate("company");
     if (!user) {
       return res.status(404).json({
-        message: 'User not found',
+        message: "User not found",
       });
     }
     return res.status(200).json({
-      message: 'User fetched successfully!',
+      message: "User fetched successfully!",
       user,
     });
   } catch (error) {
-    console.log('error while fetching user: ', error);
+    console.log("error while fetching user: ", error);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       error,
     });
   }
@@ -112,22 +112,22 @@ exports.updateUser = async (req, res) => {
         new: true,
       }
     )
-      .select('-password')
-      .populate('company');
+      .select("-password")
+      .populate("company");
     if (!user) {
       return res.status(404).json({
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
     return res.status(200).json({
-      message: 'User updated successfully!',
+      message: "User updated successfully!",
       user,
     });
   } catch (error) {
-    console.log('error while updating user: ', error);
+    console.log("error while updating user: ", error);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       error,
     });
   }
@@ -140,17 +140,17 @@ exports.deleteUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
     return res.status(200).json({
-      message: 'User deleted successfully!',
+      message: "User deleted successfully!",
     });
   } catch (error) {
-    console.log('error while deleting user: ', error);
+    console.log("error while deleting user: ", error);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       error,
     });
   }
@@ -158,12 +158,12 @@ exports.deleteUser = async (req, res) => {
 
 // Upload user photo
 exports.uploadUserPhoto = [
-  upload.single('photo'),
+  upload.single("photo"),
   async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({
-          message: 'No file uploaded',
+          message: "No file uploaded",
         });
       }
 
@@ -171,24 +171,24 @@ exports.uploadUserPhoto = [
         req.user._id,
         { photo: req.file.path },
         { new: true, runValidators: true }
-      ).select('-password');
+      ).select("-password");
 
       console.log(user);
 
       if (!user) {
         return res.status(404).json({
-          message: 'User not found',
+          message: "User not found",
         });
       }
 
       return res.status(200).json({
-        message: 'Photo uploaded successfully!',
+        message: "Photo uploaded successfully!",
         user,
       });
     } catch (error) {
-      console.error('Error while uploading photo: ', error);
+      console.error("Error while uploading photo: ", error);
       return res.status(500).json({
-        message: 'Internal server error',
+        message: "Internal server error",
         error,
       });
     }
@@ -197,35 +197,35 @@ exports.uploadUserPhoto = [
 
 // Upload user resume
 exports.uploadUserResume = [
-  upload.single('resume'),
+  upload.single("resume"),
   async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({
-          message: 'No file uploaded',
+          message: "No file uploaded",
         });
       }
 
       const user = await User.findByIdAndUpdate(
         req.user._id,
-        { 'profile.resume': req.file.path },
+        { "profile.resume": req.file.path },
         { new: true, runValidators: true }
-      ).select('-password');
+      ).select("-password");
 
       if (!user) {
         return res.status(404).json({
-          message: 'User not found',
+          message: "User not found",
         });
       }
 
       return res.status(200).json({
-        message: 'Resume uploaded successfully!',
+        message: "Resume uploaded successfully!",
         user,
       });
     } catch (error) {
-      console.error('Error while uploading resume: ', error);
+      console.error("Error while uploading resume: ", error);
       return res.status(500).json({
-        message: 'Internal server error',
+        message: "Internal server error",
         error: error.message,
       });
     }
