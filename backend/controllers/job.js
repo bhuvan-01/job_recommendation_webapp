@@ -121,6 +121,7 @@ exports.getJobs = async (req, res) => {
     jobType,
     experience,
     locationType,
+    orderBy
   } = req.query;
 
   let mongoQuery = {};
@@ -167,10 +168,18 @@ exports.getJobs = async (req, res) => {
   const skip = (page - 1) * perPage;
 
   try {
-    const jobs = await Job.find(mongoQuery)
+    let query = Job.find(mongoQuery)
       .populate("company")
       .skip(skip)
       .limit(perPage);
+    if (orderBy) {
+      switch (orderBy) { 
+        case "createdAt":
+          query = query.sort({ createdAt: 1 });
+          break;
+      }
+    }
+    const jobs = await query;
     const count = await Job.countDocuments(mongoQuery);
     const totalPages = Math.ceil(count / perPage);
     return res.status(200).json({ jobs, totalPages, count, currentPage: page });

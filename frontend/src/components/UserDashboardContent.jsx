@@ -189,6 +189,12 @@ const UserDashboardContent = () => {
   const jobs = useSelector((state) => state.jobs.jobs);
   const totalCount = useSelector((state) => state.jobs.totalCount);
   const [page, setPage] = useState(1);
+  const [orderBy, setOrderBy] = useState("createdAt");
+
+  const orderByOptions = [
+    { id: "createdAt", label: "Date Posted" },
+    { id: "relevance", label: "Relevance" },
+  ];
 
   const {
     keywordQuery,
@@ -217,6 +223,7 @@ const UserDashboardContent = () => {
             jobType: selectedJobTypes,
             locationType: selectedLocationTypes,
             industry: selectedIndustries,
+            orderBy,
           },
         });
 
@@ -240,6 +247,7 @@ const UserDashboardContent = () => {
     selectedJobTypes,
     selectedLocationTypes,
     selectedIndustries,
+    orderBy,
   ]);
 
   const handleKeywordChange = (e) => {
@@ -409,13 +417,14 @@ const UserDashboardContent = () => {
               className="p-2 border rounded-md font-medium"
               name="sort"
               id="sort"
+              value={orderBy}
+              onChange={(e) => setOrderBy(e.target.value)}
             >
-              <option value="date" className="font-medium">
-                Date Posted
-              </option>
-              <option value="relevance" className="font-medium">
-                Relevance
-              </option>
+              {orderByOptions.map((o) => (
+                <option key={o.id} value={o.id} className="font-medium">
+                  {o.label}
+                </option>
+              ))}
             </select>
           </div>
 
