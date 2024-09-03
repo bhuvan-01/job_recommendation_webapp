@@ -6,6 +6,7 @@ const {
   updateUser,
   uploadUserPhoto,
   uploadUserResume,
+  deleteUser,
 } = require("../controllers/user");
 const { getUserAppliedJobs } = require("../controllers/job");
 const Notification = require("../models/Notification");
@@ -45,5 +46,7 @@ router.post("/photo", isLoggedin, uploadUserPhoto);
 
 // upload resume
 router.post("/resume", isLoggedin, uploadUserResume);
+
+router.delete("/delete", isLoggedin, deleteUser);
 
 module.exports = router;

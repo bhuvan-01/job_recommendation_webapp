@@ -9,7 +9,7 @@ import { login } from "@/app/auth/authSlice";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Navbar from "@/components/Navbar";
-import signUpImage from "../assets/images/loginImage2.jpg";
+import signUpImage from "../assets/images/loginImage3.png";
 
 const Signup = () => {
   const [isEmployer, setIsEmployer] = useState(false);

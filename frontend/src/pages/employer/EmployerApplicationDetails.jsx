@@ -63,12 +63,12 @@ const EmployerApplicationDetails = () => {
       console.log("Resume not available.");
       return;
     }
-    const link = document.createElement('a');
-    link.href = `${import.meta.env.VITE_API}/${resumeUrl.replace(/\\/g, '/')}`;
-    link.download = 'resume.pdf';
+    const link = document.createElement("a");
+    link.href = `${import.meta.env.VITE_API}/${resumeUrl.replace(/\\/g, "/")}`;
+    link.download = "resume.pdf";
     link.click();
   };
-  
+
   const downloadApplicationPDF = () => {
     const doc = new jsPDF();
     const { job, applicant, status, coverLetter, qualification } =
@@ -165,7 +165,7 @@ const EmployerApplicationDetails = () => {
           Applicant Information
         </h2>
         <p className="text-gray-700">
-          <strong>Full Name:</strong> {applicant.fullName}
+          <strong>Full Name:</strong> {applicant?.fullName || "N/A"}
         </p>
         <p className="text-gray-700">
           <strong>Email:</strong> {email}

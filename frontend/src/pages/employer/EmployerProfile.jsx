@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Intro from "@/components/user/Intro";
 import Contact from "@/components/user/Contact";
 import EmailToggle from "@/components/EmailToggle";
+import DeleteProfileCard from "@/components/DeleteProfile";
+
 
 const EmployerProfile = () => {
   const dispatch = useDispatch();
@@ -15,6 +17,8 @@ const EmployerProfile = () => {
   const [jobsCreated, setJobsCreated] = useState([]);
   const [isAddingDetails, setIsAddingDetails] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const userId = useSelector((state) => state.auth.userId);
+  const token = useSelector((state) => state.auth.token);
   const [companyDetails, setCompanyDetails] = useState({
     name: "",
     industry: "",
@@ -302,6 +306,8 @@ const EmployerProfile = () => {
             <div className="sticky top-4">
               <Contact />
               <EmailToggle userId={user?._id} />
+              <DeleteProfileCard userId={userId} token={token} />
+
             </div>
           </div>
         </div>

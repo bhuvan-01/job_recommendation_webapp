@@ -53,7 +53,8 @@ const FeaturedJobs = () => {
             <div>
               <h3 className="text-md font-semibold">{job.title}</h3>
               <p className="text-gray-600 text-sm">
-                {job.company.name} • {job.location}
+                {job.company?.name ? `${job.company.name} • ` : ""}
+                {job.location}
               </p>
             </div>
             <div className="mt-2">

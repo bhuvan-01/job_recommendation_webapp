@@ -12,10 +12,12 @@ import Contact from "@/components/user/Contact";
 import Intro from "@/components/user/Intro";
 import { useSelector } from "react-redux";
 import EmailToggle from "@/components/EmailToggle";
+import DeleteProfileCard from "@/components/DeleteProfile";
 
 const UserProfile = () => {
   const isLoading = useSelector((state) => state.auth.isLoading);
   const userId = useSelector((state) => state.auth.userId);
+  const token = useSelector((state) => state.auth.token);
 
   if (isLoading) {
     return (
@@ -44,6 +46,7 @@ const UserProfile = () => {
             <Languages />
             <Contact />
             <EmailToggle userId={userId} />
+            <DeleteProfileCard userId={userId} token={token} />
           </div>
         </div>
       </div>
