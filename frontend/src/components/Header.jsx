@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { Bell, LogOut, MessageSquareText, User, BarChart2 } from "lucide-react";
+import { Bell, LogOut, MessageSquareText, User, BarChart2, BaggageClaim, PersonStandingIcon, PersonStanding } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,8 @@ import useUser from "@/hooks/useUser";
 import { IMG_URL } from "@/utils/constants";
 import Notifications from "./Notifications";
 import ContactImage from "../assets/images/contactIcon.png";
-import { DashboardIcon } from "@radix-ui/react-icons";
+import { DashboardIcon, PersonIcon } from "@radix-ui/react-icons";
+import { FaRing } from "react-icons/fa";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -40,14 +41,6 @@ const Header = () => {
         <Logo />
 
         <div className="flex gap-4 items-center text-white">
-          {/* <Link
-            to="/messages"
-            className="flex font-semibold gap-2 items-center hover:text-white hover:scale-105 transition-all duration-300 p-4 px-2"
-          >
-            <MessageSquareText size={18} />
-            <span className="hidden md:inline">Messages</span>
-          </Link> */}
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -109,7 +102,7 @@ const Header = () => {
               {user?.role === "employer" && (
                 <DropdownMenuItem>
                   <Link to="/jobs" className="flex items-center">
-                    <DashboardIcon
+                    <FaRing
                       size={16}
                       className="text-gray-800 dark:text-gray-300 mr-2"
                     />
@@ -124,7 +117,7 @@ const Header = () => {
                     to="/dashboard/employer/applications"
                     className="flex items-center"
                   >
-                    <BarChart2
+                    <PersonStandingIcon
                       size={16}
                       className="text-gray-800 dark:text-gray-300 mr-2"
                     />
@@ -150,7 +143,7 @@ const Header = () => {
               {user?.role === "user" && (
                 <DropdownMenuItem>
                   <Link to="/jobs/applied" className="flex items-center">
-                    <DashboardIcon
+                    <PersonStanding
                       size={16}
                       className="text-gray-800 dark:text-gray-300 mr-2"
                     />

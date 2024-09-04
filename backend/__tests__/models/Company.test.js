@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const Company = require('../../models/Company');
+const mongoose = require("mongoose");
+const Company = require("../../models/Company");
 
-describe('Company Model Test', () => {
+describe("Company Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,11 +13,11 @@ describe('Company Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save a company successfully', async () => {
+  it("create & save a company successfully", async () => {
     const companyData = {
-      name: 'Tech Corp',
-      industry: 'IT',
-      location: 'San Francisco',
+      name: "Tech Corp",
+      industry: "IT",
+      location: "San Francisco",
     };
     const validCompany = new Company(companyData);
     const savedCompany = await validCompany.save();
@@ -26,7 +26,7 @@ describe('Company Model Test', () => {
     expect(savedCompany.industry).toBe(companyData.industry);
   });
 
-  it('should fail when saving a company without required fields', async () => {
+  it("should fail when saving a company without required fields", async () => {
     const companyWithoutRequiredField = new Company({});
     let err;
     try {

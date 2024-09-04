@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Subscriber = require("../../models/Subscriber");
 
-describe('Subscriber Model Test', () => {
+describe("Subscriber Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,9 +13,9 @@ describe('Subscriber Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save a subscriber successfully', async () => {
+  it("create & save a subscriber successfully", async () => {
     const subscriberData = {
-      email: 'subscriber@example.com',
+      email: "subscriber@example.com",
     };
     const validSubscriber = new Subscriber(subscriberData);
     const savedSubscriber = await validSubscriber.save();
@@ -23,7 +23,7 @@ describe('Subscriber Model Test', () => {
     expect(savedSubscriber.email).toBe(subscriberData.email);
   });
 
-  it('should fail when saving a subscriber without an email', async () => {
+  it("should fail when saving a subscriber without an email", async () => {
     const subscriberWithoutEmail = new Subscriber({});
     let err;
     try {

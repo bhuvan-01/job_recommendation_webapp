@@ -47,7 +47,7 @@ const Community = () => {
               networking with fellow job seekers and professionals.
             </p>
             <a
-              href="https://discord.gg/8Fr4yS7U"
+              href="https://discord.gg/EGqBm3kV"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"

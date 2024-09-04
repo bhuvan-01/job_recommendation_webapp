@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const User = require('../../models/User');
+const mongoose = require("mongoose");
+const User = require("../../models/User");
 
-describe('User Model Test', () => {
+describe("User Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,13 +13,13 @@ describe('User Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save a user successfully', async () => {
+  it("create & save a user successfully", async () => {
     const userData = {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      role: 'user',
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@example.com",
+      password: "password123",
+      role: "user",
     };
     const validUser = new User(userData);
     const savedUser = await validUser.save();
@@ -28,8 +28,8 @@ describe('User Model Test', () => {
     expect(savedUser.email).toBe(userData.email);
   });
 
-  it('should fail when saving a user without required fields', async () => {
-    const userWithoutRequiredField = new User({ firstName: 'John' });
+  it("should fail when saving a user without required fields", async () => {
+    const userWithoutRequiredField = new User({ firstName: "John" });
     let err;
     try {
       await userWithoutRequiredField.save();

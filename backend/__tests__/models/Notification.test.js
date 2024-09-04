@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const Notification = require('../../models/Notification');
+const mongoose = require("mongoose");
+const Notification = require("../../models/Notification");
 
-describe('Notification Model Test', () => {
+describe("Notification Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,11 +13,11 @@ describe('Notification Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save a notification successfully', async () => {
+  it("create & save a notification successfully", async () => {
     const notificationData = {
       recipient: new mongoose.Types.ObjectId(),
-      message: 'You have a new message.',
-      type: 'info',
+      message: "You have a new message.",
+      type: "info",
     };
     const validNotification = new Notification(notificationData);
     const savedNotification = await validNotification.save();
@@ -26,7 +26,7 @@ describe('Notification Model Test', () => {
     expect(savedNotification.message).toBe(notificationData.message);
   });
 
-  it('should fail when saving a notification without required fields', async () => {
+  it("should fail when saving a notification without required fields", async () => {
     const notificationWithoutRequiredField = new Notification({});
     let err;
     try {

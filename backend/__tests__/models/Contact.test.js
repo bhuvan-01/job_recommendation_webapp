@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const Contact = require('../../models/Contact');
+const mongoose = require("mongoose");
+const Contact = require("../../models/Contact");
 
-describe('Contact Model Test', () => {
+describe("Contact Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,12 +13,12 @@ describe('Contact Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save a contact successfully', async () => {
+  it("create & save a contact successfully", async () => {
     const contactData = {
-      name: 'Jane Doe',
-      email: 'jane.doe@example.com',
-      phone: '987-654-3210',
-      message: 'I am interested in your services.',
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      phone: "987-654-3210",
+      message: "I am interested in your services.",
     };
     const validContact = new Contact(contactData);
     const savedContact = await validContact.save();
@@ -27,7 +27,7 @@ describe('Contact Model Test', () => {
     expect(savedContact.message).toBe(contactData.message);
   });
 
-  it('should fail when saving a contact without required fields', async () => {
+  it("should fail when saving a contact without required fields", async () => {
     const contactWithoutRequiredField = new Contact({});
     let err;
     try {

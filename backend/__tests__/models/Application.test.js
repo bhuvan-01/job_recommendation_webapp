@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const Application = require('../../models/Application');
+const mongoose = require("mongoose");
+const Application = require("../../models/Application");
 
-describe('Application Model Test', () => {
+describe("Application Model Test", () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/testdb', {
+    await mongoose.connect("mongodb://localhost:27017/testdb", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -13,19 +13,19 @@ describe('Application Model Test', () => {
     await mongoose.connection.close();
   });
 
-  it('create & save an application successfully', async () => {
+  it("create & save an application successfully", async () => {
     const applicationData = {
       job: new mongoose.Types.ObjectId(),
       applicant: new mongoose.Types.ObjectId(),
-      status: 'Pending',
-      email: 'applicant@example.com',
-      phoneNumber: '123-456-7890',
+      status: "Pending",
+      email: "applicant@example.com",
+      phoneNumber: "123-456-7890",
       experience: 3,
-      visaStatus: 'Valid',
-      relocation: 'Yes',
+      visaStatus: "Valid",
+      relocation: "Yes",
       qualification: {
-        degreeName: 'BSc in Computer Science',
-        majorSubject: 'Computer Science',
+        degreeName: "BSc in Computer Science",
+        majorSubject: "Computer Science",
         startDate: new Date(),
       },
     };
@@ -36,7 +36,7 @@ describe('Application Model Test', () => {
     expect(savedApplication.email).toBe(applicationData.email);
   });
 
-  it('should fail when saving an application without required fields', async () => {
+  it("should fail when saving an application without required fields", async () => {
     const applicationWithoutRequiredField = new Application({});
     let err;
     try {
