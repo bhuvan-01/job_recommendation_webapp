@@ -14,10 +14,11 @@ describe("User Model Test", () => {
   });
 
   it("create & save a user successfully", async () => {
+    const uniqueEmail = `john.doe${Date.now()}@example.com`;
     const userData = {
       firstName: "John",
       lastName: "Doe",
-      email: "john.doe@example.com",
+      email: uniqueEmail,
       password: "password123",
       role: "user",
     };

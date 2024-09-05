@@ -58,15 +58,6 @@ const JobSchema = new Schema(
     ],
 
     viewCount: { type: Number, default: 0 },
-
-    keywords: {
-      type: [String],
-      default: [],
-    },
-    keywordVector: {
-      type: [Number],
-      default: [],
-    },
   },
   {
     timestamps: true,

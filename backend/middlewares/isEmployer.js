@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   } else {
     return res.status(403).json({
       message: "Not authorized, you are not an employer",
-      error: error.message,
+      error: "No sufficient privileges",
     });
   }
 };

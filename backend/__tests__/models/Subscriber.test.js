@@ -15,7 +15,7 @@ describe("Subscriber Model Test", () => {
 
   it("create & save a subscriber successfully", async () => {
     const subscriberData = {
-      email: "subscriber@example.com",
+      email: `subscriber${Date.now()}@example.com`, 
     };
     const validSubscriber = new Subscriber(subscriberData);
     const savedSubscriber = await validSubscriber.save();
