@@ -12,7 +12,19 @@ const RecommendedJobs = () => {
     const fetchRecommendedJobs = async () => {
       try {
         const response = await apiClient.get("/jobs/recommended");
-        setJobs(response.data);
+        console.log("Full Response:", response); 
+        console.log("Response Data:", response.data);  
+        
+        
+        if (Array.isArray(response.data)) {
+          setJobs(response.data);
+        } else if (response.data && Array.isArray(response.data.jobs)) {
+          
+          setJobs(response.data.jobs);
+        } else {
+          setJobs([]);  
+          setError("Unexpected response format");
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -35,33 +47,39 @@ const RecommendedJobs = () => {
     );
   }
 
-  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+  if (error) {
+    return <p className="text-center text-red-500">Error: {error}</p>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-4">
       <div className="grid grid-cols-1 gap-6">
-        {jobs.map((job) => (
-          <div
-            key={job._id.$oid}
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
-            <h3
-              className="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 cursor-pointer"
-              onClick={() => handleTitleClick(job._id.$oid)}
+        {Array.isArray(jobs) && jobs.length > 0 ? (
+          jobs.map((job) => (
+            <div
+              key={job._id.$oid}
+              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
             >
-              {job.title}
-            </h3>
-            <p className="text-gray-700 mb-1">
-              <strong>Type:</strong> {job.jobType}
-            </p>
-            <p className="text-gray-700 mb-1">
-              <strong>Location:</strong> {job.location}
-            </p>
-            <p className="text-gray-700">
-              <strong>Salary:</strong> ${job.salary}
-            </p>
-          </div>
-        ))}
+              <h3
+                className="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                onClick={() => handleTitleClick(job._id.$oid)}
+              >
+                {job.title}
+              </h3>
+              <p className="text-gray-700 mb-1">
+                <strong>Type:</strong> {job.jobType}
+              </p>
+              <p className="text-gray-700 mb-1">
+                <strong>Location:</strong> {job.location}
+              </p>
+              <p className="text-gray-700">
+                <strong>Salary:</strong> ${job.salary}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-center">No jobs found</p>
+        )}
       </div>
     </div>
   );
