@@ -17,6 +17,9 @@ step-3:Activate the virtual environment
   
    .\venv\Scripts\Activate.ps1 
 
+
+Step -4 Create .env file according to the sample.env file with your credentails   
+
 step 4: install the requires libraries
 
   pip install -r requirements.txt

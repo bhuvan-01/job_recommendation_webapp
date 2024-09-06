@@ -9,7 +9,11 @@
 
     npm i / npm install
 
-step 3 - run the frontend server    
+
+Step 3 - Create.env file according to the sample.env with your credentials
+
+
+step 4 - run the frontend server    
 
       npm run dev
 

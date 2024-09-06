@@ -3,13 +3,15 @@
 ```js
   step 1 - go the the backend directory
       
-      cd  backend
+    cd  backend
 
  Step 2 - install dependencies
 
     npm i / npm install
 
-step 3 - run the backend server    
+Step 3 - Create.env file according to the sample.env with your credentials
+
+step 4 - run the backend server    
 
       npm run dev
 
