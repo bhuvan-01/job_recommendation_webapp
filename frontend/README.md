@@ -13,10 +13,16 @@ step 3 - run the frontend server
 
       npm run dev
 
-If above command shows some error try this command ---->    npm install --legacy-peer-deps
+If above command shows some error try this command ---->  npm install --legacy-peer-deps
 
 npm run dev
 ```
+
+<!-- <Admin login details> -->
+
+email --> admin@gmail.com
+
+password --> admin123@
 
 
 
