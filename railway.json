@@ -5,7 +5,7 @@
         "name": "frontend",
         "path": "client",
         "buildCommand": "npm install && npm run build",
-        "startCommand": "npx serve -s build",
+        "startCommand": "npx serve -s build"
       },
       {
         "name": "mern-api",
