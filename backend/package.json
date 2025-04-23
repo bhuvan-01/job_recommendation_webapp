@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "build": "vite build",
     "test": "jest",
     "test:models": "jest __tests__/models",
     "test:middlewares": "jest __tests__/middlewares",
