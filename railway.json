@@ -1,31 +1,28 @@
 {
-    "projectName": "job-portal",
-    "services": [
-      {
-        "name": "frontend",
-        "path": "client",
-        "buildCommand": "npm install && npm run build",
-        "startCommand": "npx serve -s build"
-      },
-      {
-        "name": "mern-api",
-        "path": "server",
-        "buildCommand": "npm install",
-        "startCommand": "npm start",
-        "env": {
-          "MONGO_URI": "$MONGO_URL"
-        }
-      },
-      {
-        "name": "flask-api",
-        "path": "JobRecommend-Flask-Api",
-        "buildCommand": "pip install -r requirements.txt",
-        "startCommand": "gunicorn app:app",
-        "env": {
-          "MONGO_URI": "$MONGO_URL",
-          "FLASK_ENV": "production"
-        }
+  "projectName": "job-portal",
+  "services": [
+    {
+      "name": "frontend",
+      "path": "frontend",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "npx serve -s build"
+    },
+    {
+      "name": "mern-api",
+      "path": "backend",
+      "buildCommand": "npm install",
+      "startCommand": "npm start",
+      "env": { "MONGO_URI": "$MONGO_URL" }
+    },
+    {
+      "name": "flask-api",
+      "path": "JobRecommend-Flask-Api",
+      "buildCommand": "pip install -r requirements.txt",
+      "startCommand": "gunicorn app:app",
+      "env": {
+        "MONGO_URI": "$MONGO_URL",
+        "FLASK_ENV": "production"
       }
-    ]
-  }
-  
+    }
+  ]
+}
